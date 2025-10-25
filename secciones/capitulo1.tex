@@ -1,0 +1,50 @@
+\chapter{MOTIVACIÓN Y CONTEXTO} 
+
+\section{Presentación del tema de investigación}
+
+La re-identificación de personas (\textit{Person Re-ID}) es una tarea fundamental en el campo de la visión por computadora, cuyo objetivo es reconocer a un mismo individuo en diferentes cámaras o momentos. Entre las distintas modalidades biométricas, el reconocimiento de marcha (\textit{Gait Recognition}) destaca por utilizar la forma de caminar como rasgo distintivo, lo que lo hace menos sensible a cambios de vestimenta, pose o iluminación que los enfoques basados en la apariencia \citep{Purish2023GaitRecognition}.
+
+Para entrenar estos sistemas, existen dos estrategias principales. La primera es el aprendizaje supervisado (\textit{supervised learning}), que depende de grandes volúmenes de datos etiquetados para alcanzar una alta precisión. La segunda es el aprendizaje autosupervisado (\textit{Self-Supervised Learning, SSL}), una alternativa reciente que permite aprender representaciones útiles a partir de videos sin etiquetas manuales, como lo demuestran trabajos de referencia \citep{Zheng2022GaitLU1M, Wang2025GaitForeMer}. Este paradigma ha demostrado ser especialmente valioso para aprovechar datos no estructurados y reducir la dependencia del etiquetado manual.
+
+\section{Descripción de la situación problemática}
+
+A pesar de sus avances, el \textit{Gait Recognition} enfrenta un desafío central relacionado con las limitaciones de ambas estrategias de aprendizaje. Los métodos supervisados ofrecen una alta precisión, pero su escalabilidad se ve comprometida por la necesidad de datos etiquetados en contextos reales, donde las variaciones visuales son casi infinitas. En contraste, el aprendizaje autosupervisado permite una mayor generalización y adaptabilidad, pero carece de una guía explícita que ayude al modelo a distinguir detalles sutiles entre individuos con patrones de caminata similares.
+
+Para abordar estas deficiencias, investigaciones recientes han explorado modelos híbridos y arquitecturas más complejas. Por ejemplo, el trabajo de \citet{Kovacevic2021SelfAttentionGait} introduce mecanismos de auto-atención que mejoran la capacidad del modelo para concentrarse en las regiones más relevantes del movimiento. No obstante, incluso estos enfoques avanzados no logran resolver completamente el problema, ya que siguen careciendo de un componente supervisado que refine la discriminación entre identidades.
+
+En este contexto, el problema que esta tesis aborda radica en la necesidad de un marco de trabajo que combine de manera efectiva la capacidad de generalización del aprendizaje autosupervisado con la precisión del aprendizaje supervisado. Más que una simple combinación, se busca explorar una integración sinérgica entre ambos paradigmas, aprovechando la robustez de los modelos basados en atención y la guía estructurada del aprendizaje supervisado para mejorar la fiabilidad y adaptabilidad del reconocimiento de marcha en escenarios reales.
+
+
+\section{Formulación del problema}
+
+En \textit{Gait Recognition}, los métodos supervisados ofrecen alta precisión, pero dependen de grandes volúmenes de datos etiquetados, lo que limita su escalabilidad. Por otro lado, el aprendizaje autosupervisado reduce esa dependencia, aunque pierde capacidad para diferenciar identidades similares. Las propuestas híbridas actuales combinan ambos enfoques de forma parcial, sin una integración real. Por ello, esta investigación aborda la falta de un marco unificado que combine de manera efectiva la precisión del aprendizaje supervisado y la generalización del aprendizaje autosupervisado para mejorar la re-identificación de personas.
+
+\section{Objetivos de investigación}
+
+\subsection*{Objetivo General}
+
+Desarrollar y evaluar un modelo híbrido que combine el aprendizaje supervisado y autosupervisado para la re-identificación de personas mediante \textit{Gait Recognition}.
+
+\subsection*{Objetivos Específicos}
+\begin{enumerate}
+    \item Analizar el estado del arte de los métodos supervisados, autosupervisados y combinados aplicados al \textit{Person Re-ID} mediante \textit{Gait recognition}, identificando sus principales limitaciones y tendencias recientes.
+    \item Diseñar una arquitectura híbrida que integre un módulo de pre-entrenamiento autosupervisado con una etapa de ajuste fino supervisado, buscando un equilibrio entre generalización y precisión.
+    \item Implementar el modelo propuesto utilizando un conjunto de datos no etiquetado de gran escala para el pre-entrenamiento y datasets etiquetados estándar (CASIA-B, OUMVLP, Gait3D) para el entrenamiento supervisado.
+    \item Evaluar el desempeño, bajo métricas de precisión, del enfoque híbrido frente a métodos puramente supervisados y puramente autosupervisados.
+\end{enumerate}
+
+\section{Justificación}
+
+La presente investigación se justifica desde tres perspectivas complementarias: metodológica, práctica y social. Desde el punto de vista metodológico, este trabajo busca superar las limitaciones de los enfoques híbridos actuales en el reconocimiento de marcha. Aunque existen propuestas que combinan el aprendizaje supervisado y el autosupervisado \citep{Li2020SemiSupGait}, la mayoría lo hace de manera secuencial, sin lograr una integración efectiva entre ambos paradigmas. En este contexto, la investigación propone un marco unificado que permita la interacción sinérgica entre las dos estrategias de aprendizaje, contribuyendo así al desarrollo de modelos más equilibrados entre precisión y capacidad de generalización.
+
+En el plano práctico, esta propuesta tiene un impacto tangible al reducir la dependencia de grandes volúmenes de datos etiquetados, lo que disminuye los costos y la complejidad asociados a la implementación de sistemas de re-identificación a gran escala. Un modelo más generalizable, como los explorados en trabajos recientes \citep{Dou2023IdentitySeeking}, facilitaría la transición de los sistemas actuales desde entornos controlados de laboratorio hacia aplicaciones reales, aumentando su robustez y confiabilidad.
+
+Finalmente, la justificación social radica en el potencial de este tipo de tecnologías para fortalecer la seguridad ciudadana, el monitoreo inteligente de espacios públicos y el análisis forense. Al mejorar la precisión y escalabilidad de los sistemas de reconocimiento de marcha, esta investigación contribuye al desarrollo de soluciones tecnológicas más efectivas y socialmente relevantes, capaces de apoyar la gestión de entornos urbanos de manera ética y responsable.
+
+
+
+\section{Alcance y limitaciones / restricciones} %[opcional]
+
+El alcance de esta investigación se centra en el desarrollo y evaluación experimental de un modelo híbrido para la re-identificación de personas mediante \textit{Gait Recognition}. Se considera únicamente datos visuales y se limita al uso de conjuntos de datos públicos disponibles. No se aborda la integración en sistemas de vigilancia en tiempo real ni la optimización para hardware específico. Además, como limitación técnica, el entrenamiento del modelo dependerá de los recursos computacionales disponibles, lo que puede restringir la escala del pre-entrenamiento.
+
+\textit{Nota: El documento corresponde a una entrega parcial del trabajo de tesis, por lo que el alcance y las limitaciones  pueden estar sujetos a cambios en función del avance y los resultados experimentales obtenidos.}

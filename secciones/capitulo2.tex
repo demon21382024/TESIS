@@ -1,0 +1,217 @@
+\chapter{REVISIÓN CRÍTICA DE LA LITERATURA}
+
+\begin{comment}
+La reidentificación de personas es un problema de visión por computador cuyo objetivo es determinar si imágenes o secuencias, procedentes de distintas cámaras, pertenecen a la misma persona. La complejidad de esta tarea reside en la gran variabilidad intra-clase inducida por cambio de poses, oclusiones, iluminación o resolución, así como en la reducida variabilidad inter-clase que presentan con apariencia o vestimenta similar. Esta dualidad exige el aprendizaje de representaciones altamente discriminativas y robustas.
+Históricamente, las soluciones supervisadas (Supervised Learning) han alcanzado altos rendimientos cuando existen anotaciones abundantes; sin embargo, en escenarios reales la obtención de etiquetas es costosa, sujeta a privacidad y poco escalable. En este contexto, los métodos que aplican aprendizaje autosupervisado (Self-Supervised Learning - SSL) emergen como una paradigma prometedor para aprovechar grandes colecciones no etiquetadas y aprender representaciones transferibles y robustas sin dependencia directa de anotaciones humanas previas.
+
+En este primer capítulo buscamos sintetizar y comparar cómo distintos métodos que aplican Self-Supervised Learning diseñan señales de aprendizaje (pretext tasks, pérdidas y arquitecturas) para capturar características discriminativas en Re-ID. Así mismo, evaluar la evidencia en datasets, protocolos y métricas que respalden sus afirmaciones y reproducibilidad. Y, por último, identificaremos las limitaciones comunes de estos proyectos como puede ser el coste computacional, dependencia de colecciones no etiquetadas u oclusiones.
+\end{comment}
+
+\textit{Person Re-ID} tiene como objetivo determinar si imágenes o secuencias procedentes de distintas cámaras, pertenecen a la misma persona. La complejidad de esta tarea radica en la variabilidad intra-clase inducida por cambios de pose, oclusiones, iluminación o resolución; así como en la reducida variabilidad inter-clase que presentan individuos con apariencia o vestimenta similar. Esta dualidad exige el aprendizaje de representaciones altamente discriminativas y robustas.
+
+Históricamente, las soluciones basadas en aprendizaje supervisado (\textit{Supervised Learning}) han alcanzado altos rendimientos cuando existen anotaciones abundantes y de alta calidad. Sin embargo, en escenarios reales la obtención de etiquetas es costosa, sujeta a restricciones de privacidad y poco escalable. En este contexto, los métodos de aprendizaje autosupervisado (\textit{Self-Supervised Learning, SSL}) nacen como un paradigma prometedor para aprovechar grandes colecciones no etiquetadas y aprender representaciones transferibles y robustas sin dependencia directa de anotaciones humanas previas.
+
+Aunque este trabajo se centra en el reconocimiento por marcha (\textit{Gait Recognition}), la literatura de \textit{Person Re-ID} basada en apariencia y en pre-entrenamiento autosupervisado aporta técnicas clave como el aprendizaje contrastivo, enmascaramiento de imagen (\textit{Masked Image Modeling, MIM}), entre otras; que pueden ser enfocadas en \textit{Gait Recognition}. Por tanto, para la revisión de literatura, se incluyen y analizan métodos representativos de \textit{Person Re-ID} con el fin de identificar técnicas de pre-entrenamiento robustas; evaluar estrategias de aumento de datos y representación de partes corporales; y detectar brechas en la aplicación de aprendizaje autosupervisado.
+
+Esta revisión crítica busca, en primer lugar, sintetizar y comparar cómo los distintos métodos que aplican aprendizaje autosupervisado diseñan señales de entrenamiento para capturar características discriminativas en \textit{Re-ID}. En segundo lugar, se evalúa la evidencia experimental reportada en términos de \textit{datasets} y métricas de desempeño. Finalmente, se discuten las limitaciones comunes observadas en la literatura, como el costo computacional, la dependencia de grandes volúmenes de datos no etiquetados y la sensibilidad a oclusiones o variaciones de postura.
+
+\begin{comment}
+\section{PersonViT: Large-scale Self-supervised Vision Transformer for Person Re-Identification (2024)}
+
+PersonViT es una estrategia propuesta  de pre-entrenamiento self-supervised a gran escala para Re-ID basada en Vision Transformers que combina dos señales: DINO (self-distillation contrastiva con multi-crop) para conservar correspondencias globales y locales, y una pérdida de Masked Image Modeling (MIM) aplicada a parches que fuerza al modelo a aprender características locales finas sin particiones manuales. El pipeline se basa en pre-entrenar ViT sobre LUPerson (millones de imágenes no etiquetadas) con la combinación L = Ldino + Lmim, y después afinar supervisadamente con esquemas estándar de Re-ID (ID loss + triplet, BNNeck). La inclusión de MIM aporta ganancias significativas y el rendimiento escala con la fracción de LUPerson empleada, lo que evidencia la importancia del pre-entrenamiento masivo para ViT en Re-ID.
+
+Las visualizaciones de atención muestran que PersonViT aprende correspondencias parciales útiles en casos de oclusión, y la variante con backbone ViT-B/16 alcanza resultados adecuados en MSMT17, Market1501, Duke y Occluded-Duke. No obstante, la propuesta tiene un coste computacional elevado, el pre-entrenamiento en LUPerson requiere recursos GPU considerables (grandes batches y muchas épocas), y el modelo pesado (ViT-B) amplifica requisitos de memoria y tiempo de inferencia. Además, la sensibilidad a la composición del conjunto de pre-entrenamiento y el ajuste fino de hiper-parámetros obligan a una experimentación extensa para producir resultados óptimos.
+
+
+\section{A Self-Supervised Gait Encoding Approach with Locality-Awareness for 3D Skeleton Based Person Re-Identification (2021)}
+
+Se presenta un enfoque autosupervisado dirigido a aprender representaciones de gait bajo secuencias de esqueletos 3D, con el objetivo de producir embeddings discriminativos para “Person Re-Identification”. La propuesta combina un esquema encoder-decoder (LSTM) con una tarea de pretexto de reverse sequence reconstruction, diseñada para forzar la captura de dependencias temporales, y un Locality-Aware Attention (LAS) que impone una preferencia por pesos de atención cercanos en el eje temporal, con el fin de retener información local relevante para el gait. A partir de los vectores de contexto de atención se construyen los Attention-based Gait Encodings (AGEs) y se afina la representación mediante “pérdida contrastiva” que explota el “locality inter-secuencia”  (Locality-Aware Contrastive Learning, LCL), donde secuencias temporalmente cercanas se tratan como positivas. De esta combinación resultan las CAGEs, representaciones que compiten con métodos skeleton-based y con algunos enfoques multimodales en benchmarks como BIWI, KS20 y KGBD.
+Entre las principales fortalezas del método figuran la capacidad de aprender sin etiquetas, la explotación explícita de la estructura temporal y la flexibilidad de operar con esqueletos procedentes de sensores 3D o estimadores de pose sobre RGB. 
+
+Sin embargo, el enfoque tiene limitaciones relevantes para su adopción práctica, los datasets empleados son pequeños y controlados, lo que plantea dudas de generalización a escenarios ; la calidad final depende fuertemente de la precisión del esqueleto (los errores del pose estimator degradan la representación); y las variantes más completas (ej. combinaciones de pretextos) aumentan notablemente el coste computacional y la dimensionalidad de las features, además de requerir batches estructurados para el contraste, lo que incrementa la memoria GPU durante el entrenamiento.	
+
+\section{Identity-Seeking Self-Supervised Representation Learning for Generalizable Person Re-Identification (2023)}
+
+El trabajo introduce \textit{Identity-seeking Self-supervised Representation learning (ISR)}, un método autosupervisado para la reidentificación de personas (Person Re-ID) orientado a la  generalización entre dominios. A diferencia de los enfoques previos de DG Re-ID que requieren datos etiquetados costosos y limitados, ISR entrena sobre videos a gran escala sin anotaciones. La propuesta construye pares positivos entre imágenes de distintos fotogramas modelando la asociación de instancias como un problema de \textit{maximum-weight bipartite matching}. Además, incorpora una \textit{reliability-guided contrastive loss} para reducir el impacto de 
+pares positivos ruidosos y asegurar que el aprendizaje se base en asociaciones confiables.  
+
+Los experimentos muestran que ISR escala de manera casi lineal con la cantidad de datos, lo que permite aprovechar grandes volúmenes sin incurrir en costos prohibitivos. En benchmarks estándar, el método logra resultados sobresalientes: \textbf{87.0\% Rank-1 en Market-1501} y  \textbf{56.4\% Rank-1 en MSMT17} sin necesidad de anotaciones ni \textit{fine-tuning}, superando  en hasta \textbf{19.5\%} a los mejores enfoques supervisados de generalización. Bajo el esquema de \textit{pre-training → fine-tuning}, ISR establece nuevo \textit{state-of-the-art} en MSMT17 con \textbf{88.4\% Rank-1}.  
+
+Sin embargo, el método presenta ciertos retos: depende de la correcta construcción de pares \textit{inter-frame}, lo que puede ser sensible a ruido en escenarios de vigilancia complejos, y aunque su escalabilidad es positiva, su desempeño podría contrastarse con otras  estrategias autosupervisadas de menor complejidad.
+
+\section{Using Optical Flow Consistency to Improve Segmentation Stability in Long-Duration Surveillance Video (2025)}
+
+Los autores abordan el problema de la inestabilidad temporal en la segmentación semántica de video, un desafío crítico en escenarios de vigilancia prolongada. Aunque los métodos cuadro a cuadro han alcanzado gran precisión, suelen producir "flickering" e inconsistencias a lo largo de la secuencia. Para resolverlo, proponen un marco de entrenamiento end-to-end que combina un backbone moderno de segmentación con una red eficiente de estimación de flujo óptico. La contribución central es una pérdida de consistencia autosupervisada basada en flujo, que utiliza vectores de movimiento para reforzar la coherencia temporal entre cuadros consecutivos sin sacrificar precisión individual. En evaluaciones sobre datasets complejos como MOSE, el método mejora la estabilidad de la segmentación en hasta 15.7\%, alcanzando un nuevo estado del arte en métricas como mIoU y mTC.
+
+Por otro lado, el trabajo reconoce limitaciones y compromisos: la dependencia del flujo óptico introduce sobrecosto computacional que puede afectar la aplicabilidad en tiempo real, especialmente en dispositivos de baja potencia. Además, el rendimiento depende directamente de la calidad del flujo, que se degrada en condiciones adversas como baja iluminación, mal clima o desenfoque extremo. Esto abre la puerta al desarrollo de métodos libres de flujo, que podrían complementar o sustituir la propuesta en escenarios más hostiles. Finalmente, persiste el reto de la reidentificación de objetos tras largas desapariciones, lo que señala la necesidad de integrar mecanismos avanzados de memoria o tracking a largo plazo.
+
+\section{Self-Supervised Low-FPS Multiple Object Tracking for UAV: Introducing 5 FPS Benchmark and Methodological Advancements (2025)}
+
+Los autores exploran el problema del \textit{multiple object tracking} (MOT) en videos capturados por vehículos aéreos no tripulados (UAVs), donde factores como cambios frecuentes de ángulo, transiciones de escena y variaciones de apariencia complican el seguimiento. La situación se agrava en escenarios de baja tasa de cuadros (low-FPS), comunes por las limitaciones computacionales al procesar múltiples flujos de video en paralelo, lo que produce grandes desplazamientos entre cuadros y afecta el rendimiento de los trackers. Para reducir la dependencia de anotaciones manuales costosas y propensas a error, se investigan técnicas de aprendizaje autosupervisado, junto con mecanismos de memoria a largo plazo para mejorar la reidentificación de objetos tras amplias brechas temporales. El trabajo compara enfoques basados en similaridad quasi-densa, grafos y pseudo-etiquetado mediante modelos maestro, empleando detectores preentrenados como YOLO en datasets militares. Además, se introduce un benchmark novedoso diseñado para imágenes militares a 5 FPS, que permite evaluar de forma integral distintos métodos bajo restricciones realistas.
+
+En cuanto a limitaciones, se destaca que las predicciones ruidosas afectan las métricas de MOT y aún representan un desafío clave. Asimismo, el bajo número de cuadros por segundo restringe la granularidad temporal disponible, lo que plantea la necesidad de trackers más robustos y eficientes en entornos con recursos limitados. El estudio abre camino hacia el diseño de métodos de tracking especializados para escenarios militares y aplicaciones críticas donde la anotación exhaustiva y el procesamiento en tiempo real no son factibles.
+
+\section{UCM-VeID V2: A Richer Dataset and A Pre-training Method for UAV Cross-Modality Vehicle Re-Identification (2025)}
+
+El trabajo aborda el problema del \textit{Vehicle Cross-Modality Re-Identification} (VT-ReID), cuyo objetivo es permitir la identificación de vehículos tanto en modalidad RGB como infrarroja (IR), favoreciendo aplicaciones de vigilancia continua día y noche. Una de las principales limitaciones en este campo es la escasez de datasets amplios y representativos, así como el sesgo introducido por preentrenamientos en ImageNet que generan \textit{modality bias training} (MBT). Para enfrentar estos retos, los autores presentan un nuevo benchmark llamado \textbf{UCM-VeID V2}, que incrementa de manera sustancial el volumen de datos y mejora múltiples aspectos de las capturas. Además, proponen un método de preentrenamiento autosupervisado denominado \textbf{Patch-Mixed Self-supervised Learning (PMSL)}, diseñado para aprender representaciones invariantes entre modalidades. PMSL integra tres componentes clave: la reconstrucción de imágenes con mezcla de parches (\textit{Patch-Mixed Image Reconstruction, PMIR}), el aprendizaje adversarial de discriminación de modalidad (\textit{MDAL}) y el contraste de clústeres con aumento de modalidad (\textit{MACC}).
+
+Los experimentos demuestran que la combinación de UCM-VeID V2 y PMSL no solo mitiga el sesgo de modalidad, sino que también mejora la capacidad discriminativa de los modelos en escenarios reales. Sin embargo, aún persisten retos relacionados con la complejidad de las estrategias adversariales y contrastivas, así como la necesidad de validar la escalabilidad del método en contextos operativos más amplios y variados.
+\section{Taxonomía del Estado del Arte}
+\end{comment}
+
+\begin{comment}
+A continuación se presenta una taxonomía organizada por paradigmas de aprendizaje —\textbf{Self-Supervised}, \textbf{Supervised} y \textbf{Unsupervised}— aplicada a Person Re-Identification y Gait Recognition. Para cada rama se indica una metodología representativa seguida de una referencia y el año entre paréntesis (ej.: (\cite{Clave}, año)).
+\end{comment}
+
+\begin{comment}
+\section{Self-Supervised Learning (SSL)}
+
+\begin{itemize}
+  \item \textbf{Contrastive learning} (PASS / instance/contrastive schemes) (\cite{Zheng2022PASS}, 2022; \cite{Dou2023IdentitySeeking}, 2023).
+  \item \textbf{Masked reconstruction / Masked Sequence Modeling} (pretexto reconstructivo tipo MAE adaptado a gait) (\cite{Han2021LocalitySGE}, 2021; \cite{Wang2025GaitForeMer}, 2025).
+  \item \textbf{Temporal forecasting / motion prediction} (predecir frames o dinámica para aprender representación) (\cite{Zheng2021SelfGait}, 2021; \cite{Duan2024FSGait}, 2024).
+  \item \textbf{Skeleton / Graph-based SSL} (aprendizaje autosupervisado sobre esqueletos y grafos) (\cite{Han2021SMSGE}, 2021).
+  \item \textbf{Generative / restoration-oriented SSL} (restauración o distillation orientada a Re-ID) (\cite{Li2025OrientedKD}, 2025).
+  \item \textbf{Large-scale unlabeled pretraining (datasets para SSL)} (corpus no etiquetado para pre-entrenamiento de gait) (\cite{Zheng2022GaitLU1M}, 2022; \cite{Liu2023GaitBenchmark}, 2023).
+\end{itemize}
+
+\section{Supervised Learning}
+
+\begin{itemize}
+  \item \textbf{Metric learning / Triplet and variants} (pérdidas de triplet, soft-labels para Re-ID) (\cite{Lin2020Softened}, 2020; \cite{Guo2023TripletContrastive}, 2023).
+  \item \textbf{CNN-based supervised models para gait} (desentrelazado identidad/covariables) (\cite{Li2020SemiSupGait}, 2020).
+  \item \textbf{Transformer-based supervised models} (Vision Transformers aplicados a person Re-ID) (\cite{Huang2025PersonViT}, 2025; \cite{He2025TransReID}, 2025).
+  \item \textbf{Part-aware / attention supervised approaches} (plantillas/residual attention para detalles discriminativos) (\cite{Yang2020DevilDetails}, 2020).
+\end{itemize}
+
+\section{Unsupervised Learning}
+
+\begin{itemize}
+  \item \textbf{Clustering-based unsupervised learning} (clustering iterativo para generar pseudo-etiquetas) (\cite{Lin2020Softened}, 2020; \cite{Wu2020Tracklet}, 2020).
+  \item \textbf{Domain adaptation / multi-scene unsupervised strategies} (enfoques para generalización entre escenas) (\cite{Zhou2024VersReID}, 2024; \cite{Xu2023VILLS}, 2023).
+  \item \textbf{Synthetic-to-real transfer / unsupervised sim2real} (usar datos sintéticos y adaptar a real) (\cite{Li2024SyntheticReID}, 2024).
+  \item \textbf{Low-FPS / weak supervision / tracker-based unsupervised} (métodos auto y no supervisados para tracking y re-id en escenarios difíciles) (\cite{Smith2025LowFPS}, 2025; \cite{Joshua2025OpticalFlow}, 2025).
+\end{itemize}
+
+\section{Aprendizajes Híbridos y Métodos Transversales}
+
+\begin{itemize}
+  \item \textbf{SSL $\rightarrow$ Fine-tuning supervisado} (pre-entrenamiento self-supervised seguido de fine-tuning supervisado en benchmarks) (\cite{Dou2023IdentitySeeking}, 2023; \cite{Huang2025PersonViT}, 2025).
+  \item \textbf{Knowledge distillation orientada a Re-ID} (teacher-student para robustecer representaciones) (\cite{Li2025OrientedKD}, 2025).
+  \item \textbf{Cycle / association based learning} (asociaciones en ciclos diferenciables para re-ID sin etiquetas) (\cite{Gao2025CycAs}, 2025).
+  \item \textbf{Cross-modality / multi-platform pretraining} (pre-entrenamiento y transferencia entre modalidades, e.g., UAV + CCTV) (\cite{Liu2025UCMVeID}, 2025; \cite{Rao2024MSFFT}, 2024).
+\end{itemize}
+
+\section{Tabla de resumen}
+\begin{table}[H]
+    \centering
+    \caption{Resumen taxonómico: metodología y referencia representativa.}
+    \begin{tabular}{p{6.5cm} p{6.5cm}}
+    \hline
+    \textbf{Metodología} & \textbf{Paper representativo (clave, año)} \\ \hline\hline
+    Contrastive SSL & \cite{Dou2023IdentitySeeking}, 2023 \\ 
+    Masked reconstruction / Masked Sequence Modeling & \cite{Han2021LocalitySGE}, 2021 \\ 
+    Temporal forecasting / predictive SSL & \cite{Zheng2021SelfGait}, 2021 \\ 
+    Graph / Skeleton SSL & \cite{Han2021SMSGE}, 2021 \\ 
+    Large-scale unlabeled pretraining (datasets) & \cite{Zheng2022GaitLU1M}, 2022 \\ 
+    Transformer-based supervised models & \cite{Huang2025PersonViT}, 2025 \\ 
+    Metric learning / Triplet & \cite{Lin2020Softened}, 2020 \\ 
+    Clustering-based unsupervised & \cite{Wu2020Tracklet}, 2020 \\ 
+    Synthetic-to-real transfer & \cite{Li2024SyntheticReID}, 2024 \\ 
+    Cycle association (SSL) & \cite{Gao2025CycAs}, 2025 \\ \hline
+    \end{tabular}
+    \label{tab:taxonomy_summary}
+\end{table}
+\end{comment}
+
+\section{Aprendizaje Autosupervisado}
+
+Los trabajos basados en aprendizaje auto-supervisado muestran una diversificación de pretext-tasks orientadas a capturar distintas propiedades útiles para Re-ID. Las estrategias basadas en \textit{contrastive learning}, enfoques que construyen pares a partir de frames y tracklets (\cite{Zheng2022PASS}; \cite{Dou2023IdentitySeeking}), buscan explotar la continuidad temporal de videos para obtener invariancias útiles entre vistas y son representadas por métodos como \textit{Identity-Seeking (ISR)}, que emplea este emparejamiento y pérdida contrastiva por confiabilidad para mitigar pares ruidosos. Sin embargo, puede llegar depender fuertemente de la calidad del extractor de características y de la selección temporal de pares.
+
+Así mismo, se investiga también sobre enmascaramiento \textit{(MIM / Masked Sequence Modeling)} y tareas reconstructivas que han sido adaptadas para extraer características locales sin requerir alineación manual; como es el caso de PersonViT, que incorpora MIM para obtener representaciones locales de grano fino y reducir dependencia de divisiones manuales de partes (\cite{Han2021LocalitySGE}; \cite{Wang2025GaitForeMer}), lo que es muy relevante cuando se trabaja con silhouettes o secuencias de marcha donde la alineación es difícil, aunque su alto costo computacional y modelos complejos de pre-entrenamiento (LUPerson - Utilizado también en \cite{Zheng2022PASS}; \cite{Li2025OrientedKD}; \cite{Xu2023VILLS}) son limitaciones claras.
+
+Otros métodos aprovechan modelos geométricos, esqueletos y grafos, donde métodos como SM-SGE (\cite{Han2021SMSGE}) y CAGES (\cite{Han2021LocalitySGE}) aplican tareas de reconstrucción \textit{multi-scale} y pérdidas contrastivas con conciencia de localidad para conservar relaciones intra-secuencia y estructura corporal. Estos enfoques son particularmente prometedores para \textit{Gait Recognition}, ya que explotan explícitamente la dinámica corporal, pero su desempeño queda restringido por la calidad y disponibilidad de esqueletos 3D y por el tamaño reducido de \textit{datasets} disponibles.
+
+\section{Aprendizaje supervisado}
+
+Los trabajos supervisados mantienen una línea de referencia para medir el rendimiento, enfoques basados en metric learning (triplet y variantes con soft-labels) se mantienen como estándar para optimizar la separación identidad-interna y la discriminación entre clases cercanas, aunque sufren cuando las etiquetas son escasas o ruidosas y no generalizan bien entre escenas muy distintas (\cite{Lin2020Softened}; \cite{Guo2023TripletContrastive}). Estudios sobre pérdidas tipo triplet y sus variantes muestran robustez en benchmarks clásicos, pero exigen anotaciones costosas y estrategias de muestreo cuidadosas. 
+
+Por otro lado, los CNNs tradicionales resultan competitivos en\textit{gait recognition} cuando se diseñan para separar identidad y covariables, pero la adopción creciente de Transformers y ViT-based supervised models (\cite{Huang2025PersonViT}; \cite{He2025TransReID}) evidencia una tendencia hacia \textit{backbones} que capturan relaciones a larga distancia y tokens; estos modelos tienden a obtener mejoras en escenarios donde hay suficiente data anotada.
+
+Finalmente, los métodos \textit{part-aware} (\cite{Yang2020DevilDetails}) y basados en atención proveen discriminación a nivel de región, especialmente útil en \textit{gait recognition} si se busca resaltar los segmentos corporales por separado. No obstante, su dependencia en buenas detecciones y segmentaciones, y la posible saturación en datasets implican que las ganancias pueden ser modestas en escenarios reales.
+
+\section{Aprendizaje no supervisado}
+
+Dentro de los trabajos basados en aprendizaje no supervisado, Softened Similarity Learning (\cite{Lin2020Softened}) propone eliminar el clustering y suavizar etiquetas mediante distribuciones sobre imágenes similares, lo que amortigua errores de cuantización pero sigue siendo sensible a la medida de similitud y a hiperparámetros, demostrando que es posible aprender descriptores razonables sin anotaciones, aunque la estabilidad y la precisión final suelen estar por debajo de otros enfoques.
+
+En contraste, hay métodos que explotan información temporal (tracklets) y asociación cíclica para aprender sin etiquetas (tracklet-based (\cite{Wu2020Tracklet}), los cuales reducen la dependencia de clustering y focalizan la señal de aprendizaje en la consistencia temporal, pero requieren datos con solapamiento temporal y sufren cuando la detección o el tracking son ruidosos. 
+
+Adicionalmente, estrategias de synthetic-to-real (\cite{Zhang2024SyntheticReID}) aparece como una alternativa para superar la escasez de anotaciones, ya que la generación sintética permite controlar variaciones (vistas, ropa, oclusión); pero la adaptación al dominio real añade complejidad y la calidad de generación determina el éxito final.
+
+\section{Aprendizajes híbridos}
+
+Los métodos híbridos nos presentan una serie de nuevos enfoques como pre-entrenamiento SSL seguido de fine-tuning supervisado (\cite{Dou2023IdentitySeeking}; \cite{Huang2025PersonViT}), distillation orientada a Re-ID (\cite{Li2025OrientedKD}) y frameworks multi-escena (\cite{Liu2025UCMVeID}; \cite{Rao2024MSFFT}). Estos métodos permiten máximizar la generalización; por ejemplo, frameworks como VersReID (\cite{Zhou2024VersReID}) emplean pre-entrenamiento autosupervisado y destilan conocimiento multi-escena para obtener un modelo único robusto frente a variaciones de escenario, mostrando que combinar etapas es una de las rutas más prácticas para obtener ventajas que otorga SSL a tareas concretas de Re-ID.
+
+Los métodos de distillation orientada o los que combinan reconstrucción más alineación, ofrecen mejoras frente a baja resolución y oclusiones simuladas, pero añaden hiperparámetros y aumentan el coste de entrenamiento. En el extremo, los métodos de asociación cíclica (CycAs - \cite{Gao2025CycAs}) proponen pretextos alineados, evitando pseudo-etiquetas y mostrando que diseñar tareas pretexto coherentes con la métrica final (re-identificación) puede ser más efectivo que adaptaciones genéricas de SSL.
+
+\section{Síntesis crítica: oportunidades}
+
+Podemos concluir que, a lo largo de la revisión del estado del arte se han observado varias brechas que un modelo híbrido puede aprovechar. En primer lugar, la mayoría de SSL en Re-ID ha sido diseñado para imágenes de apariencia (LUPerson, PASS, PersonViT) y no para secuencias de marcha; por lo tanto, se presenta una oportunidad para diseñar pretext-tasks que respeten la dinámica temporal y la información estructural de la marcha. En segundo lugar, los frameworks prometedores basados en skeleton/GNN (SM-SGE, CAGES) están restringidos por la escala y calidad de datasets 3D disponibles (KS20, KGBD), lo que dificulta pre-entrenamientos robustos y generalizables. En este sentido, estimar esqueletos desde RGB (CASIA-B) puede ayudar, pero introduce ruido que degrada el aprendizaje. En tercer lugar, los métodos basados en enmascaramiento y transformers (PersonViT, PASS) requieren recursos de cómputo elevados. \\
+Finalmente, destacamos una oportunidad metodológica concreta; los enfoques híbridos basados en SSL con fine-tuning supervisado y las tareas pretexto alineadas con la métrica final nos ofrecen la mejor relación entre escalabilidad, efectividad y rendimiento. Por lo tanto, un modelo de este estilo representa una alternativa equilibrada, aprovechando la estructura temporal de las secuencias, mitigando el ruido de los esqueletos y evitando la alta demanda computacional.
+
+\section{Tabla de resumen}
+\begin{table}[H]
+    \centering
+    \caption{Resumen taxonómico}
+    \small
+    \begin{tabular}{p{2.8cm} p{5.2cm} p{5.2cm}}
+    \hline
+    \textbf{Tipo de aprendizaje} & \textbf{Metodología} & \textbf{Paper representativo} \\ \hline\hline
+
+    Self-supervised
+    & Contrastive SSL (pares frame / tracklet / contrastive schemes) 
+    & \cite{Zheng2022PASS}; \cite{Dou2023IdentitySeeking} \\
+    \hline
+
+    \textit{Self-supervised}
+    & Masked reconstruction / Masked Sequence Modeling (MIM) 
+    & \cite{Han2021LocalitySGE}; \cite{Wang2025GaitForeMer} \\
+    \hline
+
+    \textit{Self-supervised}
+    & Skeleton y Graph-based SSL (reconstrucción multi-scale, contrastive)
+    & \cite{Han2021SMSGE}; \cite{Han2021LocalitySGE} \\
+    \hline
+
+    \textit{Self-supervised}
+    & Large-scale unlabeled pre-training
+    & \cite{Zheng2022GaitLU1M}; \cite{Xu2023VILLS} \\
+    \hline
+
+    \textit{Supervised}
+    & Metric learning (Triplet y variantes / soft-labels) 
+    & \cite{Lin2020Softened}; \cite{Guo2023TripletContrastive} \\
+    \hline
+
+    \textit{Supervised}
+    & Transformer-based supervised models (ViT para Re-ID) 
+    & \cite{Huang2025PersonViT} \\
+    \hline
+
+    \textit{Unsupervised}
+    & Clustering-based unsupervised / Tracklet-based association 
+    & \cite{Wu2020Tracklet}; \cite{Lin2020Softened} \\
+    \hline
+
+    \textit{Semi-Supervised / Domain adaptation}
+    & Synthetic-to-real
+    & \cite{Zhang2024SyntheticReID} \\
+    \hline
+
+    \textit{Hybrid}
+    & Modelos híbridos: SSL y Fine-tuning / Distillation / Multi-scene
+    & \cite{Dou2023IdentitySeeking}; \cite{Li2025OrientedKD}; \cite{Zhou2024VersReID} \\
+    \hline
+    \end{tabular}
+    \label{tab:taxonomy_summary}
+\end{table}

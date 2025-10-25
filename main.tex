@@ -1,0 +1,102 @@
+%% --------------------------------------------------------------------
+%% Template UTEC Tesis
+%% --------------------------------------------------------------------
+
+% Este template ha sido modificado y actualizado por Eduardo Castro y Roosevelt Ubaldo en base a lo trabajado por Víctor Murray, Oscar Ramos y Juan Carlos Barbaran.
+% Última actualización: Mayo, 2022
+
+\documentclass[a4paper,12pt,oneside]{tesisutec}
+
+\selectlanguage{spanish}
+
+%% Paquetes
+\usepackage[utf8]{inputenc}
+\usepackage[round,authoryear]{natbib}
+% Libreria de idioma
+\usepackage[spanish]{babel}
+% Libreria para posicionamiento
+\usepackage{float}
+% Librerias para insertar codigos
+\usepackage[spanish,onelanguage,ruled,vlined]{algorithm2e}
+\usepackage{verbatim} 
+% Librería para hipervínculos
+\usepackage{hyperref}
+ % Librería necesaria para arreglar el orden de referencias en overleaf.com
+\usepackage{notoccite}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes, arrows.meta}
+% Incluir acá los paquetes adicionales que deseas. 
+\usepackage{comment}
+% Ubicación de los imágenes.
+\graphicspath{images/}
+
+\makeatletter
+% Reinsert missing \algbackskip
+\def\algbackskip{\hskip-\ALG@thistlm}
+\makeatother
+
+\hypersetup{urlcolor=blue, colorlinks=true}
+
+% ------------------------------
+
+\begin{document}
+
+\frontmatter
+
+\department{CIENCIA DE LA COMPUTACIÓN}
+\degree{... }
+\major{...}
+
+\title{UN ENFOQUE HÍBRIDO: GAIT-BASED PERSON RE-ID}
+
+\author{
+  CANTO VIDAL, HAROLD ALEXIS VICTOR \orcid{0000-0000-0000-0000} \\
+  TORRES FARFÁN, JUAN MANUEL  \orcid{1111-1111-1111-1111}
+}
+
+\supervisor{CAYLLAHUA CAHUINA, EDWARD JORGE YURI \orcid{0000-0000-0000-0000}} % Es obligatorio agregar ORCID del asesor
+
+\date{2025}
+
+\maketitle
+
+\setstretch{1.5}
+
+\input{encabezados/dedicatoria}
+\input{encabezados/agradecimientos}
+
+\tableofcontents
+
+\newpage
+
+\listoftables
+
+\newpage
+
+\listoffigures
+
+\addtocontents{toc}{\vspace{1.5em}}
+
+%% ============================================================================
+\mainmatter
+\pagestyle{fancy}
+
+\input{secciones/resumen}
+\input{secciones/abstract} 
+\input{secciones/capitulo1}
+\input{secciones/capitulo2}
+\input{secciones/capitulo3}
+% \input{secciones/capitulo4}
+% \input{secciones/conclusiones}
+\input{secciones/recomendaciones} % sección opcional
+
+%% ============================================================================
+\renewcommand{\bibname}{\hfill\Large\bf{REFERENCIAS BIBLIOGRÁFICAS}\hfill}
+
+\bibliographystyle{apalike}
+
+\bibliography{referencias} % Recibe las referencias de IEEE
+
+% \input{secciones/anexos}
+
+\end{document}

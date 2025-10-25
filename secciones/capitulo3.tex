@@ -1,0 +1,108 @@
+\chapter{ MARCO TEÓRICO}
+\section{Fundamentos de la Reidentificación de Personas}
+
+La re-identificación de personas es una tarea de visión por computador orientada a reconocer a un mismo individuo a través de diferentes cámaras, momentos o entornos, sin depender de información biométrica explícita. Este proceso resulta fundamental en aplicaciones de videovigilancia, control de acceso y análisis de comportamiento, donde es necesario mantener la continuidad de identidad pese a los cambios de perspectiva o condiciones visuales.
+
+Tradicionalmente, los sistemas de \textit{Re-ID} se han basado en el aprendizaje supervisado, en el cual cada individuo del conjunto de entrenamiento se asocia con una etiqueta de identidad. Este enfoque ha permitido avances significativos, pero presenta limitaciones importantes: requiere grandes volúmenes de datos anotados manualmente y muestra una reducida capacidad de generalización cuando se enfrenta a escenarios no vistos durante el entrenamiento. En entornos reales, donde las condiciones de captura son diversas y las identidades no están etiquetadas, estas limitaciones afectan directamente su rendimiento y aplicabilidad.
+
+Ante ello, ha cobrado relevancia el aprendizaje auto-supervisado, que busca aprovechar la estructura interna de los datos para generar representaciones discriminativas sin recurrir a etiquetas. En la reidentificación, este paradigma permite extraer características más invariantes frente a cambios de cámara, iluminación o pose. Sin embargo, aunque mejora la adaptabilidad del modelo, suele carecer de la precisión discriminativa que caracteriza a los métodos supervisados.
+
+Por tanto, la integración de ambos paradigmas surge como una alternativa sólida para mejorar tanto la robustez como la generalización de los modelos de \textit{Re-ID}. Este marco conceptual da sustento al objetivo general de la presente investigación, orientado al desarrollo y evaluación de un modelo híbrido capaz de combinar la precisión del aprendizaje supervisado con la capacidad de adaptación del aprendizaje auto-supervisado.
+
+\subsection{Definición y contexto}
+
+La re-identificación de personas se enmarca dentro del campo del análisis de video basado en visión artificial. Su propósito es establecer correspondencias entre imágenes o secuencias que pertenecen a la misma persona, capturadas por diferentes cámaras o en distintos momentos. A diferencia del reconocimiento facial o de huellas, la Re-ID trabaja con características globales del cuerpo, patrones de vestimenta, postura y movimiento, lo que la hace aplicable incluso cuando el rostro no es visible.
+
+El proceso general implica tres etapas: detección del individuo en las imágenes, extracción de características representativas y comparación mediante una métrica de similitud. La calidad del descriptor aprendido —es decir, la representación del individuo en un espacio de características— es determinante para garantizar una identificación consistente y robusta ante las variaciones visuales.
+
+\subsection{Desafíos y variabilidad intra/inter-clase}
+
+Uno de los principales retos de la reidentificación de personas radica en la gran variabilidad visual entre capturas. La variabilidad \textit{intra-clase} se refiere a los cambios en la apariencia del mismo individuo debido a factores como el ángulo de visión, la iluminación, la pose corporal o el tipo de ropa. Por su parte, la variabilidad \textit{inter-clase} alude a las similitudes entre diferentes personas, especialmente cuando comparten vestimenta o contextura física.
+
+Estas fuentes de variación complican el aprendizaje de representaciones verdaderamente invariantes y discriminativas. Los modelos deben ser capaces de mantener la identidad ante transformaciones significativas y, al mismo tiempo, distinguir entre sujetos visualmente parecidos. Superar este equilibrio constituye uno de los ejes centrales en la investigación de modelos híbridos, los cuales buscan fortalecer tanto la discriminación supervisada como la generalización auto-supervisada.
+
+\section{Reconocimiento de Marcha}
+
+El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas, como el reconocimiento facial o de huellas, radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada.
+
+\subsection{Modalidades y representaciones}
+
+Los métodos de reconocimiento de marcha pueden agruparse según la naturaleza de la información utilizada para describir el movimiento.  
+Las \textbf{modalidades basadas en apariencia} emplean secuencias de imágenes o siluetas binarias que capturan la forma y textura del cuerpo durante el ciclo de caminata. Estas técnicas buscan patrones visuales discriminativos mediante modelos que analizan la evolución espacial de la silueta. Aunque son efectivas en escenarios controlados, suelen ser sensibles a factores externos como el cambio de ropa, el fondo o las condiciones de iluminación.
+
+Por otro lado, las \textbf{modalidades basadas en pose} utilizan representaciones esqueléticas derivadas de la estimación de articulaciones corporales. Este enfoque abstrae la información visual y se centra en la dinámica de movimiento, ofreciendo mayor invariancia ante el entorno y la apariencia. En estas representaciones, el cuerpo humano se modela como un grafo cuyas conexiones reflejan las relaciones espaciales y temporales entre articulaciones, lo que facilita la integración con arquitecturas basadas en grafos o secuencias temporales.
+
+En ambos casos, el objetivo central es aprender una representación robusta del patrón de marcha, capaz de preservar la identidad del sujeto y resistir la variabilidad en las condiciones de captura. Los enfoques modernos emplean redes profundas —ya sean convolucionales o basadas en transformadores— que extraen características espaciales y temporales de manera conjunta, superando las limitaciones de los descriptores manuales tradicionales.
+
+\subsection{Desafíos y aplicaciones}
+
+A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos.
+
+Para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
+
+En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas auxiliares como la predicción temporal, la reconstrucción o el enmascaramiento de secuencias. Combinadas con la precisión de los métodos supervisados, estas técnicas favorecen el desarrollo de modelos híbridos más adaptables y escalables, alineados con el propósito de esta investigación.
+
+
+
+\section{Paradigmas de Aprendizaje en Re-Identification}
+
+Los avances en reidentificación de personas se deben, en gran medida, a la evolución de los paradigmas de aprendizaje automático aplicados a la visión por computador. Cada paradigma ofrece un enfoque distinto para la adquisición de conocimiento a partir de los datos, lo cual influye directamente en la capacidad del modelo para generalizar, adaptarse y discriminar identidades. A continuación, se describen los principales enfoques: supervisado, no supervisado y auto-supervisado.
+
+\subsection{Aprendizaje Supervisado}
+
+El aprendizaje supervisado se basa en el uso de conjuntos de datos anotados, donde cada muestra está asociada a una etiqueta que representa la identidad de la persona. El objetivo del modelo es aprender una función de correspondencia entre las imágenes y sus etiquetas, de manera que pueda clasificar correctamente a nuevos individuos del mismo dominio de entrenamiento.
+
+En reidentificación, este paradigma ha sido ampliamente utilizado gracias a su alta precisión y estabilidad durante la fase de entrenamiento. Modelos basados en redes convolucionales (\textit{CNNs}) y transformadores visuales (\textit{Vision Transformers}) han mostrado gran capacidad para aprender representaciones discriminativas, especialmente cuando se emplean estrategias de pérdida como \textit{Triplet Loss} o \textit{Cross-Entropy Loss}.
+
+Sin embargo, su dependencia de etiquetas exhaustivas limita su aplicabilidad a escenarios reales. La recolección y anotación de grandes volúmenes de datos es costosa y poco escalable, además de generar modelos fuertemente dependientes del dominio, cuya efectividad disminuye ante condiciones no vistas. Estas limitaciones han impulsado la búsqueda de métodos que reduzcan la dependencia de la supervisión manual.
+
+\subsection{Aprendizaje No Supervisado}
+
+En contraste, el aprendizaje no supervisado prescinde totalmente de etiquetas, centrándose en descubrir patrones o estructuras inherentes a los datos. En reidentificación, estos métodos buscan agrupar instancias visualmente similares y construir representaciones que reflejen relaciones de similitud sin información explícita de identidad.
+
+Las técnicas más comunes incluyen la agrupación iterativa (\textit{clustering}) combinada con aprendizaje de características, el uso de autoencoders y la asignación pseudoetiquetada basada en distancias métricas. Si bien estas estrategias eliminan el costo de la anotación, su rendimiento suele ser inferior al supervisado, ya que la ausencia de señales de identidad precisas dificulta la optimización directa de la discriminación entre individuos.
+
+No obstante, el aprendizaje no supervisado ha sentado las bases para paradigmas más avanzados, al demostrar que es posible aprender representaciones útiles sin depender de etiquetas, aprovechando únicamente la estructura estadística de los datos.
+
+\subsection{Aprendizaje Auto-supervisado (Self-Supervised Learning)}
+
+El aprendizaje auto-supervisado (\textit{Self-Supervised Learning}, SSL) surge como una alternativa intermedia entre los enfoques supervisado y no supervisado. En lugar de requerir etiquetas externas, el SSL genera sus propias tareas de supervisión a partir de la información interna de los datos, denominadas \textit{pretext tasks}. Estas tareas permiten al modelo aprender representaciones semánticamente ricas que pueden transferirse posteriormente a tareas específicas, como la reidentificación de personas.
+
+En el contexto de Re-ID, el aprendizaje auto-supervisado permite capturar invariancias espaciales y temporales sin anotaciones manuales, lo que lo convierte en una herramienta clave para entrenar modelos en entornos con escasez de etiquetas o alta variabilidad visual.
+
+\subsubsection{Contrastive Learning}
+
+El aprendizaje contrastivo busca que las representaciones de una misma identidad (vistas positivas) sean similares, mientras que las de identidades diferentes (vistas negativas) se mantengan separadas en el espacio de características. Para ello, se generan distintas vistas de una misma imagen mediante transformaciones de datos, y el modelo aprende a maximizar la similitud entre ellas.  
+En Re-ID, este principio se adapta al aprendizaje de descriptores robustos frente a cambios de cámara, pose o iluminación, logrando resultados competitivos incluso sin etiquetas.
+
+\subsubsection{Masked Image / Sequence Modeling}
+
+El modelado enmascarado (\textit{Masked Image Modeling}, MIM) y su equivalente temporal (\textit{Masked Sequence Modeling}) se inspiran en el aprendizaje predictivo. Estos métodos consisten en ocultar parcialmente regiones de una imagen o pasos de una secuencia y entrenar al modelo para reconstruir las partes faltantes.  
+En reconocimiento de marcha, esta estrategia permite que el modelo capture relaciones espaciales y temporales implícitas en la secuencia de movimiento, reforzando su capacidad para comprender la estructura dinámica del cuerpo humano.
+
+\subsubsection{Predicción temporal y reconstrucción}
+
+Otra familia de métodos auto-supervisados se centra en la predicción de estados futuros o la reconstrucción de secuencias temporales. En este caso, el modelo aprende a anticipar la evolución del movimiento humano, comprendiendo la coherencia temporal entre fotogramas.  
+Estas tareas de predicción fomentan la adquisición de representaciones invariantes al tiempo y útiles para distinguir patrones de marcha, aspecto fundamental en la reidentificación basada en secuencias.
+
+\subsubsection{Skeleton y Graph-based SSL}
+
+En los enfoques basados en esqueleto, el cuerpo humano se modela como un conjunto de articulaciones interconectadas, lo que permite representar el movimiento mediante grafos dinámicos. El aprendizaje auto-supervisado en este contexto se apoya en tareas como la predicción de trayectorias articulares, la reconstrucción de grafos incompletos o la detección de inconsistencias estructurales.  
+Estas técnicas explotan la topología corporal y las relaciones espaciales entre articulaciones, resultando especialmente efectivas para el reconocimiento de marcha. Además, su combinación con arquitecturas de grafos (\textit{Graph Neural Networks}, GNNs) ha demostrado mejorar la capacidad del modelo para aprender dependencias espaciales complejas.
+
+
+\section{Modelos y Arquitecturas}
+\subsection{Redes Convolucionales (CNNs)}
+\subsection{Vision Transformers (ViTs)}
+\subsection{Modelos Basados en Esqueletos y Grafos}
+
+\section{Estrategias Complementarias}
+\subsection{Fine-Tuning y Transferencia}
+\subsection{Knowledge Distillation y Aprendizaje Híbrido}
+\subsection{Datasets y Métricas de Evaluación}
+
+\section{Síntesis Conceptual}
+\subsection{Integración de paradigmas}
+\subsection{Oportunidades y fundamentos del enfoque propuesto}
+
+
