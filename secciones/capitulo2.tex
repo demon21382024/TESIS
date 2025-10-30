@@ -154,11 +154,6 @@ Los métodos híbridos nos presentan una serie de nuevos enfoques como pre-entre
 
 Los métodos de distillation orientada o los que combinan reconstrucción más alineación, ofrecen mejoras frente a baja resolución y oclusiones simuladas, pero añaden hiperparámetros y aumentan el coste de entrenamiento. En el extremo, los métodos de asociación cíclica (CycAs - \cite{Gao2025CycAs}) proponen pretextos alineados, evitando pseudo-etiquetas y mostrando que diseñar tareas pretexto coherentes con la métrica final (re-identificación) puede ser más efectivo que adaptaciones genéricas de SSL.
 
-\section{Síntesis crítica: oportunidades}
-
-Podemos concluir que, a lo largo de la revisión del estado del arte se han observado varias brechas que un modelo híbrido puede aprovechar. En primer lugar, la mayoría de SSL en Re-ID ha sido diseñado para imágenes de apariencia (LUPerson, PASS, PersonViT) y no para secuencias de marcha; por lo tanto, se presenta una oportunidad para diseñar pretext-tasks que respeten la dinámica temporal y la información estructural de la marcha. En segundo lugar, los frameworks prometedores basados en skeleton/GNN (SM-SGE, CAGES) están restringidos por la escala y calidad de datasets 3D disponibles (KS20, KGBD), lo que dificulta pre-entrenamientos robustos y generalizables. En este sentido, estimar esqueletos desde RGB (CASIA-B) puede ayudar, pero introduce ruido que degrada el aprendizaje. En tercer lugar, los métodos basados en enmascaramiento y transformers (PersonViT, PASS) requieren recursos de cómputo elevados. \\
-Finalmente, destacamos una oportunidad metodológica concreta; los enfoques híbridos basados en SSL con fine-tuning supervisado y las tareas pretexto alineadas con la métrica final nos ofrecen la mejor relación entre escalabilidad, efectividad y rendimiento. Por lo tanto, un modelo de este estilo representa una alternativa equilibrada, aprovechando la estructura temporal de las secuencias, mitigando el ruido de los esqueletos y evitando la alta demanda computacional.
-
 \section{Tabla de resumen}
 \begin{table}[H]
     \centering
@@ -215,3 +210,8 @@ Finalmente, destacamos una oportunidad metodológica concreta; los enfoques híb
     \end{tabular}
     \label{tab:taxonomy_summary}
 \end{table}
+
+\section{Síntesis crítica: oportunidades}
+
+Podemos concluir que, a lo largo de la revisión del estado del arte se han observado varias brechas que un modelo híbrido puede aprovechar. En primer lugar, la mayoría de SSL en Re-ID ha sido diseñado para imágenes de apariencia (LUPerson, PASS, PersonViT) y no para secuencias de marcha; por lo tanto, se presenta una oportunidad para diseñar pretext-tasks que respeten la dinámica temporal y la información estructural de la marcha. En segundo lugar, los frameworks prometedores basados en skeleton/GNN (SM-SGE, CAGES) están restringidos por la escala y calidad de datasets 3D disponibles (KS20, KGBD), lo que dificulta pre-entrenamientos robustos y generalizables. En este sentido, estimar esqueletos desde RGB (CASIA-B) puede ayudar, pero introduce ruido que degrada el aprendizaje. En tercer lugar, los métodos basados en enmascaramiento y transformers (PersonViT, PASS) requieren recursos de cómputo elevados. \\
+Finalmente, destacamos una oportunidad metodológica concreta; los enfoques híbridos basados en SSL con fine-tuning supervisado y las tareas pretexto alineadas con la métrica final nos ofrecen la mejor relación entre escalabilidad, efectividad y rendimiento. Por lo tanto, un modelo de este estilo representa una alternativa equilibrada, aprovechando la estructura temporal de las secuencias, mitigando el ruido de los esqueletos y evitando la alta demanda computacional.

@@ -1,24 +1,26 @@
 \chapter{MARCO METODOLÓGICO}
 
-\noindent
-\setlength{\parindent}{1.25cm} % Asegura la sangría de 1.25 cm en el primer párrafo del capítulo
-La metodología propuesta se enmarca en el diseño experimental de sistemas de Aprendizaje Profundo (\textit{Deep Learning}) para la biometría, específicamente en la Re-Identificación de Personas (Person Re-ID) basada en la marcha (\textit{Gait Recognition}). Se adopta un **Enfoque Híbrido** que combina el aprendizaje auto-supervisado (SSL) y el aprendizaje supervisado (mediante \textit{Fine-Tuning}) para desarrollar un modelo robusto y generalizable, capaz de superar las limitaciones inherentes a la variabilidad de la apariencia y la escasez de datos etiquetados en escenarios de videovigilancia. \cite{Huang2025PersonViT, Lee2023GaitParse}
+% \noindent
+% \setlength{\parindent}{1.25cm} % Asegura la sangría de 1.25 cm en el primer párrafo del capítulo
 
-Este enfoque metodológico se divide rigurosamente en tres áreas principales: (1) La justificación y el diseño arquitectónico de la Fusión Multi-Modal, (2) El protocolo de pre-procesamiento de datos de marcha, y (3) La estrategia de Entrenamiento Híbrido, culminando en un diseño experimental detallado para la validación y el análisis de ablación.
+La metodología propuesta se enmarca específicamente en la re-identificación de personas basada en la marcha (\textit{Gait Recognition}). Se adoptará un enfoque híbrido que combina el aprendizaje auto-supervisado (SSL) y el aprendizaje supervisado, mediante \textit{Fine-Tuning}, para desarrollar un modelo robusto y generalizable, capaz de superar las limitaciones inherentes a la variabilidad de la apariencia y la escasez de datos etiquetados en escenarios de videovigilancia (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
-\section{Diseño Metodológico Híbrido y Arquitectura de Fusión}
+Este enfoque metodológico se divide rigurosamente en tres áreas principales: La justificación y el diseño arquitectónico de la fusión \textit{Multi-Modal}, el protocolo de pre-procesamiento de datos de marcha, y la estrategia de entrenamiento híbrido; culminando en un diseño experimental detallado para la validación y el análisis de ablación.
 
-La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos profundos (e.g., \textit{Vision Transformers}) requiere un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente. \cite{Huang2025PersonViT, Lee2023GaitParse}
+\section{Diseño híbrido y arquitectura \textit{Multi-Modal}}
 
-\subsection{Justificación del Protocolo de Doble Etapa (SSL y Fine-Tuning)}
+La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos requieren un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente (\cite{Huang2025PersonViT, Lee2023GaitParse}).
+
+\subsection{Justificación (\textit{SSL y Fine-Tuning})}
 
 La adopción de la metodología híbrida se segmenta en dos fases interconectadas para maximizar la robustez y la capacidad discriminativa:
 \begin{enumerate}
-    \item \textbf{Fase I: Pre-entrenamiento Auto-Supervisado (SSL):} Utiliza grandes \textit{datasets} no etiquetados (e.g., OU-MVLP) para forzar al \textit{backbone} a aprender los \textbf{patrones cinemáticos generales} y la estructura del movimiento humano. Este conocimiento transferido confiere una robustez inicial que es resistente a ruido y variaciones de iluminación. \cite{Lee2023GaitParse, Zheng2022PASS}
-    \item \textbf{Fase II: Ajuste Fino (\textit{Fine-Tuning}) Supervisado:} Consiste en especializar los pesos robustos pre-entrenados para la tarea final de \textbf{discriminación de identidad}. Se utiliza un conjunto de datos etiquetado más pequeño (e.g., CASIA-B) para adaptar las representaciones a las etiquetas de identidad, maximizando la precisión de clasificación (Rank-1 y mAP). \cite{Liu2019AttributeIdentity}
+    \item \textbf{Fase I: Pre-entrenamiento Auto-Supervisado (SSL):} Se utiliza los \textit{datasets} no etiquetados para forzar el aprendizaje de los \textbf{patrones generales} y la estructura del movimiento humano. Este conocimiento transferido confiere una robustez inicial que es resistente a ruido y variaciones de iluminación (\cite{Lee2023GaitParse, Zheng2022PASS}).
+    \item \textbf{Fase II: Ajuste Fino (\textit{Fine-Tuning}) Supervisado:} Consiste en especializar los pesos robustos pre-entrenados para la tarea final de discriminación. Se busca utilizar un conjunto de datos etiquetado más pequeño para adaptar las representaciones a las etiquetas de identidad, maximizando la precisión de clasificación bajo Rank-1 y mAP.
 \end{enumerate}
 
-\subsection{Estructura del Modelo de Fusión Multi-Modal}
+\begin{comment}
+\subsection{Estructura del modelo de fusión textit{Multi-Modal} }
 
 El modelo implementa una arquitectura de doble rama y \textbf{Fusión a Nivel de Característica} (\textit{Feature-Level Fusion}) para explotar la complementariedad de las biometrías de apariencia y marcha. \cite{Purish2023GaitRecognition, Rao2024MSFFT}
 
@@ -29,23 +31,24 @@ El modelo implementa una arquitectura de doble rama y \textbf{Fusión a Nivel de
     $$\vec{F} = [\vec{F_a}, \theta \cdot \vec{F_g}]$$
     El hiperparámetro $\theta$ se utiliza para aumentar el peso de la característica de marcha ($\vec{F_g}$), haciendo el sistema más robusto ante la variación de la vestimenta (condición CL), donde la información de apariencia falla. \cite{Zhou2024VersReID, Rao2024MSFFT}
 \end{itemize}
+\end{comment}
 
-\section{Protocolo de Adquisición y Pre-Procesamiento de Datos}
+\section{Adquisición y pre-procesamiento de datos}
 
 \subsection{Selección y Uso de Bases de Datos Benchmark}
 
-Se utilizarán las siguientes bases de datos por su relevancia en la literatura y su cobertura de las covariantes clave:
+Se proponen las siguientes bases de datos por su relevancia en la literatura revisada y su cobertura de las variantes clave:
 
 \begin{table}[h]
     \centering
     \caption{Selección de Bases de Datos y Uso Metodológico}
     \label{tab:datasets}
-    \begin{tabular}{l|c|l}
+    \begin{tabular}{l|p{3.5cm}|p{5cm}}
         \toprule
         \textbf{Dataset} & \textbf{Propósito Metodológico} & \textbf{Covariantes Clave} \\
         \midrule
-        OU-MVLP ($>10,000$ IDs) & Fase I: Pre-entrenamiento Auto-Supervisado (SSL) \cite{Huang2025PersonViT} & Multi-View  \\
-        CASIA-B (124 IDs) & Fase II: Ajuste Fino Supervisado y Evaluación Final \cite{Li2020SemiSupGait} & Ropa (CL), Carga (BG), Multi-View  \\
+        OU-MVLP ($>10,000$ IDs) & Fase I: Pre-entrenamiento Auto-Supervisado (SSL) \cite{Huang2025PersonViT} & Multi-View \\
+        CASIA-B (124 IDs) & Fase II: Ajuste Fino Supervisado y Evaluación Final \cite{Li2020SemiSupGait} & Ropa (CL), Carga (BG), Multi-View \\
         TUM-GAID & Validación complementaria de generalización \cite{Purish2023GaitRecognition} & Dirección de Caminata \cite{Han2021LocalitySGE} \\
         \bottomrule
     \end{tabular}
@@ -55,48 +58,50 @@ Se utilizarán las siguientes bases de datos por su relevancia en la literatura 
 
 El pre-procesamiento es un paso crítico para garantizar que las entradas del modelo estén normalizadas y aisladas del ruido de fondo:
 \begin{enumerate}
-    \item \textbf{Segmentación Humana:} Extracción de siluetas binarias ($\mathcal{B}(x, y, t)$) para aislar la figura del individuo en movimiento de cada cuadro. \cite{Zhang2024LowResolution}
-    \item \textbf{Normalización Espacial:} Las siluetas se reescalarán a una dimensión fija (e.g., $120 \times 120$ px) y se centrarán para estandarizar la entrada, mitigando variaciones de distancia. \cite{Lee2023GaitParse}
-    \item \textbf{Normalización Temporal:} Se ajustarán las secuencias de video para que representen un ciclo de marcha completo con una longitud temporal fija $N$, minimizando el impacto de las variaciones de velocidad de caminata. \cite{Kovacevic2021SelfAttentionGait}
+    \item \textbf{Segmentación Humana:} Extracción de siluetas binarias para aislar la figura del individuo en movimiento de cada cuadro (\cite{Zhang2024LowResolution}).
+    \item \textbf{Normalización Espacial:} Las siluetas se reescalarán a una dimensión fija y se contran para estandarizar la entrada, mitigando variaciones de distancia \cite{Lee2023GaitParse}.
+    \item \textbf{Normalización Temporal:} Se ajustarán las secuencias de video para que representen un ciclo de marcha completo con una longitud temporal fija $N$, minimizando el impacto de las variaciones de velocidad de caminata (\cite{Kovacevic2021SelfAttentionGait}).
 \end{enumerate}
 
 \subsection{Generación del Gait Energy Image (GEI)}
 
-Para la Rama de Marcha, se generará el \textit{Gait Energy Image} (GEI). El GEI es una representación 2D que condensa la información dinámica de un ciclo de marcha 3D en una única imagen estática, resultando en una reducción significativa de los requisitos de almacenamiento y procesamiento, manteniendo la invarianza a la fase. \cite{Kovacevic2021SelfAttentionGait}
+Para la evaluación de marcha, se generará el \textit{Gait Energy Image} (GEI). El GEI es una representación 2D que condensa la información dinámica de un ciclo de marcha 3D en una única imagen estática, resultando en una reducción significativa de los requisitos de almacenamiento y procesamiento, manteniendo la invarianza a la fase (\cite{Kovacevic2021SelfAttentionGait}).
 
-El GEI $G(x, y)$ se calculará como la media de las siluetas binarias normalizadas $\mathcal{B}(x, y, t)$ a lo largo de un ciclo de $N$ cuadros:
+El GEI ($G(x, y)$) se calculá como la media de las siluetas binarias normalizadas ($\mathcal{B}(x, y, t)$) a lo largo de un ciclo de $N$ cuadros:
 
 \begin{equation}
     G(x, y) = \frac{1}{N} \sum_{t=1}^{N} \mathcal{B}(x, y, t)
 \end{equation}
 
-\section{Protocolo de Entrenamiento y Evaluación Experimental}
+\section{Entrenamiento y evaluación experimental}
 
-\subsection{Protocolo de Entrenamiento Híbrido (Dual-Stage)}
+\subsection{Protocolo de entrenamiento híbrido}
 
-\subsubsection{Fase I: Pre-entrenamiento Auto-Supervisado}
-El \textit{backbone} de marcha será pre-entrenado en el *dataset* OU-MVLP utilizando un \textit{framework} SSL como DINO o MAE, adaptado para secuencias de marcha. El objetivo es que el modelo aprenda representaciones cinemáticas sin depender de etiquetas. \cite{Huang2025PersonViT, Zheng2022PASS}
+\subsubsection{Fase I: Pre-entrenamiento auto-supervisado}
+El \textit{backbone} de marcha será pre-entrenado en el dataset utilizando un \textit{framework} autosupervisado, adaptado para secuencias de marcha. El objetivo es que el modelo aprenda representaciones cinemáticas sin depender de etiquetas en primera instancia \cite{Huang2025PersonViT, Zheng2022PASS}.
 
-\subsubsection{Fase II: Ajuste Fino (\textit{Fine-Tuning}) Supervisado}
-Se procederá al **Ajuste Fino Supervisado** del modelo híbrido completo sobre los datos etiquetados de CASIA-B.
-
-\begin{itemize}
-    \item \textbf{Ajuste Fino Diferencial:} Para optimizar la transferencia de conocimiento, se implementará un protocolo de **tasa de aprendizaje diferencial**. Las capas pre-entrenadas del \textit{backbone} de marcha utilizarán una tasa de aprendizaje baja para preservar la robustez adquirida en SSL, mientras que las capas de clasificación y métrica de salida se entrenarán con una tasa más alta, promoviendo la especialización en la discriminación de identidad. \cite{Zheng2022PASS}
-    \item \textbf{Funciones de Pérdida:} Se utilizará una función de pérdida combinada de \textit{Identity Loss} (\textit{Cross-Entropy}) y \textit{Metric Loss} (\textit{Triplet Loss} o \textit{Contrastive Loss}) para asegurar una maximización tanto de la clasificación de identidad como de la separación métrica de las incrustaciones (\textit{embeddings}) en el espacio de características. \cite{Purish2023GaitRecognition}
-\end{itemize}
-
-\subsection{Diseño Experimental y Métricas de Evaluación}
+\subsubsection{Fase II: Ajuste fino (\textit{Fine-Tuning}) supervisado}
+Posteiormente se realiza el ajuste fino supervisado del modelo híbrido completo sobre los datos etiquetados de CASIA-B.
 
 \begin{itemize}
-    \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata Normal (NM), con Bolsa (BG), y el desafío principal, con Ropa Cambiada (CL), todas en régimen de vista cruzada (\textit{cross-view}). \cite{Li2020SemiSupGait}
-    \item \textbf{Control de Generalización:} Se utilizará un **Conjunto de Desarrollo (\textit{Dev Set})** extraído de la distribución de los 50 IDs de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo. \cite{Huang2025PersonViT, Zhang2024LowResolution}
+    \item \textbf{Ajuste Fino Diferencial:} Para optimizar la transferencia de conocimiento, se implementará un protocolo de tasa de aprendizaje diferencial. Las capas pre-entrenadas del \textit{backbone} de marcha utilizarán una tasa de aprendizaje baja para preservar la robustez adquirida en SSL, mientras que las capas de clasificación y métrica de salida se entrenarán con una tasa más alta, promoviendo la especialización en la discriminación de identidad (\cite{Zheng2022PASS}).
+    \item \textbf{Funciones de Pérdida:} Se utilizará una función de pérdida combinada de \textit{Identity Loss} (\textit{Cross-Entropy}) y \textit{Metric Loss} (\textit{Triplet Loss}) para asegurar una maximización tanto de la clasificación de identidad como de la separación métrica de las incrustaciones (\textit{embeddings}) en el espacio de características (\cite{Purish2023GaitRecognition}).
 \end{itemize}
+
+\subsection{Diseño experimental y métricas de evaluación}
 
 \begin{itemize}
-    \item \textbf{Rank-1 Accuracy:} Mide la tasa de acierto en la cual la identidad correcta es clasificada como la primera coincidencia (Top-1). \cite{Asperti2024ReviewReID}
-    \item \textbf{mAP (\textit{Mean Average Precision}):} Evalúa el rendimiento holístico del sistema de recuperación en el conjunto de la Galería, reflejando la calidad general de los resultados. \cite{Asperti2024ReviewReID}
+    \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata normal y con Ropa cambiada, todas en régimen de vista cruzada (\textit{cross-view}) (\cite{Li2020SemiSupGait}).
+    \item \textbf{Control de Generalización:} Se utilizará un conjunto de desarrollo extraído de la distribución de los \textit{IDs} de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo (\cite{Huang2025PersonViT, Zhang2024LowResolution}).
 \end{itemize}
 
+Además, se propone el uso de las siguientes métricas para poder cuantificar la eficiencia del modelo híbrido.
+\begin{itemize}
+    \item \textbf{Rank-1 Accuracy:} Mide la tasa de acierto en la cual la identidad correcta es clasificada como la primera coincidencia (Top-1) (\cite{Asperti2024ReviewReID})
+    \item \textbf{mAP (\textit{Mean Average Precision}):} Evalúa el rendimiento del sistema de recuperación en el conjunto de la Galería, reflejando la calidad general de los resultados (\cite{Asperti2024ReviewReID}).
+\end{itemize}
+
+\begin{comment}
 \subsection{Análisis de Ablación Propuesto}
 Para validar las decisiones metodológicas, se realizará un análisis de ablación sistemático:
 \begin{enumerate}
@@ -104,3 +109,4 @@ Para validar las decisiones metodológicas, se realizará un análisis de ablaci
     \item \textbf{Ablación II: Impacto del SSL} (Comparación \textbf{SSL + Fine-Tuning} vs. Supervisado desde cero).
     \item \textbf{Ablación III: Optimización de Ponderación $\theta$} (Determinación del valor óptimo de $\theta$ para la robustez en la condición CL).
 \end{enumerate}
+\end{comment}

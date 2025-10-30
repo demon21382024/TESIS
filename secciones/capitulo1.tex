@@ -29,13 +29,13 @@ Desarrollar y evaluar un modelo híbrido que combine el aprendizaje supervisado 
 \begin{enumerate}
     \item Analizar el estado del arte de los métodos supervisados, autosupervisados y combinados aplicados al \textit{Person Re-ID} mediante \textit{Gait recognition}, identificando sus principales limitaciones y tendencias recientes.
     \item Diseñar una arquitectura híbrida que integre un módulo de pre-entrenamiento autosupervisado con una etapa de ajuste fino supervisado, buscando un equilibrio entre generalización y precisión.
-    \item Implementar el modelo propuesto utilizando un conjunto de datos no etiquetado de gran escala para el pre-entrenamiento y datasets etiquetados estándar (CASIA-B, OUMVLP, Gait3D) para el entrenamiento supervisado.
+    \item Implementar el modelo propuesto utilizando un conjunto de datos no etiquetado de gran escala para el pre-entrenamiento y datasets etiquetados estándar para el entrenamiento supervisado.
     \item Evaluar el desempeño, bajo métricas de precisión, del enfoque híbrido frente a métodos puramente supervisados y puramente autosupervisados.
 \end{enumerate}
 
 \section{Justificación}
 
-La presente investigación se justifica desde tres perspectivas complementarias: metodológica, práctica y social. Desde el punto de vista metodológico, este trabajo busca superar las limitaciones de los enfoques híbridos actuales en el reconocimiento de marcha. Aunque existen propuestas que combinan el aprendizaje supervisado y el autosupervisado \citep{Li2020SemiSupGait}, la mayoría lo hace de manera secuencial, sin lograr una integración efectiva entre ambos paradigmas. En este contexto, la investigación propone un marco unificado que permita la interacción sinérgica entre las dos estrategias de aprendizaje, contribuyendo así al desarrollo de modelos más equilibrados entre precisión y capacidad de generalización.
+Este trabajo busca superar las limitaciones de los enfoques híbridos actuales en el reconocimiento de marcha. Aunque existen propuestas que combinan el aprendizaje supervisado y autosupervisado \citep{Li2020SemiSupGait}, la mayoría lo hace de manera secuencial, sin lograr una integración efectiva entre ambos paradigmas. En este contexto, la investigación propone un marco unificado que permita la interacción sinérgica entre las dos estrategias de aprendizaje, contribuyendo así al desarrollo de modelos más equilibrados entre precisión y capacidad de generalización.
 
 En el plano práctico, esta propuesta tiene un impacto tangible al reducir la dependencia de grandes volúmenes de datos etiquetados, lo que disminuye los costos y la complejidad asociados a la implementación de sistemas de re-identificación a gran escala. Un modelo más generalizable, como los explorados en trabajos recientes \citep{Dou2023IdentitySeeking}, facilitaría la transición de los sistemas actuales desde entornos controlados de laboratorio hacia aplicaciones reales, aumentando su robustez y confiabilidad.
 
