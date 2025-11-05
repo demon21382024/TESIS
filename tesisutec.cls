@@ -310,7 +310,7 @@
       \vspace{0.5cm}
 %      {\large \textbf{Código \studentid} \par}
       \vspace{0.5cm}
-      {\large \bf ASESOR(ES) \par}
+      {\large \bf ASESOR\par}
       \smallskip
       {\large \supname \par}
       \vfill

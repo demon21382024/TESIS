@@ -11,13 +11,60 @@ Este enfoque metodológico se divide rigurosamente en tres áreas principales: L
 
 La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos requieren un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
-\subsection{Justificación (\textit{SSL y Fine-Tuning})}
 
-La adopción de la metodología híbrida se segmenta en dos fases interconectadas para maximizar la robustez y la capacidad discriminativa:
-\begin{enumerate}
-    \item \textbf{Fase I: Pre-entrenamiento Auto-Supervisado (SSL):} Se utiliza los \textit{datasets} no etiquetados para forzar el aprendizaje de los \textbf{patrones generales} y la estructura del movimiento humano. Este conocimiento transferido confiere una robustez inicial que es resistente a ruido y variaciones de iluminación (\cite{Lee2023GaitParse, Zheng2022PASS}).
-    \item \textbf{Fase II: Ajuste Fino (\textit{Fine-Tuning}) Supervisado:} Consiste en especializar los pesos robustos pre-entrenados para la tarea final de discriminación. Se busca utilizar un conjunto de datos etiquetado más pequeño para adaptar las representaciones a las etiquetas de identidad, maximizando la precisión de clasificación bajo Rank-1 y mAP.
-\end{enumerate}
+\section{Fase I: Fundación del Conocimiento – Preentrenamiento Auto-Supervisado (SSL) a Gran Escala}
+
+La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Supervisado} (\textit{Self-Supervised Learning}, SSL). Este paradigma elimina la dependencia de etiquetas humanas al generar su propia señal de supervisión a partir de la estructura intrínseca de los datos. El propósito de esta fase no es resolver la tarea final, sino construir un \textit{modelo base} (\textit{backbone}) capaz de desarrollar una comprensión profunda y generalizable de las características visuales relevantes.  
+
+El proceso se basa en la formulación de \textit{tareas de supervisión derivadas directamente de los datos}, las cuales, de acuerdo con la literatura especializada en visión por computador, pueden clasificarse en dos enfoques metodológicos principales:
+
+\subsection{Enfoques Generativos (Reconstructivos)}
+
+Este grupo de métodos se fundamenta en el principio de \textit{aprender prediciendo lo oculto}. Modelos como el \textit{Modelado de Imágenes Enmascaradas} (MIM) o su versión temporal, el \textit{Modelado de Secuencias Enmascaradas} (MSM), representan ejemplos característicos de este enfoque.  
+
+En un contexto de \textit{reidentificación basada en la marcha} (\textit{Gait Re-ID}), el modelo no recibe la secuencia completa de siluetas. En su lugar, se le presenta una secuencia en la que ciertos fotogramas o parches se encuentran enmascarados aleatoriamente, y su tarea consiste en reconstruir las partes ausentes.  
+
+La justificación metodológica de este enfoque radica en que, para reconstruir correctamente una porción faltante de un ciclo de caminata, el modelo debe aprender la estructura latente del movimiento humano, las relaciones espaciales entre las articulaciones y la dinámica temporal del desplazamiento. Este proceso impulsa al modelo a desarrollar \textit{representaciones locales y de alta resolución}, que capturan la estructura esencial del fenómeno analizado.  
+
+\subsection{Enfoques Discriminativos (Contrastivos)}
+
+Esta familia de métodos, ampliamente difundida por marcos como \textit{MoCo} y \textit{SimCLR}, se basa en el principio de \textit{aprender mediante comparación}. En lugar de reconstruir, el modelo de \textit{Aprendizaje Contrastivo} (\textit{Contrastive Learning}, CL) aprende a identificar qué vistas provienen de la misma instancia y cuáles no.  
+
+Durante el entrenamiento, el modelo maximiza la similitud en el espacio de características entre dos vistas aumentadas de una misma imagen (denominadas \textit{pares positivos}) y, simultáneamente, minimiza la similitud con las demás imágenes del conjunto (los \textit{pares negativos}).  
+
+El objetivo metodológico de este enfoque es fomentar el \textit{aprendizaje de invariancias}, de modo que el modelo genere representaciones robustas frente a transformaciones superficiales tales como ruido, recortes o cambios de iluminación, preservando únicamente la identidad semántica de cada instancia.  
+
+La \textbf{selección entre un enfoque generativo (MIM) o discriminativo (CL)} constituye una decisión metodológica fundamental, ya que determina el tipo de sesgo inductivo introducido en el modelo.  
+\begin{itemize}
+    \item Los métodos contrastivos priorizan el aprendizaje de características distintivas, lo que resulta adecuado para tareas de \textit{reidentificación basada en la apariencia}.
+    \item Los métodos generativos promueven la comprensión de estructuras comunes, lo cual es más apropiado para la \textit{reidentificación basada en la marcha (Gait Re-ID)}, donde la dinámica del movimiento actúa como la firma biométrica principal.
+\end{itemize}
+
+El \textbf{resultado de la Fase I} no es un modelo finalizado, sino un \textit{modelo base preentrenado} con pesos inicializados que capturan conocimiento visual relevante para el dominio. Esta inicialización supera ampliamente a una aleatoria o incluso a un preentrenamiento convencional en \textit{ImageNet}, proporcionando mayor eficiencia de entrenamiento y mejor capacidad de generalización, además de ayudar al modelo a evitar mínimos locales poco representativos en las fases posteriores.  
+
+\section{Fase II: Especialización de la Tarea – Ajuste Fino (Fine-Tuning) Supervisado}
+
+Una vez que el modelo ha adquirido una comprensión general de la forma y el movimiento a través del preentrenamiento auto-supervisado, se procede a su especialización en la \textit{tarea específica (downstream task)} de reidentificación. En esta fase, se incorporan los \textit{datos etiquetados}, los cuales tienen un costo más elevado, con el propósito de desarrollar la capacidad discriminativa del modelo.  
+
+A diferencia de un problema de clasificación tradicional, el objetivo principal de esta fase es el \textit{aprendizaje métrico (metric learning)}, cuyo propósito es construir un \textit{espacio de características (feature space)} altamente discriminativo. En dicho espacio, las representaciones correspondientes a una misma identidad (intra-clase) deben agruparse de manera compacta, mientras que las representaciones de distintas identidades (inter-clase) deben mantenerse lo más separadas posible.  
+
+El problema de reidentificación presenta una naturaleza dual: requiere gestionar una \textit{alta variabilidad intra-clase} (una misma persona puede variar en apariencia según el ángulo, la ropa o las condiciones de iluminación) y, al mismo tiempo, una \textit{baja variabilidad inter-clase} (distintas personas pueden parecerse entre sí). Para abordar esta dualidad, se emplea una \textit{estrategia de pérdidas híbridas}, compuesta por dos funciones complementarias:
+
+\begin{itemize}
+    \item \textbf{Pérdida de Identidad (Identity Loss):} Habitualmente implementada mediante \textit{Entropía Cruzada (Cross-Entropy Loss)}. Este componente considera la tarea como un problema de clasificación y promueve la coherencia de las representaciones intra-clase al agrupar todas las instancias de una misma identidad en una única representación consistente.
+    
+    \item \textbf{Pérdida Métrica (Metric Loss):} Generalmente implementada mediante \textit{Triplet Loss} o \textit{Contrastive Loss}. Esta función impone explícitamente un margen de separación entre identidades, penalizando al modelo cuando la distancia entre una muestra ancla y su correspondiente positivo no es significativamente menor que la distancia al negativo.
+\end{itemize}
+
+No obstante, este proceso de especialización conlleva un riesgo metodológico conocido como \textit{olvido catastrófico}, que ocurre cuando el reajuste excesivo sobre los nuevos datos etiquetados deteriora la robustez y la capacidad general adquiridas en la fase anterior.  
+
+Para mitigar este efecto, se aplica la técnica de \textit{Ajuste Fino Diferencial (Differential Fine-Tuning)}, que sustituye la tasa de aprendizaje uniforme por un esquema \textit{asimétrico}, considerando la distinta naturaleza de los componentes del modelo:  
+
+\begin{itemize}
+    \item \textbf{Modelo Base (heredado de la Fase I):} Incluye las capas previamente entrenadas que contienen conocimiento estructural y dinámico. A este componente se le asigna una tasa de aprendizaje reducida, con el fin de preservar la robustez adquirida y permitir ajustes graduales sin comprometer la generalización.
+
+    \item \textbf{Cabeza de Clasificación (introducida en la Fase II):} Comprende las capas añadidas para la clasificación de identidad o la proyección métrica. Dado que estas capas se inicializan desde cero, se les asigna una tasa de aprendizaje más alta, permitiendo una rápida adaptación a la tarea supervisada de identificación.
+\end{itemize}
 
 \begin{comment}
 \subsection{Estructura del modelo de fusión textit{Multi-Modal} }
