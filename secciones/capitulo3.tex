@@ -1,8 +1,6 @@
 \chapter{MARCO TEÓRICO}
 \section{Fundamentos de la Re-identificación de Personas}
 
-% La re-identificación de personas es una tarea de visión por computador orientada a reconocer a un mismo individuo a través de diferentes cámaras, momentos o entornos, sin depender de información biométrica explícita. Este proceso resulta fundamental en aplicaciones de videovigilancia, control de acceso y análisis de comportamiento, donde es necesario mantener la continuidad de identidad pese a los cambios de perspectiva o condiciones visuales.
-
 Tradicionalmente, los sistemas de \textit{Re-ID} se han basado en el aprendizaje supervisado, en el cual cada individuo del conjunto de entrenamiento se asocia con una etiqueta de identidad. Este enfoque ha permitido avances significativos, pero presenta limitaciones importantes ya que requiere de grandes volúmenes de datos anotados manualmente y muestra una reducida capacidad de generalización cuando se enfrenta a escenarios no vistos durante el entrenamiento. En entornos reales, donde las condiciones de captura son diversas y las identidades no están etiquetadas, estas limitaciones afectan directamente su rendimiento y aplicabilidad.
 
 Ante ello, ha cobrado relevancia el aprendizaje auto-supervisado, que busca aprovechar la estructura interna de los datos para generar representaciones discriminativas sin recurrir a etiquetas. En la re-identificación, este paradigma permite extraer características más invariantes frente a cambios de cámara, iluminación o pose. Sin embargo, aunque mejora la adaptabilidad del modelo, suele carecer de la precisión discriminativa que caracteriza a los métodos supervisados.
@@ -20,6 +18,32 @@ El proceso general implica tres etapas: detección del individuo en las imágene
 Uno de los principales retos de la re-identificación de personas radica en la gran variabilidad visual entre capturas. La variabilidad \textit{intra-clase} se refiere a los cambios en la apariencia del mismo individuo por factores como el ángulo de visión, la iluminación, la pose corporal o el tipo de ropa. Por otra parte, la variabilidad \textit{inter-clase} refiere a las similitudes entre diferentes personas, especialmente cuando comparten vestimenta o contextura física.
 
 Estas variaciones complican el aprendizaje de representaciones verdaderamente invariantes y discriminativas. Los modelos deben ser capaces de mantener la identidad ante transformaciones significativas y, al mismo tiempo, distinguir entre sujetos visualmente parecidos. Superar este equilibrio constituye uno de los ejes centrales en la investigación de modelos híbridos, los cuales buscan fortalecer tanto la discriminación supervisada como la generalización auto-supervisada.
+
+\section{Reconocimiento de Marcha}
+
+El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada.
+
+\subsection{Modalidades y representaciones}
+
+Los métodos de reconocimiento de marcha pueden agruparse según la naturaleza de la información utilizada para describir el movimiento.  
+Las \textbf{modalidades basadas en apariencia} emplean secuencias de imágenes o siluetas binarias que capturan la forma y textura del cuerpo durante el ciclo de caminata. Estas técnicas buscan patrones visuales discriminativos mediante modelos que analizan la evolución espacial de la silueta. Aunque son efectivas en escenarios controlados, suelen ser sensibles a factores externos como el cambio de ropa, el fondo o las condiciones de iluminación.
+
+Por otro lado, las \textbf{modalidades basadas en pose} utilizan representaciones esqueléticas derivadas de la estimación de articulaciones corporales. Este enfoque abstrae la información visual y se centra en la dinámica de movimiento, ofreciendo mayor invariancia ante el entorno y la apariencia. En estas representaciones, el cuerpo humano se modela como un grafo cuyas conexiones reflejan las relaciones espaciales y temporales entre articulaciones, lo que facilita la integración con arquitecturas basadas en grafos o secuencias temporales.
+
+En ambos casos, el objetivo central es aprender una representación robusta del patrón de marcha, capaz de preservar la identidad del sujeto y resistir la variabilidad en las condiciones de captura. Los enfoques modernos emplean redes profundas que extraen características espaciales y temporales de manera conjunta, superando las limitaciones de los descriptores manuales tradicionales.
+
+\subsection{Desafíos y aplicaciones}
+
+A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos.
+
+Para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. % Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
+
+En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas auxiliares. Y, combinadas con la precisión de los métodos supervisados, estas técnicas favorecen el desarrollo de modelos híbridos más adaptables y escalables, alineados con el propósito de esta investigación.
+
+\section{Modelos y Arquitecturas}
+\subsection{Redes Convolucionales (CNNs)}
+\subsection{Vision Transformers (ViTs)}
+\subsection{Modelos Basados en Esqueletos y Grafos}
 
 \section{Paradigmas de Aprendizaje en Re-Identification}
 
@@ -67,36 +91,28 @@ Estas tareas de predicción fomentan la adquisición de representaciones invaria
 En los enfoques basados en esqueleto, el cuerpo humano se modela como un conjunto de articulaciones interconectadas, lo que permite representar el movimiento mediante grafos dinámicos. El aprendizaje auto-supervisado en este contexto se apoya en tareas como la predicción de trayectorias articulares, la reconstrucción de grafos incompletos o la detección de inconsistencias estructurales.  
 Estas técnicas explotan la topología corporal y las relaciones espaciales entre articulaciones, resultando especialmente efectivas para el reconocimiento de marcha. Además, su combinación con arquitecturas de grafos (\textit{Graph Neural Networks}, GNNs) ha demostrado mejorar la capacidad del modelo para aprender dependencias espaciales complejas.
 
-\section{Reconocimiento de Marcha}
-
-El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada.
-
-\subsection{Modalidades y representaciones}
-
-Los métodos de reconocimiento de marcha pueden agruparse según la naturaleza de la información utilizada para describir el movimiento.  
-Las \textbf{modalidades basadas en apariencia} emplean secuencias de imágenes o siluetas binarias que capturan la forma y textura del cuerpo durante el ciclo de caminata. Estas técnicas buscan patrones visuales discriminativos mediante modelos que analizan la evolución espacial de la silueta. Aunque son efectivas en escenarios controlados, suelen ser sensibles a factores externos como el cambio de ropa, el fondo o las condiciones de iluminación.
-
-Por otro lado, las \textbf{modalidades basadas en pose} utilizan representaciones esqueléticas derivadas de la estimación de articulaciones corporales. Este enfoque abstrae la información visual y se centra en la dinámica de movimiento, ofreciendo mayor invariancia ante el entorno y la apariencia. En estas representaciones, el cuerpo humano se modela como un grafo cuyas conexiones reflejan las relaciones espaciales y temporales entre articulaciones, lo que facilita la integración con arquitecturas basadas en grafos o secuencias temporales.
-
-En ambos casos, el objetivo central es aprender una representación robusta del patrón de marcha, capaz de preservar la identidad del sujeto y resistir la variabilidad en las condiciones de captura. Los enfoques modernos emplean redes profundas que extraen características espaciales y temporales de manera conjunta, superando las limitaciones de los descriptores manuales tradicionales.
-
-\subsection{Desafíos y aplicaciones}
-
-A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos.
-
-Para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. % Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
-
-En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas auxiliares. Y, combinadas con la precisión de los métodos supervisados, estas técnicas favorecen el desarrollo de modelos híbridos más adaptables y escalables, alineados con el propósito de esta investigación.
-
-\section{Modelos y Arquitecturas}
-\subsection{Redes Convolucionales (CNNs)}
-\subsection{Vision Transformers (ViTs)}
-\subsection{Modelos Basados en Esqueletos y Grafos}
-
 \section{Estrategias Complementarias}
 \subsection{Fine-Tuning y Transferencia}
 \subsection{Knowledge Distillation y Aprendizaje Híbrido}
-\subsection{Datasets y Métricas de Evaluación}
+
+\begin{comment}
+\section{Diseño Experimental, Datasets y Métricas de Evaluación}
+\subsection{Pruebas y protocolos de evaluación}
+\begin{itemize}
+    \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata normal y con ropa cambiada, todas en régimen de vista cruzada (\textit{cross-view}) (\cite{Li2020SemiSupGait}).
+    \item \textbf{Control de Generalización:} Se utilizará un conjunto de desarrollo extraído de la distribución de los \textit{IDs} de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo (\cite{Huang2025PersonViT, Zhang2024LowResolution}).
+\end{itemize}
+\end{comment}
+
+\section{Métricas de Evaluación}
+Para evaluar el rendimiento de los modelos de re-identificación, se emplean ciertas métricas que permiten medir tanto la precisión de identificación como la calidad de la recuperación de identidades dentro de un conjunto de galería. En el presente trabajo se consideran las métricas \textit{Rank-1 Accuracy} y \textit{Mean Average Precision (mAP)}, ampliamente utilizadas en la literatura de Person Re-ID y Gait Recognition \citep{Asperti2024ReviewReID}.
+
+\begin{itemize}
+    \item \textbf{Rank-1 Accuracy:} Esta métrica indica la proporción de veces en que la identidad correcta del individuo consultado aparece como la primera coincidencia en el ranking generado por el modelo (\cite{Asperti2024ReviewReID}). Es decir, mide el porcentaje de consultas para las cuales la secuencia correspondiente a la misma persona ocupa la primera posición en la lista ordenada de similitudes. Un alto valor de Rank-1 refleja que el modelo es capaz de generar representaciones discriminativas y robustas ante variaciones de vista, ropa o entorno.
+    
+    \item \textbf{mAP (\textit{Mean Average Precision}):} Esta métrica evalúa la calidad global del sistema de recuperación, considerando la posición y relevancia de todas las coincidencias correctas dentro del ranking (\cite{Asperti2024ReviewReID}). Para cada consulta, se calcula el \textit{Average Precision} (AP) como el área bajo la curva de precisión-recall, y luego se obtiene el promedio sobre todas las consultas válidas. A diferencia de Rank-1, el mAP proporciona una visión donde se refleja tanto la precisión como la exhaustividad del modelo en la recuperación de identidades.
+
+\end{itemize}
 
 \section{Síntesis Conceptual}
 \subsection{Integración de paradigmas}

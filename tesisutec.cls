@@ -305,7 +305,7 @@
       \vfill
       \smallskip
       \vspace{0.5cm}
-      {\large \textbf{AUTOR(ES)}\par}
+      {\large \textbf{AUTORES}\par}
       {\large \authornames \par}
       \vspace{0.5cm}
 %      {\large \textbf{Código \studentid} \par}
