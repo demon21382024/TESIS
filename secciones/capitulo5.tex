@@ -135,8 +135,8 @@ Posteiormente se realiza el ajuste fino supervisado del modelo híbrido completo
     \item \textbf{Funciones de Pérdida:} Se utilizará una función de pérdida combinada de \textit{Identity Loss} (\textit{Cross-Entropy}) y \textit{Metric Loss} (\textit{Triplet Loss}) para asegurar una maximización tanto de la clasificación de identidad como de la separación métrica de las incrustaciones (\textit{embeddings}) en el espacio de características (\cite{Purish2023GaitRecognition}).
 \end{itemize}
 
+\begin{comment}
 \subsection{Diseño experimental y métricas de evaluación}
-
 \begin{itemize}
     \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata normal y con Ropa cambiada, todas en régimen de vista cruzada (\textit{cross-view}) (\cite{Li2020SemiSupGait}).
     \item \textbf{Control de Generalización:} Se utilizará un conjunto de desarrollo extraído de la distribución de los \textit{IDs} de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo (\cite{Huang2025PersonViT, Zhang2024LowResolution}).
@@ -147,13 +147,4 @@ Además, se propone el uso de las siguientes métricas para poder cuantificar la
     \item \textbf{Rank-1 Accuracy:} Mide la tasa de acierto en la cual la identidad correcta es clasificada como la primera coincidencia (Top-1) (\cite{Asperti2024ReviewReID})
     \item \textbf{mAP (\textit{Mean Average Precision}):} Evalúa el rendimiento del sistema de recuperación en el conjunto de la Galería, reflejando la calidad general de los resultados (\cite{Asperti2024ReviewReID}).
 \end{itemize}
-
-\begin{comment}
-\subsection{Análisis de Ablación Propuesto}
-Para validar las decisiones metodológicas, se realizará un análisis de ablación sistemático:
-\begin{enumerate}
-    \item \textbf{Ablación I: Fusión Multi-Modal} (Comparación $\vec{F}$ vs. $\vec{F_g}$ o $\vec{F_a}$ solamente).
-    \item \textbf{Ablación II: Impacto del SSL} (Comparación \textbf{SSL + Fine-Tuning} vs. Supervisado desde cero).
-    \item \textbf{Ablación III: Optimización de Ponderación $\theta$} (Determinación del valor óptimo de $\theta$ para la robustez en la condición CL).
-\end{enumerate}
 \end{comment}
