@@ -2,6 +2,16 @@
 \addcontentsline{toc}{section}{\bfseries RECOMENDACIONES} 
 \markboth{RECOMENDACIONES}{RECOMENDACIONES} 
 
-Lorem ipsum dolor sit amet, mei no laboramus gloriatur, no timeam euripidis qui, eu eos aperiam patrioque accommodare. Mei probo accommodare an, ex case minim salutatus sit. Ad doming impetus mei, placerat verterem has no. His assum quaeque et, ea aliquid dissentiet eum. Copiosae evertitur cum te, sea clita disputationi ea.
+A partir de la evidencia experimental recabada y el análisis de las limitaciones del modelo híbrido, se formulan las siguientes recomendaciones técnicas para la continuidad y mejora de esta línea de investigación:
 
-Libris ridens malorum cu vis. Per vitae eirmod cotidieque cu. Cum unum mucius alterum eu, nam enim regione appellantur id. Cum putant dignissim te, est dolore essent definiebas ei. Facilisi convenire vix in, dictas delenit et per. Pro tota affert argumentum cu.
+\begin{itemize}
+    \item \textbf{Mitigación de la Varianza Estocástica:} Dado que el ajuste fino mostró sensibilidad a la inicialización de los pesos en la capa de clasificación, se sugiere la implementación de técnicas de promediado de pesos estocástico (Stochastic Weight Averaging, SWA) o métodos de ensamble. Estas estrategias permitirían suavizar la superficie de error y converger a soluciones más generalizables, reduciendo la fluctuación del rendimiento observada entre distintas corridas experimentales.
+
+    \item \textbf{Optimización de la Consistencia del Ranking (mAP):} La discrepancia observada entre la alta precisión Rank-1 y el mAP moderado indica dificultades en la recuperación de instancias bajo ángulos de visión extremos (0° o 180°). Se recomienda integrar mecanismos de atención espacial o módulos View-Aware en la arquitectura del backbone. Esto permitiría al modelo ponderar dinámicamente las regiones corporales más informativas, mejorando la recuperación de coincidencias difíciles y elevando la métrica mAP.
+
+    \item \textbf{Validación en Espacios de Identidad de Alta Densidad:} Si bien el modelo demostró robustez al escalar de 60 a 80 sujetos, es imperativo validar la arquitectura en conjuntos de datos de escala masiva como OU-MVLP. Evaluar el desempeño en espacios con más de 10,000 identidades permitirá verificar si la separabilidad inter-clase aprendida mediante el preentrenamiento autosupervisado se mantiene cuando los márgenes de decisión se vuelven significativamente más estrechos.
+
+    \item \textbf{Transición hacia Arquitecturas basadas en Transformers:} Considerando las limitaciones del campo receptivo local de las redes convolucionales (CNN), se recomienda explorar la adopción de Vision Transformers (ViT). Estas arquitecturas poseen una capacidad superior para modelar dependencias espacio-temporales globales en secuencias de video, lo cual podría potenciar la extracción de características cinemáticas en la fase autosupervisada.
+
+    \item \textbf{Fusión Multimodal para Covariantes Complejas:} Para abordar la degradación de rendimiento en condiciones de oclusión severa o cambio de vestimenta, se sugiere investigar la fusión de características de la marcha con datos de apariencia RGB o esqueletos 3D estimados. La redundancia de información proveniente de múltiples modalidades podría compensar la pérdida de información de la silueta en escenarios adversos.
+\end{itemize}
