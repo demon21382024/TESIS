@@ -45,7 +45,7 @@ Las Convolutional Neural Networks (CNNs) son uno de los pilares fundamentales en
 
 \subsection{Vision Transformers (ViTs)}
 
-Los \textit{vision Transformers} representan los nuevos modelos que reemplazan las convoluciones tradicionales con mecanismos de auto-atención, permitiendo que el modelo aprenda relaciones globales entre diferentes regiones de una imagen. A diferencia de los \textit{CNNs} que procesan regiones locales, los \textit{ViTs} dividen la imagen y los tratan como una secuencia, de manera siomilar a los Transformers de procesamiento de lenguaje. Esto facilita que el modelo captura patrones globales del cuierpo, la postura y la dinámica del movimiento, siendo beneficioso en \textit{Gait Recognition}.
+Los \textit{vision Transformers} representan los nuevos modelos que reemplazan las convoluciones tradicionales con mecanismos de auto-atención, permitiendo que el modelo aprenda relaciones globales entre diferentes regiones de una imagen. A diferencia de los \textit{CNNs} que procesan regiones locales, los \textit{ViTs} dividen la imagen y los tratan como una secuencia, de manera similar a los Transformers de procesamiento de lenguaje. Esto facilita que el modelo captura patrones globales del cuerpo, la postura y la dinámica del movimiento, siendo beneficioso en \textit{Gait Recognition}.
 
 \section{Paradigmas de Aprendizaje en Re-Identification}
 
@@ -61,7 +61,7 @@ Sin embargo, su dependencia de etiquetas exhaustivas limita su aplicabilidad a e
 
 \subsection{No Supervisado}
 
-En contraste, el aprendizaje no supervisado prescinde totalmente de etiquetas, centrándose en descubrir patrones o estructuras inherentes a los datos. En reidentificación, estos métodos buscan agrupar instancias visualmente similares y construir representaciones que reflejen relaciones de similitud sin información explícita de identidad.
+En contraste, el aprendizaje no supervisado prescinde totalmente de etiquetas, centrándose en descubrir patrones o estructuras inherentes a los datos. En re-identificación, estos métodos buscan agrupar instancias visualmente similares y construir representaciones que reflejen relaciones de similitud sin información explícita de identidad.
 
 Las técnicas más comunes incluyen la agrupación iterativa (\textit{clustering}) combinada con aprendizaje de características, el uso de autoencoders y la asignación pseudoetiquetada basada en distancias métricas. Si bien estas estrategias eliminan el costo de la anotación, su rendimiento suele ser inferior al supervisado, ya que la ausencia de señales de identidad precisas dificulta la optimización directa de la discriminación entre individuos.
 
@@ -69,7 +69,7 @@ No obstante, el aprendizaje no supervisado ha sentado las bases para paradigmas 
 
 \subsection{Auto-supervisado}
 
-El aprendizaje auto-supervisado (\textit{Self-Supervised Learning}, SSL) surge como una alternativa intermedia entre los enfoques supervisado y no supervisado. En lugar de requerir etiquetas externas, el SSL genera sus propias tareas de supervisión a partir de la información interna de los datos, denominadas \textit{pretext tasks}. Estas tareas permiten al modelo aprender representaciones semánticamente ricas que pueden transferirse posteriormente a tareas específicas, como la reidentificación de personas.
+El aprendizaje auto-supervisado (\textit{Self-Supervised Learning}, SSL) surge como una alternativa intermedia entre los enfoques supervisado y no supervisado. En lugar de requerir etiquetas externas, el SSL genera sus propias tareas de supervisión a partir de la información interna de los datos, denominadas \textit{pretext tasks}. Estas tareas permiten al modelo aprender representaciones semánticamente ricas que pueden transferirse posteriormente a tareas específicas, como la re-identificación de personas.
 
 En el contexto de Re-ID, el aprendizaje auto-supervisado permite capturar invariancias espaciales y temporales sin anotaciones manuales, lo que lo convierte en una herramienta clave para entrenar modelos en entornos con escasez de etiquetas o alta variabilidad visual.
 
@@ -86,7 +86,7 @@ En reconocimiento de marcha, esta estrategia permite que el modelo capture relac
 \subsubsection{Predicción temporal y reconstrucción}
 
 Otra familia de métodos auto-supervisados se centra en la predicción de estados futuros o la reconstrucción de secuencias temporales. En este caso, el modelo aprende a anticipar la evolución del movimiento humano, comprendiendo la coherencia temporal entre fotogramas.  
-Estas tareas de predicción fomentan la adquisición de representaciones invariantes al tiempo y útiles para distinguir patrones de marcha, aspecto fundamental en la reidentificación basada en secuencias.
+Estas tareas de predicción fomentan la adquisición de representaciones invariantes al tiempo y útiles para distinguir patrones de marcha, aspecto fundamental en la re-identificación basada en secuencias.
 
 \subsubsection{\textit{Skeleton y Graph-based SSL}}
 
@@ -96,7 +96,7 @@ Estas técnicas explotan la topología corporal y las relaciones espaciales entr
 \section{Estrategias Complementarias}
 \subsection{Fine-Tuning y Transferencia}
 
-Las Transferencia de aprendizaje es altamente utlizada en visión por computador, consiste en aprovechar el conocimiento adquirido por un modelo durante un pre-entrenamiento para luego adaptarlo a una tarea específica. En \textit{Gait Recognition}, la estrategia es muy útil debido a la escasez de grandes conjuntos de datos etiquetados, condición que dificulta entrenar modelos más complejos.
+Las transferencia de aprendizaje es altamente utilizada en visión por computador, consiste en aprovechar el conocimiento adquirido por un modelo durante un pre-entrenamiento para luego adaptarlo a una tarea específica. En \textit{Gait Recognition}, la estrategia es muy útil debido a la escasez de grandes conjuntos de datos etiquetados, condición que dificulta entrenar modelos más complejos.
 
 En este contexto, el \textit{fine-tuning} implica tomar un modelo ya entrenado y ajustar sus pesos de manera supervisada utilizando un dataset etiquetado. Esta fase o etapa permite que el modelo refine características generales hacia patrones más discriminativos entre identidades, mejorando la precisión sin sacrificar la capacidad de generalización obtenida durante el pre-entrenamiento. 
 
@@ -126,10 +126,10 @@ Para evaluar el rendimiento de los modelos de re-identificación, se emplean cie
 \section{Síntesis Conceptual}
 \subsection{Integración de paradigmas}
 
-La revisión del marco teórico muestra que los enfoques supervisados y autosupervisados en \textit{Gait Recognition} presenta fortalezas que se pueden complementar. Los métodos supervisados logran altos niveles de precisión, pero dependen de grandes volúmenes de datos etiquetados y tienen a sobreajustarse a condiciones específicas del entorno. Por otro lado, el aprendizaje autosupervisado permite extraer representaciones más generales y robustas, aunque carece de un mecanismo explítico para diferenciar identidades similares. \\
-Entonces, la integración de ambos surge como una estrategia natural para combiar robustez con la capacidad discriminativa. dicho proceso no se limite a ejecutar dos etapas consecutiva; implica articular de forma que las representaciones aprendidas se utilicen como base para un refinamiento supervisado más eficiente. Esto nos permitirá construir un modelo que no solo aprenda a generalizar, sino que también ajuste su capacidad discrimativa mediante supervisión, generando una solución equilibrida y efectiva para la re-identificación de personas.
+La revisión del marco teórico muestra que los enfoques supervisados y autosupervisados en \textit{Gait Recognition} presenta fortalezas que se pueden complementar. Los métodos supervisados logran altos niveles de precisión, pero dependen de grandes volúmenes de datos etiquetados y tienen a sobreajustarse a condiciones específicas del entorno. Por otro lado, el aprendizaje autosupervisado permite extraer representaciones más generales y robustas, aunque carece de un mecanismo explícito para diferenciar identidades similares. \\
+Entonces, la integración de ambos surge como una estrategia natural para cambiar robustez con la capacidad discriminativa. dicho proceso no se limite a ejecutar dos etapas consecutiva; implica articular de forma que las representaciones aprendidas se utilicen como base para un refinamiento supervisado más eficiente. Esto nos permitirá construir un modelo que no solo aprenda a generalizar, sino que también ajuste su capacidad discrimativa mediante supervisión, generando una solución equilibrada y efectiva para la re-identificación de personas.
 
 \subsection{Oportunidades y fundamentos del enfoque propuesto}
 
 El enfoque híbrido propuesto se sustenta en varias oportunidades. Los avances recientes en aprendizaje autosupervisados han demostrado que es posible entrenar modelos potentes sin depender de anotaciones, lo que reduce significativamente los costos asociados al etiquetado de datos. Además, la literatura revisada anteriormente meustra que lo métodos supervisados siguen siendo indispensables para obtener altos niveles de precisión, sobre todo en tareas que requieren ser sensibles a pequeños detalles. \\
-En conjunto, estas oportunidades constituyen el fundamento conceptural de la propuesto, aprovechar ambos modelos de la forma posible para construir un sistema de re-identificación de personas mucho más robuso, preciso y escalable.
+En conjunto, estas oportunidades constituyen el fundamento conceptual de la propuesto, aprovechar ambos modelos de la forma posible para construir un sistema de re-identificación de personas mucho más robuso, preciso y escalable.

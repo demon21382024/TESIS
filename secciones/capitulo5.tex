@@ -15,7 +15,7 @@ El modelo implementado en la presente investigación utiliza un \textit{backbone
 
 La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos requieren un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
-\section{Fase I: Fundación del Conocimiento – Preentrenamiento Auto-Supervisado (SSL)}
+\section{Fase I: Fundación del Conocimiento – Pre-entrenamiento Auto-Supervisado (SSL)}
 
 La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Supervisado} (\textit{Self-Supervised Learning}, SSL). Este paradigma elimina la dependencia de etiquetas humanas al generar su propia señal de supervisión a partir de la estructura intrínseca de los datos. El propósito de esta fase no es resolver la tarea final, sino construir un \textit{modelo base} (\textit{backbone}) capaz de desarrollar una comprensión profunda y generalizable de las características visuales relevantes.  
 
@@ -23,7 +23,7 @@ La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Su
 El proceso se basa en la formulación de \textit{tareas de supervisión derivadas directamente de los datos}, las cuales, de acuerdo con la literatura especializada en visión por computador, pueden clasificarse en dos enfoques metodológicos principales:
 \end{comment}
 
-El preentrenamiento autosupervisado implementado adopta un enfoque basado en predicción de transformaciones. En esta fase, el modelo recibe imágenes de siluetas a las que se les aplican transformaciones geométricas simples y el objetivo consiste en que el modelo identifique cuál transformación fue aplicada. Este mecanismo obliga al backbone a aprender patrones estructurales relevantes del cuerpo humano y de la forma general de la marcha, sin necesidad de etiquetas. Aunque este enfoque es más simple que métodos más avanzados como el enmascaramiento de patches o las \textit{contrastive losses}, resulta adecuado para una tesis de pregrado y suficiente para producir representaciones útiles que posteriormente se especializan durante el entrenamiento supervisado.
+El pre-entrenamiento autosupervisado implementado adopta un enfoque basado en predicción de transformaciones. En esta fase, el modelo recibe imágenes de siluetas a las que se les aplican transformaciones geométricas simples y el objetivo consiste en que el modelo identifique cuál transformación fue aplicada. Este mecanismo obliga al backbone a aprender patrones estructurales relevantes del cuerpo humano y de la forma general de la marcha, sin necesidad de etiquetas. Aunque este enfoque es más simple que métodos más avanzados como el enmascaramiento de patches o las \textit{contrastive losses}, resulta adecuado para una tesis de pregrado y suficiente para producir representaciones útiles que posteriormente se especializan durante el entrenamiento supervisado.
 
 \subsection{Enfoques Generativos (Reconstructivos)}
 
@@ -47,11 +47,11 @@ La \textbf{selección entre un enfoque generativo (MIM) o discriminativo (CL)} c
     \item Los métodos generativos promueven la comprensión de estructuras comunes, lo cual es más apropiado para la \textit{reidentificación basada en la marcha (Gait Re-ID)}, donde la dinámica del movimiento actúa como la firma biométrica principal.
 \end{itemize}
 
-El \textbf{resultado de la Fase I} no es un modelo finalizado, sino un \textit{modelo base preentrenado} con pesos inicializados que capturan conocimiento visual relevante para el dominio. Esta inicialización supera ampliamente a una aleatoria o incluso a un preentrenamiento convencional en \textit{ImageNet}, proporcionando mayor eficiencia de entrenamiento y mejor capacidad de generalización, además de ayudar al modelo a evitar mínimos locales poco representativos en las fases posteriores.  
+El \textbf{resultado de la Fase I} no es un modelo finalizado, sino un \textit{modelo base preentrenado} con pesos inicializados que capturan conocimiento visual relevante para el dominio. Esta inicialización supera ampliamente a una aleatoria o incluso a un pre-entrenamiento convencional en \textit{ImageNet}, proporcionando mayor eficiencia de entrenamiento y mejor capacidad de generalización, además de ayudar al modelo a evitar mínimos locales poco representativos en las fases posteriores.  
 
 \section{Fase II: Especialización de la Tarea – Ajuste Fino (Fine-Tuning) Supervisado}
 
-Una vez que el modelo ha adquirido una comprensión general de la forma y el movimiento a través del preentrenamiento auto-supervisado, se procede a su especialización en la \textit{tarea específica (downstream task)} de reidentificación. En esta fase, se incorporan los \textit{datos etiquetados}, los cuales tienen un costo más elevado, con el propósito de desarrollar la capacidad discriminativa del modelo.  
+Una vez que el modelo ha adquirido una comprensión general de la forma y el movimiento a través del pre-entrenamiento auto-supervisado, se procede a su especialización en la \textit{tarea específica (downstream task)} de reidentificación. En esta fase, se incorporan los \textit{datos etiquetados}, los cuales tienen un costo más elevado, con el propósito de desarrollar la capacidad discriminativa del modelo.  
 
 A diferencia de un problema de clasificación tradicional, el objetivo principal de esta fase es el \textit{aprendizaje métrico (metric learning)}, cuyo propósito es construir un \textit{espacio de características (feature space)} altamente discriminativo. En dicho espacio, las representaciones correspondientes a una misma identidad (intra-clase) deben agruparse de manera compacta, mientras que las representaciones de distintas identidades (inter-clase) deben mantenerse lo más separadas posible.  
 
@@ -140,7 +140,7 @@ Todas las imágenes se redimensionan a una resolución fija de: 64x64 pixeles. Y
 
 \subsection{Augmentación para Aprendizaje Autosupervisado}
 
-Para la etapa de aprendizaje autosupervisado, el pre-procesamiento incorpora un conjunto específico de augmentaciones con el objetivo es generar dos versiones distintas de cada imagen, permitiendo que el modelo aprenda invariancias sin utilizar etiquetas. Estas transformaciones incluyen recortes aleatorios, ligeras rotaciones, inversión horizontal y cambios controlados en brillo o contraste. Todas estas operaciones están alineadas con el enfoque contrastivo implementado en el proyecto y buscan reforzar la robustez del modelo ante variaciones espaciales comunes en secuencias de marcha. Estas augmentaciones se aplican exclusivamente durante el preentrenamiento autosupervisado, mientras que la fase supervisada utiliza únicamente las transformaciones estándar.
+Para la etapa de aprendizaje autosupervisado, el pre-procesamiento incorpora un conjunto específico de augmentaciones con el objetivo es generar dos versiones distintas de cada imagen, permitiendo que el modelo aprenda invariancias sin utilizar etiquetas. Estas transformaciones incluyen recortes aleatorios, ligeras rotaciones, inversión horizontal y cambios controlados en brillo o contraste. Todas estas operaciones están alineadas con el enfoque contrastivo implementado en el proyecto y buscan reforzar la robustez del modelo ante variaciones espaciales comunes en secuencias de marcha. Estas augmentaciones se aplican exclusivamente durante el pre-entrenamiento autosupervisado, mientras que la fase supervisada utiliza únicamente las transformaciones estándar.
 
 \subsection{Construcción de Mini-Batches}
 
@@ -169,7 +169,7 @@ El GEI ($G(x, y)$) se calculá como la media de las siluetas binarias normalizad
 
 \section{Entrenamiento y evaluación experimental}
 
-El proceso experimental del proyecto se basa en un esquema de entrenamiento híbrido compuesto por  un preentrenamiento autosupervisado diseñado para aprender representaciones generales de marcha, seguido por un ajuste fino supervisado orientado a la re-identificación. Ambos procedimientos fueron implementados y evaluados sobre CASIA-B, respetando la estructura real del flujo de trabajo descrito en el código.
+El proceso experimental del proyecto se basa en un esquema de entrenamiento híbrido compuesto por  un pre-entrenamiento autosupervisado diseñado para aprender representaciones generales de marcha, seguido por un ajuste fino supervisado orientado a la re-identificación. Ambos procedimientos fueron implementados y evaluados sobre CASIA-B, respetando la estructura real del flujo de trabajo descrito en el código.
 
 \subsection{Protocolo de entrenamiento híbrido}
 
@@ -187,7 +187,7 @@ Posteiormente se realiza el ajuste fino supervisado del modelo híbrido completo
 
 \section{Diseño experimental y métricas de evaluación}
 
-El diseño experimental se basa en el protocolo estándar del dataset CASIA-B, separando las secuencias en un conjunto gallery y un conjunto de prueba según las variaciones de vista y condiciones de vestimenta. Para cada identidad, el modelo genera un vector de características (\textit{embedding}) mediante el \textit{backbone} entrenado, y luego se calcula la matriz completa de distancias euclidianas entre las muestras de ambos conjuntos. Este procedimiento permite evaluar la capacidad del modelo para recuperar correctamente la identidad de una persona bajo cambios de apariencia, vista o carga.
+El diseño experimental se basa en el protocolo estándar del dataset CASIA-B, separando las secuencias en un conjunto \textit{gallery} y un conjunto de prueba según las variaciones de vista y condiciones de vestimenta. Para cada identidad, el modelo genera un vector de características (\textit{embedding}) mediante el \textit{backbone} entrenado, y luego se calcula la matriz completa de distancias euclidianas entre las muestras de ambos conjuntos. Este procedimiento permite evaluar la capacidad del modelo para recuperar correctamente la identidad de una persona bajo cambios de apariencia, vista o carga.
 
 Las métricas empleadas reflejan los más comúnes en \textit{Gait Recognition}. \textit{Rank-1 Accuracy} cuantifica el porcentaje de veces en que la muestra correcta aparece como la más cercana en el espacio de características, siendo una medida directa de la precisión de re-identificación. Complementariamente, se utiliza el \textit{Mean Average Precision} (mAP), que evalúa la calidad del ordenamiento completo de las distancias, penalizando recuperaciones parciales y ofreciendo una visión más robusta del rendimiento general del modelo.
 
