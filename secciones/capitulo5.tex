@@ -5,18 +5,25 @@
 
 La metodología propuesta se enmarca específicamente en la re-identificación de personas basada en la marcha (\textit{Gait Recognition}). Se adoptará un enfoque híbrido que combina el aprendizaje auto-supervisado (SSL) y el aprendizaje supervisado, mediante \textit{Fine-Tuning}, para desarrollar un modelo robusto y generalizable, capaz de superar las limitaciones inherentes a la variabilidad de la apariencia y la escasez de datos etiquetados en escenarios de videovigilancia (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
+\begin{comment}
 Este enfoque metodológico se divide rigurosamente en tres áreas principales: La justificación y el diseño arquitectónico de la fusión \textit{Multi-Modal}, el protocolo de pre-procesamiento de datos de marcha, y la estrategia de entrenamiento híbrido; culminando en un diseño experimental detallado para la validación y el análisis de ablación.
+\end{comment}
 
-\section{Diseño híbrido y arquitectura \textit{Multi-Modal}}
+El modelo implementado en la presente investigación utiliza un \textit{backbone} convolucional ligero diseñado específicamente para operar sobre siluetas estáticas. Este extractor basado en \textit{CNN} transforma cada imagen en un vector de características, sin incorporar módulos explícitos de atención o mecanismos temporales. Sobre este backbone se añade una capa completamente conectada que actúa como cabeza métrica, encargada de generar un embedding normalizado que permite medir distancias entre identidades.
+
+\section{Diseño híbrido}
 
 La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos requieren un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
-
-\section{Fase I: Fundación del Conocimiento – Preentrenamiento Auto-Supervisado (SSL) a Gran Escala}
+\section{Fase I: Fundación del Conocimiento – Preentrenamiento Auto-Supervisado (SSL)}
 
 La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Supervisado} (\textit{Self-Supervised Learning}, SSL). Este paradigma elimina la dependencia de etiquetas humanas al generar su propia señal de supervisión a partir de la estructura intrínseca de los datos. El propósito de esta fase no es resolver la tarea final, sino construir un \textit{modelo base} (\textit{backbone}) capaz de desarrollar una comprensión profunda y generalizable de las características visuales relevantes.  
 
+\begin{comment}
 El proceso se basa en la formulación de \textit{tareas de supervisión derivadas directamente de los datos}, las cuales, de acuerdo con la literatura especializada en visión por computador, pueden clasificarse en dos enfoques metodológicos principales:
+\end{comment}
+
+El preentrenamiento autosupervisado implementado adopta un enfoque basado en predicción de transformaciones. En esta fase, el modelo recibe imágenes de siluetas a las que se les aplican transformaciones geométricas simples y el objetivo consiste en que el modelo identifique cuál transformación fue aplicada. Este mecanismo obliga al backbone a aprender patrones estructurales relevantes del cuerpo humano y de la forma general de la marcha, sin necesidad de etiquetas. Aunque este enfoque es más simple que métodos más avanzados como el enmascaramiento de patches o las \textit{contrastive losses}, resulta adecuado para una tesis de pregrado y suficiente para producir representaciones útiles que posteriormente se especializan durante el entrenamiento supervisado.
 
 \subsection{Enfoques Generativos (Reconstructivos)}
 
@@ -66,6 +73,8 @@ Para mitigar este efecto, se aplica la técnica de \textit{Ajuste Fino Diferenci
     \item \textbf{Cabeza de Clasificación (introducida en la Fase II):} Comprende las capas añadidas para la clasificación de identidad o la proyección métrica. Dado que estas capas se inicializan desde cero, se les asigna una tasa de aprendizaje más alta, permitiendo una rápida adaptación a la tarea supervisada de identificación.
 \end{itemize}
 
+El ajuste fino supervisado se realiza aplicando un único valor de tasa de aprendizaje tanto al backbone como a la cabeza métrica, manteniendo asi una configuración simple y coherente con los recursos computacionales disponibles. Durante esta fase, el modelo optimiza una combinación de pérdidas, \textit{Cross Entropy} para reforzar la discriminación entre identidades y Triplet Loss para estructurar el espacio de embeddings de manera métrica.
+
 \begin{comment}
 \subsection{Estructura del modelo de fusión textit{Multi-Modal} }
 
@@ -80,9 +89,15 @@ El modelo implementa una arquitectura de doble rama y \textbf{Fusión a Nivel de
 \end{itemize}
 \end{comment}
 
+\subsection{Estrategia de muestreo - PKSampler}
+
+Para el entrenamiento supervisado se emplea un muestreador PKSampler. Este muestreador selecciona en cada lote un conjunto fijo de identidades y un número fijo de imágenes por identidad, facilitando la construcción de ejemplos adecuados para la \textit{Triplet Loss}. Aunque su implementación es sencilla, cumple su función principal: asegurar variedad y equilibrio dentro de cada batch, elementos clave para un aprendizaje métrico estable.
+
 \section{Adquisición y pre-procesamiento de datos}
 
-\subsection{Selección y Uso de Bases de Datos Benchmark}
+La calidad y la estructura del conjunto de datos constituyen un componente determinante para el desempeño de los modelos de re-identificación de personas basados en Gait Recognition. En el presente trabajo, el proceso de adquisición y pre-procesamiento fue diseñado para ser coherente con los requerimientos del modelo híbrido implementado y con las características del dataset utilizado, que ya contiene siluetas humanas segmentadas. A continuación, se describe detalladamente el flujo seguido antes del entrenamiento.
+
+\subsection{Adquisición y pre-procesamiento de datos}
 
 Se proponen las siguientes bases de datos por su relevancia en la literatura revisada y su cobertura de las variantes clave:
 
@@ -94,13 +109,44 @@ Se proponen las siguientes bases de datos por su relevancia en la literatura rev
         \toprule
         \textbf{Dataset} & \textbf{Propósito Metodológico} & \textbf{Covariantes Clave} \\
         \midrule
-        OU-MVLP ($>10,000$ IDs) & Fase I: Pre-entrenamiento Auto-Supervisado (SSL) \cite{Huang2025PersonViT} & Multi-View \\
+        % OU-MVLP ($>10,000$ IDs) & Fase I: Pre-entrenamiento Auto-Supervisado (SSL) \cite{Huang2025PersonViT} & Multi-View \\
         CASIA-B (124 IDs) & Fase II: Ajuste Fino Supervisado y Evaluación Final \cite{Li2020SemiSupGait} & Ropa (CL), Carga (BG), Multi-View \\
         TUM-GAID & Validación complementaria de generalización \cite{Purish2023GaitRecognition} & Dirección de Caminata \cite{Han2021LocalitySGE} \\
         \bottomrule
     \end{tabular}
 \end{table}
 
+Debido a múltiples factores, para el presente proyecto hemos optado por el dataset de \textbf{CASIA-B} para poder trabajar con data etiquetada y no etiquetada deliberadamente.
+
+\subsection{Pre-procesamiento de imágenes}
+
+Dado que el dataset ya contiene siluetas limpias, el pre-procesamiento se enfoca únicamente en estandarizar las imágenes para que el modelo pueda procesarlas de forma eficiente.
+
+\subsubsection{Conversión y normalización de intensidades}
+
+Cada imagen se convierte a un tensor PyTorch y se normaliza siguiendo las convenciones estándar para redes convolucionales:
+
+\begin{itemize}
+    \item Los valores de píxel se escalan a (0,1)
+    \item Se aplica normalización estadística por canal
+    \item Las imagenes, aunque ya vienen por default en el dataset, se tratan como escala de grises.
+\end{itemize}
+
+Esta normalización es fundamental para asegurar la estabilidad en el proceso de optimización durante el entrenamiento.
+
+\subsection{Normalización espacial}
+
+Todas las imágenes se redimensionan a una resolución fija de: 64x64 pixeles. Ya que de esta forma se reduce el costo computacional, permitiendo que modelos \textit{CNN} y el módulo SSL sin necesidad de hardware potente extenro. Además, al estandarizar la entrada se facilita el aprendizaje del extractor de caracteriza. Por útltimo, también evita deformaciones significativas, ya que las siluetas tienen un alto nivel de contraste y estructura simple.
+
+\subsection{Augmentación para Aprendizaje Autosupervisado}
+
+Para la etapa de aprendizaje autosupervisado, el pre-procesamiento incorpora un conjunto específico de augmentaciones con el objetivo es generar dos versiones distintas de cada imagen, permitiendo que el modelo aprenda invariancias sin utilizar etiquetas. Estas transformaciones incluyen recortes aleatorios, ligeras rotaciones, inversión horizontal y cambios controlados en brillo o contraste. Todas estas operaciones están alineadas con el enfoque contrastivo implementado en el proyecto y buscan reforzar la robustez del modelo ante variaciones espaciales comunes en secuencias de marcha. Estas augmentaciones se aplican exclusivamente durante el preentrenamiento autosupervisado, mientras que la fase supervisada utiliza únicamente las transformaciones estándar.
+
+\subsection{Construcción de Mini-Batches}
+
+Durante el entrenamiento supervisado, el proyecto utiliza dos estrategias de muestreo complementarias. Para la parte basada en entropía cruzada, se emplea muestreo aleatorio tradicional. Por otro lado, para optimizar el \textit{Triplet Loss}, el modelo puede apoyarse en un esquema tipo PK Sampler, en el que cada mini-batch contiene un número fijo de identidades distintas y varias imágenes por cada una de ellas. Esto facilitará la construcción de anclas, positivos y negativos dentro del mismo lote, mejorando la discriminación de los embeddings entre clases y dentro de la misma identidad. Esta combinación de estrategias permite un entrenamiento más estable y efectivo para el modelo híbrido.
+
+\begin{comment}
 \subsection{Pre-Procesamiento para la Extracción de Siluetas}
 
 El pre-procesamiento es un paso crítico para garantizar que las entradas del modelo estén normalizadas y aisladas del ruido de fondo:
@@ -119,8 +165,11 @@ El GEI ($G(x, y)$) se calculá como la media de las siluetas binarias normalizad
 \begin{equation}
     G(x, y) = \frac{1}{N} \sum_{t=1}^{N} \mathcal{B}(x, y, t)
 \end{equation}
+\end{comment}
 
 \section{Entrenamiento y evaluación experimental}
+
+El proceso experimental del proyecto se basa en un esquema de entrenamiento híbrido compuesto por  un preentrenamiento autosupervisado diseñado para aprender representaciones generales de marcha, seguido por un ajuste fino supervisado orientado a la re-identificación. Ambos procedimientos fueron implementados y evaluados sobre CASIA-B, respetando la estructura real del flujo de trabajo descrito en el código.
 
 \subsection{Protocolo de entrenamiento híbrido}
 

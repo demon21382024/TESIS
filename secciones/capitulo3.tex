@@ -11,7 +11,7 @@ Por tanto, la integración de ambos paradigmas surge como una alternativa sólid
 
 El propósito de la re-identificación de personas es establecer correspondencias entre imágenes o secuencias que pertenecen a la misma persona, capturadas por diferentes cámaras y en distintos momentos. A diferencia del reconocimiento facial o de huellas, la \textit{Re-ID} tiene la capacidad de trabajar con características globales del cuerpo, patrones de vestimenta, postura y movimiento, lo que la hace aplicable incluso cuando el rostro no es visible.
 
-El proceso general implica tres etapas: detección del individuo en las imágenes, extracción de características representativas y comparación mediante una métrica de similitud. La calidad del descriptor aprendido —es decir, la representación del individuo en un espacio de características— es determinante para garantizar una identificación robusta ante las variaciones visuales.
+El proceso general implica tres etapas: detección del individuo en las imágenes, extracción de características representativas y comparación mediante una métrica de similitud. La calidad del descriptor aprendido es determinante para garantizar una identificación robusta ante las variaciones visuales.
 
 \subsection{Desafíos y variabilidad}
 
@@ -34,16 +34,18 @@ En ambos casos, el objetivo central es aprender una representación robusta del 
 
 \subsection{Desafíos y aplicaciones}
 
-A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos.
-
-Para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. % Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
+A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos. Donde, para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. % Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
 
 En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas auxiliares. Y, combinadas con la precisión de los métodos supervisados, estas técnicas favorecen el desarrollo de modelos híbridos más adaptables y escalables, alineados con el propósito de esta investigación.
 
 \section{Modelos y Arquitecturas}
 \subsection{Redes Convolucionales (CNNs)}
+
+Las Convolutional Neural Networks (CNNs) son uno de los pilares fundamentales en el procesamiento de imágenes ya que su fortalece radica en la capacidad de extraer características espaciales de varios niveles, como bordes o patrones de movimiento, mediante operaciones de convolución. Para \textit{Gait Recognition} las CNNs permiten capturar variaciones locales del contorno del cuerpo y de la propia silueta durante la secuencia de caminata. Es aqui donde las CNNs funcionan como "espina dorsal" (\textit{backbone}) para poder generar \textit{embeddings} que luego se comparan mediante distancias métricas o se optimizan con funciones.
+
 \subsection{Vision Transformers (ViTs)}
-\subsection{Modelos Basados en Esqueletos y Grafos}
+
+Los \textit{vision Transformers} representan los nuevos modelos que reemplazan las convoluciones tradicionales con mecanismos de auto-atención, permitiendo que el modelo aprenda relaciones globales entre diferentes regiones de una imagen. A diferencia de los \textit{CNNs} que procesan regiones locales, los \textit{ViTs} dividen la imagen y los tratan como una secuencia, de manera siomilar a los Transformers de procesamiento de lenguaje. Esto facilita que el modelo captura patrones globales del cuierpo, la postura y la dinámica del movimiento, siendo beneficioso en \textit{Gait Recognition}.
 
 \section{Paradigmas de Aprendizaje en Re-Identification}
 
@@ -93,7 +95,14 @@ Estas técnicas explotan la topología corporal y las relaciones espaciales entr
 
 \section{Estrategias Complementarias}
 \subsection{Fine-Tuning y Transferencia}
-\subsection{Knowledge Distillation y Aprendizaje Híbrido}
+
+Las Transferencia de aprendizaje es altamente utlizada en visión por computador, consiste en aprovechar el conocimiento adquirido por un modelo durante un pre-entrenamiento para luego adaptarlo a una tarea específica. En \textit{Gait Recognition}, la estrategia es muy útil debido a la escasez de grandes conjuntos de datos etiquetados, condición que dificulta entrenar modelos más complejos.
+
+En este contexto, el \textit{fine-tuning} implica tomar un modelo ya entrenado y ajustar sus pesos de manera supervisada utilizando un dataset etiquetado. Esta fase o etapa permite que el modelo refine características generales hacia patrones más discriminativos entre identidades, mejorando la precisión sin sacrificar la capacidad de generalización obtenida durante el pre-entrenamiento. 
+
+\subsection{Aprendizaje Híbrido}
+
+El aprendizaje híbrido refiere a la integración de distintos paradigmas de entrenamiento dentro de un mismo marco. Esta aproximación permite obtener representaciones más robustas y discriminativas, especialmente en tareas donde la variabilidad visual es alta y la disponibilidad de datos etiquetados es limitada, como es el presente caso de \textit{Gait Recognition}
 
 \begin{comment}
 \section{Diseño Experimental, Datasets y Métricas de Evaluación}
@@ -116,4 +125,11 @@ Para evaluar el rendimiento de los modelos de re-identificación, se emplean cie
 
 \section{Síntesis Conceptual}
 \subsection{Integración de paradigmas}
+
+La revisión del marco teórico muestra que los enfoques supervisados y autosupervisados en \textit{Gait Recognition} presenta fortalezas que se pueden complementar. Los métodos supervisados logran altos niveles de precisión, pero dependen de grandes volúmenes de datos etiquetados y tienen a sobreajustarse a condiciones específicas del entorno. Por otro lado, el aprendizaje autosupervisado permite extraer representaciones más generales y robustas, aunque carece de un mecanismo explítico para diferenciar identidades similares. \\
+Entonces, la integración de ambos surge como una estrategia natural para combiar robustez con la capacidad discriminativa. dicho proceso no se limite a ejecutar dos etapas consecutiva; implica articular de forma que las representaciones aprendidas se utilicen como base para un refinamiento supervisado más eficiente. Esto nos permitirá construir un modelo que no solo aprenda a generalizar, sino que también ajuste su capacidad discrimativa mediante supervisión, generando una solución equilibrida y efectiva para la re-identificación de personas.
+
 \subsection{Oportunidades y fundamentos del enfoque propuesto}
+
+El enfoque híbrido propuesto se sustenta en varias oportunidades. Los avances recientes en aprendizaje autosupervisados han demostrado que es posible entrenar modelos potentes sin depender de anotaciones, lo que reduce significativamente los costos asociados al etiquetado de datos. Además, la literatura revisada anteriormente meustra que lo métodos supervisados siguen siendo indispensables para obtener altos niveles de precisión, sobre todo en tareas que requieren ser sensibles a pequeños detalles. \\
+En conjunto, estas oportunidades constituyen el fundamento conceptural de la propuesto, aprovechar ambos modelos de la forma posible para construir un sistema de re-identificación de personas mucho más robuso, preciso y escalable.
