@@ -184,8 +184,14 @@ Posteiormente se realiza el ajuste fino supervisado del modelo híbrido completo
     \item \textbf{Funciones de Pérdida:} Se utilizará una función de pérdida combinada de \textit{Identity Loss} (\textit{Cross-Entropy}) y \textit{Metric Loss} (\textit{Triplet Loss}) para asegurar una maximización tanto de la clasificación de identidad como de la separación métrica de las incrustaciones (\textit{embeddings}) en el espacio de características (\cite{Purish2023GaitRecognition}).
 \end{itemize}
 
+
+\section{Diseño experimental y métricas de evaluación}
+
+El diseño experimental se basa en el protocolo estándar del dataset CASIA-B, separando las secuencias en un conjunto gallery y un conjunto de prueba según las variaciones de vista y condiciones de vestimenta. Para cada identidad, el modelo genera un vector de características (\textit{embedding}) mediante el \textit{backbone} entrenado, y luego se calcula la matriz completa de distancias euclidianas entre las muestras de ambos conjuntos. Este procedimiento permite evaluar la capacidad del modelo para recuperar correctamente la identidad de una persona bajo cambios de apariencia, vista o carga.
+
+Las métricas empleadas reflejan los más comúnes en \textit{Gait Recognition}. \textit{Rank-1 Accuracy} cuantifica el porcentaje de veces en que la muestra correcta aparece como la más cercana en el espacio de características, siendo una medida directa de la precisión de re-identificación. Complementariamente, se utiliza el \textit{Mean Average Precision} (mAP), que evalúa la calidad del ordenamiento completo de las distancias, penalizando recuperaciones parciales y ofreciendo una visión más robusta del rendimiento general del modelo.
+
 \begin{comment}
-\subsection{Diseño experimental y métricas de evaluación}
 \begin{itemize}
     \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata normal y con Ropa cambiada, todas en régimen de vista cruzada (\textit{cross-view}) (\cite{Li2020SemiSupGait}).
     \item \textbf{Control de Generalización:} Se utilizará un conjunto de desarrollo extraído de la distribución de los \textit{IDs} de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo (\cite{Huang2025PersonViT, Zhang2024LowResolution}).
