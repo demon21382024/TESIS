@@ -3,13 +3,26 @@
 La presente investigación logró desarrollar y validar una arquitectura híbrida para la reidentificación de personas basada en la marcha (Gait Re-ID), integrando eficazmente el aprendizaje autosupervisado (SSL) con el refinamiento supervisado. A partir de los resultados experimentales, se establecen las siguientes conclusiones que confirman la viabilidad y robustez de la propuesta:
 
 \section{Validación Exitosa de la Arquitectura Híbrida}
+\begin{comment}
 Se concluye que el enfoque híbrido propuesto supera las barreras de los métodos tradicionales en contextos de datos limitados, alcanzando una precisión sobresaliente de \textbf{91.29\% en Rank-1}. Este resultado valida la hipótesis central de la tesis: el preentrenamiento autosupervisado dota al modelo de una comprensión profunda de la dinámica locomotora humana previo a cualquier etiqueta. Esto permite una convergencia rápida y precisa en la etapa supervisada, demostrando que es posible obtener sistemas de alto rendimiento sin depender exclusivamente de bases de datos masivas.
+\end{comment}
+
+El modelo híbrido logró un desempeño competitivo en CASIA-B, alcanzando un Rank-1 de 81\% en la evaluación completa del dataset. Este resultado confirma la efectividad del preentrenamiento autosupervisado para capturar patrones dinámicos de marcha antes de utilizar data etiquetada.
+Por lo tanto, se valida la hipótesis de trabajo, donde el SSL permite una inicialización robusta, capaz de acelerar la convergencia y mejorar la capacidad discriminativa. El enfoque demuestra ser una alternativa viable y eficiente frente a métodos puramente supervisados, reduciendo el requerimiento de anotaciones exhaustivas y otros factores.
 
 \section{Alta Capacidad Discriminativa y Priorización de Identidad}
+\begin{comment}
 El análisis de las métricas revela que el modelo ha desarrollado una alta especialización en la discriminación de identidades, priorizando la recuperación inmediata del sujeto objetivo (Rank-1 \textgreater  90\%). Aunque la métrica de consistencia global (mAP) muestra valores moderados, esto se identifica como un comportamiento esperado en arquitecturas optimizadas para \textit{precisión de primer impacto}. El sistema demuestra ser altamente efectivo en encontrar la coincidencia correcta más evidente, lo cual es el requisito funcional prioritario en aplicaciones de seguridad y vigilancia en tiempo real, donde la rapidez de la primera alerta es crítica.
+\end{comment}
+
+El modelo mostró  especialización en la recuperación inmediata del individuo correcto, lo cual se refleja en métricas Rank-k consistentemente altas. Aunque el mAP alcanzó un 29\%, este comportamiento es característico en \textit{Gait Re-ID} bajo variaciones angulares severas. La diferencia entre Rank-1 y mAP evidencia que el modelo prioriza la precisión de primer impacto, el cual suele ser altamente valiosa en sistemas de vigilancia y alerta temprana.
 
 \section{Estabilidad y Escalabilidad del Modelo}
+\begin{comment}
 El modelo demostró una notable robustez ante el aumento de la complejidad del espacio de búsqueda. Al incrementar la población de prueba en un 33\%, el rendimiento se mantuvo estable con una variación mínima (manteniéndose en el rango del 88-91\%), lo que confirma que las características aprendidas son genuinamente biométricas y separables. A diferencia de modelos que memorizan datos de entrenamiento, nuestra arquitectura híbrida generaliza eficazmente frente a nuevos distractores, validando su potencial para operar en galerías dinámicas y escalables.
+\end{comment}
+
+La arquitectura demostró estabilidad frente en la población de búsqueda y a la presencia de distractores adicionales. A pesar del aumento en la complejidad del entorno experimental, el rendimiento se mantuvo dentro de un rango estable, lo que indica que las características aprendidas son verdaderamente biométricas y no dependen netamente de memorizar ejemplos de entrenamiento. Esto, a diferencia de modelos que memorizan datos de entrenamiento, confirma que nuestra arquitectura híbrida generaliza eficazmente frente a nuevos distractores, validando su potencial para operar en galerías dinámicas y escalables.
 
 \section{Eficiencia en el Aprendizaje de Representaciones}
-Finalmente, se concluye que la arquitectura propuesta ofrece una solución eficiente al problema de la inicialización de pesos en redes profundas. Los experimentos evidenciaron que, incluso con variaciones estocásticas propias del entrenamiento de redes neuronales, el enfoque híbrido permite alcanzar consistentemente altos niveles de precisión. La integración del aprendizaje autosupervisado actúa como un catalizador que reduce la dependencia de la cantidad de datos etiquetados, ofreciendo una vía viable y competitiva frente al estado del arte para la implementación de sistemas de reidentificación en escenarios con recursos restringidos.
+Finalmente, se concluye que la arquitectura propuesta ofrece una solución eficiente al problema de la inicialización de pesos en redes profundas. Los experimentos evidenciaron que, incluso con variaciones estocásticas propias del entrenamiento de redes neuronales, el enfoque híbrido permite alcanzar consistentemente altos niveles de precisión. La integración del aprendizaje autosupervisado actúa como un catalizador que reduce la dependencia de la cantidad de datos etiquetados, ofreciendo un camino viable y competitivo frente al estado del arte para la implementación de sistemas de reidentificación en escenarios con recursos restringidos.

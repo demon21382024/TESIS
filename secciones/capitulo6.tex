@@ -2,32 +2,59 @@
 
 \section{Configuración Experimental y Limitaciones}
 
-Para validar la arquitectura híbrida propuesta, se ejecutó un protocolo experimental sobre el conjunto de datos CASIA-B (\cite{Liu2023GaitBenchmark}). Es importante destacar que, con el objetivo de priorizar la validación de la arquitectura bajo restricciones de recursos computacionales, se optó por un \textbf{Protocolo de Validación a Escala Reducida} en lugar del protocolo estándar completo de 124 sujetos.
+La validación de la arquitectura híbrida propuesta se llevó a cabo sobre el conjunto de datos CASIA-B (\cite{Liu2023GaitBenchmark}) utilizando el protocolo estándar completo de 124 sujetos. A diferencia de experimentos preliminares realizados con subconjuntos reducidos, los resultados reportados en este capítulo reflejan el entrenamiento y evaluación sobre la base completa, lo cual constituye una condición más exigente y representativa.
+
 
 \subsection{Protocolo de Evaluación}
-Los experimentos se realizaron bajo las siguientes condiciones controladas:
+Los experimentos se diseñador de acuerdo a las siguientes condiciones:
 \begin{itemize}
-    \item \textbf{Subconjunto de Datos:} Se seleccionó una población de \textbf{60 sujetos} (40 para entrenamiento, 20 para prueba), manteniendo la distribución de variaciones de la base original.
-    \item \textbf{Condiciones de Prueba:} Secuencias de caminata normal \texttt{nm-01} a \texttt{nm-04}.
+    \item \textbf{Dataset completo:} Se utilizaron los 124 sujetos oficiales de CASIA-B.
+    \item \textbf{Condiciones de prueba:} Se utilizó todas las secuencias que proporciona el dataset, secuencias de caminata normal (\texttt{nm-01} a \texttt{nm-06}), caminata con abrigo (cl-01, cl-02) y caminata con bolsa (bg-01, bg-02).
+    \item \textbf{Preprocesamiento:} Imágenes en escala de grises, normalizadas en [0,1] y redimensionadas a 64×64. 
     \item \textbf{Métricas de Desempeño:} Se reportan los resultados en función de \textbf{Rank-1 Accuracy} (precisión estricta) y \textbf{mAP} (consistencia del ranking).
 \end{itemize}
 
 \section{Resultados Cuantitativos}
 
-La evaluación se estructura en dos fases: determinación del rendimiento máximo (Peak Performance) y análisis de estabilidad ante la variación del tamaño de la galería.
+El modelo híbrido (SSL + supervisado) alcanzó los siguientes valores de desempeño sobre el protocolo completo:
 
+\begin{comment}
 \subsection{Desempeño Óptimo \textit{(Peak Performance)}}
 En la configuración experimental con la población base de 60 sujetos, el modelo híbrido alcanzó los siguientes resultados:
+\end{comment}
+
 \begin{itemize}
-    \item \textbf{Rank-1 Accuracy:} 91.29\%
-    \item \textbf{mAP:} 44.83\%
+    \item \textbf{Rank-1 Accuracy:} 81.26\%
+    \item \textbf{mAP:} 29.23\%
+    \item \textbf{Rank-5:} 93.70\%
+    \item \textbf{Rank-10:} 96.18\%
+    \item \textbf{Rank-20:} 97.74\%
+    \item \textbf{minP:} 3.8
 \end{itemize}
 
+\begin{comment}
 Este resultado valida la eficacia de la fase de pre-entrenamiento autosupervisado (SSL) para la extracción de características cinemáticas robustas. La Tabla \ref{tab:results_main} contextualiza este hallazgo frente a métodos del estado del arte.
+\end{comment}
+
+Estos resultados representan el comportamiento robusto del modelo bajo dataset completo, donde la diversidad de vistas, sujetos y variaciones temporales, constituye un escenario más complejo que los experimentos realizados con subconjuntos reducidos.
+
+\subsection{Interpretación del Desempeño}
+
+El valor del \textbf{rank-1 (81.26\%)} confirma que el modelo es capaz de identificar correctamente al sujeto en la mayoría de casos, especialmente bajo condiciones de vista lateral o diagonal. Sin embargo, el \textbf{mAP (29.23\%)} revela que, aunque el primer acierto suele ser correcto, la consistencia del ranking completo disminuye en vistas desafiantes. Este comportamiento es coherente con la literatura y puede ser debido a:
+
+\begin{itemize}
+    \item Oclusiones fuertes en vistas frontales y posteriores.
+    \item Reducción de información cinemática útil cuando la silueta colapsa lateralmente.
+    \item Sensibilidad natural del Triplet Loss a variaciones extremas de vista.
+\end{itemize}
+
+Es decir, un \textbf{mAP} en ese rango implica que el modelo recupera correctamente las primeras coincidencias, pero pierde estabilidad al ordenar todas las secuencias del mismo individuo.
+
+\subsection{Comparación con el Estado del Arte}
 
 \begin{table}[h]
 \centering
-\caption{Comparación de rendimiento (Rank-1) en CASIA-B (Condición NM). *Nota: Los métodos de referencia utilizan el protocolo completo (124 sujetos), mientras que el método propuesto valida la arquitectura en un subconjunto (60 sujetos) por eficiencia computacional.}
+\caption{Comparación de rendimiento (Rank-1) en CASIA-B}
 \label{tab:results_main}
 \begin{tabular}{lccc}
 \hline
@@ -37,13 +64,18 @@ GaitSet (Baseline) & Lit. Estándar & Supervisado & 84.2 \\
 Semi-Supervised Gait & (\cite{Li2020SemiSupGait}) & Híbrido & 89.2 \\
 GaitLU-1M Baseline & (\cite{Zheng2022GaitLU1M}) & SSL (Datos Masivos) & 91.5 \\
 \hline
-\textbf{Modelo Propuesto} & - & \textbf{Híbrido (Eficiente)} & \textbf{91.29} \\
+\textbf{Modelo Propuesto} & - & \textbf{Híbrido} & \textbf{81.26} \\
 \hline
 \end{tabular}
 \end{table}
 
-Se observa que el enfoque propuesto supera a líneas base supervisadas y alcanza una competitividad estadística frente a métodos entrenados con volúmenes masivos de datos (GaitLU-1M). A pesar de utilizar un conjunto de entrenamiento reducido, el modelo logra generalizar eficazmente, demostrando una mayor eficiencia en el aprendizaje de representaciones.
+A pesar de no alcanzar resultados completamente competitivos, el modelo propuesto presenta un rendimiento considerable sin recurrir a arquitecturas profundas especializadas en siluetas. Además, de un desempeño notable considerando las limitaciones computacionales y la simplicidad del backbone empleado.
 
+\begin{comment}
+Se observa que el enfoque propuesto supera a líneas base supervisadas y alcanza una competitividad estadística frente a métodos entrenados con volúmenes masivos de datos (GaitLU-1M). A pesar de utilizar un conjunto de entrenamiento reducido, el modelo logra generalizar eficazmente, demostrando una mayor eficiencia en el aprendizaje de representaciones.
+\end{comment}
+
+\begin{comment}
 \subsection{Interpretación de la Discrepancia Rank-1 vs. mAP}
 El análisis de los resultados revela una divergencia entre la alta precisión de primer impacto (91.29\%) y el mAP moderado (44.83\%). Esta disparidad es atribuible a la sensibilidad del modelo ante variaciones extremas de ángulo de visión presentes en CASIA-B.
 Mientras que el sistema logra identificar exitosamente al sujeto en vistas laterales o diagonales (asegurando el Rank-1), la recuperación completa de todas las instancias se ve penalizada en los ángulos críticos (0° y 180°), donde la oclusión de la dinámica de las extremidades reduce la discriminabilidad de la silueta. Esto confirma que el modelo prioriza características dinámicas laterales sobre la información estática frontal.
@@ -67,3 +99,16 @@ Es pertinente reportar la sensibilidad observada durante la fase de ajuste fino 
 
 \section{Análisis Cualitativo}
 El examen visual de las recuperaciones confirma que el modelo híbrido privilegia la coherencia temporal. Los casos de éxito muestran una alta tolerancia a variaciones en la cadencia de paso, mientras que los errores de recuperación se concentran predominantemente en escenarios de baja resolución o segmentación ruidosa, validando la necesidad de mecanismos de atención visual para trabajos futuros.
+\end{comment}
+
+\section{Análisis Cuantitativo}
+
+Los resultados finales del sistema muestran una brecha entre la precisión de identificación estricta y la consistencia del ranking. Con la evaluación completa de CASIA-B, el modelo alcanzó un \textbf{Rank-1 de 81\%}, mientras que el \textbf{mAP se mantuvo en 29\%}. Esta diferencia es un comportamiento esperado en modelos de \textit{gait recognition} que trabajan con fuertes variaciones angulares.
+
+El alto Rank-1 indica que, para la mayoría de sujetos, el modelo es capaz de recuperar correctamente al individuo más similar en la primera posición. Sin embargo, el mAP refleja el desempeño del ranking, penalizando aquellas vistas donde la geometría del cuerpo pierde información discriminativa. Esto ocurre especialmente en ángulos de vista complejos, donde la marcha presenta oclusiones y menor proyección lateral de las extremidades.
+
+Adicionalmente, el sistema obtuvo valores elevados en métricas como \textbf{Rank-5 (93.7\%)}, \textbf{Rank-10 (96.18\%)} y \textbf{Rank-20 (97.74\%)}, evidenciando que, incluso en casos donde no se acierta en la primera posición, el sujeto correcto suele aparecer dentro de los primeros resultados. Estas métricas complementan al Rank-1 mostrando que el espacio de características está bien estructurado y que el modelo conserva una alta capacidad de recuperación.
+
+Finalmente, el sistema dió un \textbf{minP de 3.8}, una métrica que mide la precisión mínima entre todos los casos evaluados. Un valor bajo de minP es común en escenarios con vistas difíciles, ya que capta los peores desempeños del modelo. Este indicador refuerza la observación de que, si bien el modelo es robusto en la mayoría de vistas, existen configuraciones geométricas donde su rendimiento cae de forma notable.
+
+En conjunto, las métricas muestran que el modelo presenta buen desempeño en términos de identificación directa (Rank-1), pero mantiene un desafío en la consistencia global del ranking (mAP) y en los casos más difíciles (minP). Esto concuerda con los fenómenos evaluados en la literatura para CASIA-B, donde la diversidad angular continúa siendo el principal factor de degradación en sistemas de reconocimiento por marcha.
