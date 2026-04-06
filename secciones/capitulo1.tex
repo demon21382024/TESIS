@@ -18,39 +18,52 @@ En contraste, el aprendizaje autosupervisado (\textit{Self Supervised Learning -
 
 \section{Descripción de la situación problemática}
 
-A pesar de sus avances, \textit{Gait Recognition} aún enfrenta desafíos relacionados con las limitaciones de ambas estrategias de aprendizaje. Los métodos supervisados ofrecen una alta precisión, pero su escalabilidad se ve comprometida por la necesidad de datos etiquetados en contextos reales, donde las variaciones visuales son casi infinitas. Y, por otro lado, el aprendizaje autosupervisado permite una mayor generalización y adaptabilidad, pero carece de una guía explícita que ayude al modelo a distinguir detalles sutiles entre individuos con patrones de caminata similares.
+A pesar de los avances en \textit{Gait Recognition}, los modelos actuales presentan limitaciones fundamentales que afectan su desempeño en escenarios reales. En particular, muchas de las arquitecturas propuestas tratan las secuencias de marcha como conjuntos de \textit{frames} independientes, lo que impide capturar adecuadamente la dinámica compleja del movimiento humano. Adicionalmente, los modelos actuales tienden a aprender representaciones invariantes frente a variaciones como translaciones, cambios de posición o ruido en la captura. 
 
-Para abordar estas deficiencias, investigaciones recientes han explorado modelos híbridos y arquitecturas más complejas. Por ejemplo, \citet{Kovacevic2021SelfAttentionGait} introduce mecanismos de auto-atención que mejora la capacidad del modelo para concentrarse en las regiones más relevantes del movimiento. No obstante, incluso estos enfoques avanzados no logran resolver completamente el problema, ya que siguen careciendo de un componente supervisado que refine la discriminación entre identidades.
+Por otro lado, si bien el aprendizaje autosupervisado ha demostrado mejorar la generalización al aprovechar grandes volúmenes de datos no etiquetados, y el aprendizaje supervisado permite una mejor discriminación entre identidades, ambos enfoques presenta limitaciones cuando son aplicados independientemente. Por ejemplo, \citet{Kovacevic2021SelfAttentionGait} introduce mecanismos de auto-atención que mejora la capacidad del modelo para concentrarse en las regiones más relevantes del movimiento. No obstante, incluso bajo este enfoque avanzando, no se logra resolver el problema debido a la falta de un componente supervisado que refine la discriminación entre identidades.
 
-En este contexto, el problema que esta tesis aborda radica en la necesidad de un marco de trabajo que combine de manera efectiva la capacidad de generalización del aprendizaje autosupervisado con la precisión del aprendizaje supervisado. Más que una simple combinación, se busca explorar una integración sinérgica entre ambos paradigmas, aprovechando la robustez de los modelos basados en atención y la guía estructurada del aprendizaje supervisado para mejorar la fiabilidad y adaptabilidad del reconocimiento de marcha en escenarios reales.
+En este contexto, el problema que esta tesis aborda, radica en la ausencia de una enfoque que integre de manera efectiva el modelo temporal de la marcha con estrategias de aprendizaje robustas. Específicamente, se requiere un concepto que no solo combine aprendizaje autosupervisado y supervisado, sino que también captura la dinámica temproal y el carácter cíclico de la marcha, permitiendo mejorar la discriminación entre individuos en condiciones reales.
 
 \section{Formulación del problema}
 
+\begin{comment}
 En \textit{Gait Recognition}, los métodos supervisados ofrecen alta precisión, pero dependen de grandes volúmenes de datos etiquetados, lo que limita su escalabilidad. Por otro lado, el aprendizaje autosupervisado reduce esa dependencia, aunque pierde capacidad para diferenciar identidades similares. Las propuestas híbridas actuales combinan ambos enfoques de forma parcial, sin una integración real. Por ello, esta investigación aborda la falta de un marco unificado que combine de manera efectiva la precisión del aprendizaje supervisado y la generalizacón del aprendizaje autosupervisado para mejorar la re-identificación de personas.
 
 En \textit{Gait Recognition} no hay un marco que logre integrar de manera efectiva la capacidad de generalización del aprendizaje supervisado con la alta precisión discrimnativa del aprendizaje supervisado. Los métodos disponibles combinan ambos enfoques de forma parcial o secuencial, lo que limita su rendimiento en escenarios reales con variaciones significativas entre individuos. Por ello, el problema de la presente investigación consiste en diseñar y evalua un modelo híbrido que unifique ambos paradigmas para mejorar la diabilidad y la adaptabilidad del proceso de re-identificación.
+\end{comment}
+
+En \textit{Gait Recognition}, los métodos actuales se basan en el procesamiento de \textit{frames} individuales o en representaciones limitadas. Este enfoque \textit{frame-based} no permite capturar de manera adecuada la naturaleza secuencial y cíclica del andar humano, lo que reduce la capacidad del modelo para identofocar patrones dinámicos distintivos entre individuos. 
+
+La marcha es un proceso intrínsecamente temporal, donde la información relevante no reside únicamente en la apariencia estática, sino en la evolución del movimiento a lo largo del tiempo. Sin embargo, la falta de un modelo temporal conlleva a representaciones incompletas y poco robustas frente a variaciones reales como cambios de velocidad, fase del ciclo de marcha o condiciones de captura.
+
+Asimismo, aunque el aprendizaje autosupervisado ha permitido mejorar la generalización mediante el uso de datos no etiquetados, y el aprendizaje supervisado ha demostrado eficacia para la discriminación entre identidades, ambos paradigmas sulen aplicarse sin explotar plenamente la estructura temproal de las secuencias.
+
+En este contexto, el problema de investigación se define como la ausencia de un modelo que permita representaciones secuenciales robustas mediante un modelo temporal explícito de la marcha, integrando estrategias de aprendizaje que mejoren la capacidad de generalización y la discriminación entre individuos.
 
 \section{Objetivos de investigación}
 
 \subsection*{Objetivo General}
 
-Desarrollar y evaluar un modelo híbrido que combine el aprendizaje supervisado y autosupervisado para la re-identificación de personas mediante \textit{Gait Recognition}.
+Evaluar, diseñar e implementar un modelo de \textit{Gait Recognition} que aprenda representaciones temporales robustas mediante el modelo explícito de la dinámica de la marcha, integrando estrategias de aprendizaje autosupervisado y supervisado para mejorar la re-identificación de personas.
 
 \subsection*{Objetivos Específicos}
 \begin{enumerate}
-    \item Analizar el estado del arte de los métodos supervisados, autosupervisados y combinados aplicados al \textit{Person Re-ID} mediante \textit{Gait recognition}, identificando sus principales limitaciones y tendencias recientes.
-    \item Diseñar una arquitectura híbrida que integre un módulo de pre-entrenamiento autosupervisado con una etapa de ajuste fino supervisado, buscando un equilibrio entre generalización y precisión.
-    \item Implementar el modelo propuesto utilizando un conjunto de datos no etiquetado de gran escala para el pre-entrenamiento y datasets etiquetados estándar para el entrenamiento supervisado.
-    \item Evaluar el desempeño, bajo métricas de precisión, del enfoque híbrido frente a métodos puramente supervisados y puramente autosupervisados.
+    \item Diseñar una representación temporal de la marcha basada en secuencias que preserven la información espacial y dinámica del movimiento.
+    \item Implementar un mecanismo de alineamiento basado en el centro de masa para reducir variaciones espaciales irrelevantes y mejorar la consistencia.
+    \item Optimizar los \textit{embeddings} generados utilizando técnicas de \textit{metric learning}, con el fin de mejorar la discriminación entre identidades similares.
+    \item Integrar un esquema de aprendizaje autosupervisado coherente con la estructura temporal de la marcha, seguido de una etapa de ajuste fino supervisado que refine la capacidad discriminativa del modelo.
+    \item Evaluar el desempeño del modelo propuesto bajo métricas de precisión y comparación con enfoques tradicionales.
 \end{enumerate}
 
 \section{Justificación}
 
-Este trabajo busca superar las limitaciones de los enfoques híbridos actuales en el reconocimiento de marcha. Aunque existen propuestas que combinan el aprendizaje supervisado y autosupervisado \citep{Li2020SemiSupGait}, la mayoría lo hace de manera secuencial, sin lograr una integración efectiva entre ambos paradigmas. Frente a ellos, la investigación propone un marco unificado que permita la interacción sinérgica entre las dos estrategias de aprendizaje, contribuyendo así al desarrollo de modelos más equilibrados entre precisión y capacidad de generalización.
+Este trabajo busca superar las limitaciones de los enfoques actuales en el reconocimiento de marcha, parcticularmente la falta de un modelo temporal explícito en las secuencias. Aunque existen propuestas que combinan el aprendizaje supervisado y autosupervisado \citep{Li2020SemiSupGait}, la mayoría se centra en mejorar la discriminación sin abordar de manera adecuada la naturaleza secuencial y cíclica de la marcha, sin explotar la dinámica temporal como eje central del aprendizaje. 
 
-En el plano práctico, esta propuesta tiene un impacto tangible al reducir la dependencia de grandes volúmenes de datos etiquetados, lo que disminuye los costos y la complejidad asociados a la implementación de sistemas de re-identificación a gran escala. Un modelo más generalizable, como los explorados en trabajos recientes \citep{Dou2023IdentitySeeking}, facilitaría la transición de los sistemas actuales desde entornos controlados de laboratorio hacia aplicaciones reales, aumentando su robustez y confiabilidad.
+Frente a ello, la presente investigación propone un enfoque que integra el modelado temporal explícito de la marcha con un esquema híbrido de aprendizaje. De esta manera se busca una interacción más coherente entre el aprendizaje autosupervisado y supervisado, y la también la construcción de representaciones secuenciales más robustas. 
 
-Finalmente, la justificación social radica en el potencial de este tipo de tecnologías para fortalecer la seguridad ciudadana, el monitoreo inteligente de espacios públicos y el análisis forense. Al mejorar la precisión y escalabilidad de los sistemas de reconocimiento de marcha, esta investigación contribuye al desarrollo de soluciones tecnológicas más efectivas y socialmente relevantes, capaces de apoyar la gestión de entornos urbanos de manera ética y responsable.
+En el plano práctico esta propuesta tiene un impacto tangible al mejorar la calidad de las representaciones aprendidas, lo que puede traducirse en una mayor robustez frente a variaciones rales. Asimismo, al incorporar aprendizaje autosupervisado, se reduce la dependencia de grandes volúmenes de datos etiquetados. Esto es consistente con enfoques orientedos a mejorar la generalización \citep{Dou2023IdentitySeeking}, facilitando la transición de sistemas hacia aplicaciones reales.
+
+Finalmente, la justificación social radica en el potencial de estas tecnologías para fortalecer la seguridad, el monitoreo inteligente de espacios públicos y el análisis forense. Al incorporar modelos más robustos que consideren la dinámica real del movimiento humano, esta investigación contribuye al desarrollo de soluciones más precisas, confiables y aplicables en contexto reales. 
 
 \section{Alcance y limitaciones / restricciones} %[opcional]
 

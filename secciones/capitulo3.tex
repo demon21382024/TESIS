@@ -5,7 +5,7 @@ Tradicionalmente, los sistemas de \textit{Re-ID} se han basado en el aprendizaje
 
 Ante ello, ha cobrado relevancia el aprendizaje auto-supervisado, que busca aprovechar la estructura interna de los datos para generar representaciones discriminativas sin recurrir a etiquetas. En la re-identificación, este paradigma permite extraer características más invariantes frente a cambios de cámara, iluminación o pose. Sin embargo, aunque mejora la adaptabilidad del modelo, suele carecer de la precisión discriminativa que caracteriza a los métodos supervisados.
 
-Por tanto, la integración de ambos paradigmas surge como una alternativa sólida para mejorar tanto la robustez como la generalización de los modelos de \textit{Re-ID}. Este marco conceptual da sustento al objetivo general de la presente investigación, orientado al desarrollo y evaluación de un modelo híbrido capaz de combinar la precisión del aprendizaje supervisado con la capacidad de adaptación del aprendizaje auto-supervisado.
+Por lo tanto, la integración de ambos paradigmas puede considerarse un componente complementario para mejorar la calidad de las representaciones aprendidas. No obstante, más allá del paradigma de entrenamiento, resulta fundamental abordar la naturaleza temporal de los datos en \textit{Gait Recognition}, ya que la identidad no solo depende de características estáticas, sino también de la propia dinámica del moivimiento en el tiempo. En este sentido, la presente investigación se orienta al desarrollo de un modelo que integre estrategias de aprendizaje con un modelado temporal explícito. 
 
 \subsection{Contexto}
 
@@ -21,7 +21,8 @@ Estas variaciones complican el aprendizaje de representaciones verdaderamente in
 
 \section{Reconocimiento de Marcha}
 
-El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada.
+El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada. \\
+En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas. Sin embargo, su efectividad depende en gran medida de la capacidad del modelo para representar adecuadamente la estructura temporal de las secuencias, lo cual refuerza la necesidad de enfoques que modelen explícitamente la dinámica delmovimiento humano. 
 
 \subsection{Modalidades y representaciones}
 
@@ -93,6 +94,28 @@ Estas tareas de predicción fomentan la adquisición de representaciones invaria
 En los enfoques basados en esqueleto, el cuerpo humano se modela como un conjunto de articulaciones interconectadas, lo que permite representar el movimiento mediante grafos dinámicos. El aprendizaje auto-supervisado en este contexto se apoya en tareas como la predicción de trayectorias articulares, la reconstrucción de grafos incompletos o la detección de inconsistencias estructurales.  
 Estas técnicas explotan la topología corporal y las relaciones espaciales entre articulaciones, resultando especialmente efectivas para el reconocimiento de marcha. Además, su combinación con arquitecturas de grafos (\textit{Graph Neural Networks}, GNNs) ha demostrado mejorar la capacidad del modelo para aprender dependencias espaciales complejas.
 
+\section{Representación Espacio-Temporal}
+
+En el reconocimiento de marcha, la información visual debe ser modela como una secuencia estructurada en el tiempo, en lugar de ser procesada bajo imágenes independientes. Para ello, las secuencias pueden representarse como tensores $[T, C, H, W]$, donde $T$ corresponde al número de frames, $C$ a los canales, y $H$, $W$ a las dimensiones espaciales.
+
+Esta representación permite preservar tanto la información espacial como la evolución temporal del moivimiento. A diferencia de los enfoques basados en \textit{frames}, las representaciones espacio-temporales captura patrones dinámicos asociados al ciclo de marcha, como la priodicidad, oscilación de las extremidades y coordinación corporal.
+
+Modelar esta estructura resulta fundamental para aprender características biométricas más robustas, ya que la identidad de una persona también se basa en la forma en que se mueve a lo largo del tiempo.
+
+\section{invariancia y normalización física}
+
+Las secuencias de marcha suelen contener variaciones espaciales irrelevantes, como traslaciones, desplazamientos o inestabilidad. Estas variaciones no aportan información discrimnativa sobre la identidad, pero pueden afectar negativamente el aprendizaje. 
+
+Comúnmente, los modelos intenta aprender invariancia frente a las perturbaciones. Sin embargo, este enfoque implica que parte de la capacidad delmodelo se dedique a ignorar información irrelevante, en lugar de enfocarse en los patrones útiles y distintivos.
+
+Una estrategia más eficiente, consiste en eliminar dichas variaciones mediante normalización física antes del entrenamiento. Bajo este contexto, el alineamiento basado en el centro de masa (CoM) permite centrar las siluetas en cada \textit{frame}, reduciendo el efecto de la traslación y estabilizando la secuencia. Esto permitirá que el modelo se centre en la dinámica real del movimiento.
+
+\section{Aprendizaje métrico temporal}
+
+El objetivo del reconocimiento de marcha es aprender representaciones que permitan distinguir entre individuos en un espacio de características. Para ello, el aprendizaje métrico optimiza directamente la distancia entre muestran en función de su identidad. Por ejemplo, el \textit{triplet-loss}, busca minimizar la distancia entre muestras de la misma identidad y maximizarla respecto a diferentes identidades.
+
+En el caso de secuencias de marcha, este enfoque se extiende al dominio temporal, donde los \textit{embeddings} deben capturar la dinámica del movimiento, dando lugar a representaciones más robustas y discrimnativas.
+
 \section{Estrategias Complementarias}
 \subsection{Fine-Tuning y Transferencia}
 
@@ -126,10 +149,22 @@ Para evaluar el rendimiento de los modelos de re-identificación, se emplean cie
 \section{Síntesis Conceptual}
 \subsection{Integración de paradigmas}
 
+\begin{comment}
 La revisión del marco teórico muestra que los enfoques supervisados y autosupervisados en \textit{Gait Recognition} presenta fortalezas que se pueden complementar. Los métodos supervisados logran altos niveles de precisión, pero dependen de grandes volúmenes de datos etiquetados y tienen a sobreajustarse a condiciones específicas del entorno. Por otro lado, el aprendizaje autosupervisado permite extraer representaciones más generales y robustas, aunque carece de un mecanismo explícito para diferenciar identidades similares. \\
 Entonces, la integración de ambos surge como una estrategia natural para cambiar robustez con la capacidad discriminativa. dicho proceso no se limite a ejecutar dos etapas consecutiva; implica articular de forma que las representaciones aprendidas se utilicen como base para un refinamiento supervisado más eficiente. Esto nos permitirá construir un modelo que no solo aprenda a generalizar, sino que también ajuste su capacidad discrimativa mediante supervisión, generando una solución equilibrada y efectiva para la re-identificación de personas.
+\end{comment}
+
+La revisión del marco teórico nos muestra que los enfoques supervisados y autosupervisados en \textit{Gait Recognition} presentan fortalezas complementarias. Los métodos supervisados destacan por su capacidad discrimativa, mientras que el aprendizaje autosupervisado permite mejorar la generalización al aprovechar datos no etiquetados. \\
+Sin embargo, más allá del paradigma de entrenamiento, uno de los principales desafíos identificados es la limitada capacidad de los modelos actuales para capturar la naturaleza temporal de la marcha. \\
+En este contexto, la integración de paradigmas se plantea como un componente complementario dentro de un enfoque más amplio, donde el modelado temporal explícito de la marcha y la construcción de representaciones secuenciales robustas adquieren un rol central en el proceso de aprendizaje.
 
 \subsection{Oportunidades y fundamentos del enfoque propuesto}
 
+\begin{comment}
 El enfoque híbrido propuesto se sustenta en varias oportunidades. Los avances recientes en aprendizaje autosupervisados han demostrado que es posible entrenar modelos potentes sin depender de anotaciones, lo que reduce significativamente los costos asociados al etiquetado de datos. Además, la literatura revisada anteriormente meustra que lo métodos supervisados siguen siendo indispensables para obtener altos niveles de precisión, sobre todo en tareas que requieren ser sensibles a pequeños detalles. \\
 En conjunto, estas oportunidades constituyen el fundamento conceptual de la propuesto, aprovechar ambos modelos de la forma posible para construir un sistema de re-identificación de personas mucho más robuso, preciso y escalable.
+\end{comment}
+
+El enfoque propuesto se sustenta en la necesidad de modelar de manera explícita la dinámica temporal de la marcha, considerando que la identidad de un individuo está estrechamente ligada a patrones de movimientos que evolucionanen el tiempo. \\
+Asimismo, la incorporación de técnicas de normalización física permite reducir variaciones irrelevantes en las secuencias, facilitando que el modelo se enfoque en características discriminativas. En conjunto, el uso de representaciones espacio-temporales, mecanismos de alineamiento y estrategias de aprendizaje métrico, contribuyen a la construcción de \textit{embeddings} más robustos. \\
+En este sentido, el uso de un esquema híbrido de aprendizaje, que combine aprendizaje autosupervisado y supervisado, se integra como un componente adicional que permite mejorar la generalización y precisión del modelo.

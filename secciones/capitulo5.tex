@@ -7,23 +7,33 @@ La metodología propuesta se enmarca específicamente en la re-identificación d
 
 \begin{comment}
 Este enfoque metodológico se divide rigurosamente en tres áreas principales: La justificación y el diseño arquitectónico de la fusión \textit{Multi-Modal}, el protocolo de pre-procesamiento de datos de marcha, y la estrategia de entrenamiento híbrido; culminando en un diseño experimental detallado para la validación y el análisis de ablación.
-\end{comment}
 
 El modelo implementado en la presente investigación utiliza un \textit{backbone} convolucional ligero diseñado específicamente para operar sobre siluetas estáticas. Este extractor basado en \textit{CNN} transforma cada imagen en un vector de características, sin incorporar módulos explícitos de atención o mecanismos temporales. Sobre este backbone se añade una capa completamente conectada que actúa como cabeza métrica, encargada de generar un embedding normalizado que permite medir distancias entre identidades.
+\end{comment}
 
-\section{Diseño híbrido}
+El modelo propuesto en la presenta investigación está diseñado para operar sobre secuencias temporales de marcha, en lugar de imágenes individuales. A diferencia de enfoques tradicionales basados en \textit{frames} independientes, esta propuesta modela explícitamente la dinámica del movimiento humano, permitiendo capturar patrones temporales asociados al ciclo de marcha. 
+
+La arquitectura combina un extractor espacial basado en redes convolucionales con un mecanismo de agregación temproal, generando representaciones secuenciales robustas que posteriormente son optimizadas mediante aprendizaje métrico. 
+
+\section{Diseño híbrido y dinámica temporal}
 
 La estrategia de doble etapa es el pilar de este trabajo. Se justifica al considerar que el entrenamiento de modelos requieren un volumen de datos masivo para aprender representaciones robustas, una necesidad que la anotación manual supervisada no puede satisfacer eficientemente (\cite{Huang2025PersonViT, Lee2023GaitParse}).
 
+La estrategia híbrida adoptada en este trabajo se plantea como un componente dentro del proceso de aprendizaje. Su propósito será aprovechar las ventajas del aprendizaje autosupervisado para mejorar la generalización, y del aprendizaje supervisado para refinar la discriminación entre identidades.
+
+No obstante, el eje central de la metodología no radica únicamente en la combinación de paradigmas, sino en la capacidad del modelo para capturar y representar la dinámica temporal de la marcha, aspecto fundamental en tareas basadas en secuencias.
+
 \section{Fase I: Fundación del Conocimiento – Pre-entrenamiento Auto-Supervisado (SSL)}
 
-La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Supervisado} (\textit{Self-Supervised Learning}, SSL). Este paradigma elimina la dependencia de etiquetas humanas al generar su propia señal de supervisión a partir de la estructura intrínseca de los datos. El propósito de esta fase no es resolver la tarea final, sino construir un \textit{modelo base} (\textit{backbone}) capaz de desarrollar una comprensión profunda y generalizable de las características visuales relevantes.  
+La primera fase de la metodología se sustenta en el \textit{Aprendizaje Auto-Supervisado} (\textit{Self-Supervised Learning}, SSL). Este paradigma elimina la dependencia de etiquetas humanas al generar su propia señal de supervisión a partir de la estructura intrínseca de los datos. El propósito de esta fase no es resolver la tarea final, sino construir un \textit{modelo base} (\textit{backbone}) capaz de desarrollar una comprensión profunda y generalizable de las características visuales relevantes.
 
 \begin{comment}
-El proceso se basa en la formulación de \textit{tareas de supervisión derivadas directamente de los datos}, las cuales, de acuerdo con la literatura especializada en visión por computador, pueden clasificarse en dos enfoques metodológicos principales:
+El pre-entrenamiento autosupervisado implementado adopta un enfoque basado en predicción de transformaciones. En esta fase, el modelo recibe imágenes de siluetas a las que se les aplican transformaciones geométricas simples y el objetivo consiste en que el modelo identifique cuál transformación fue aplicada. Este mecanismo obliga al backbone a aprender patrones estructurales relevantes del cuerpo humano y de la forma general de la marcha, sin necesidad de etiquetas. Aunque este enfoque es más simple que métodos más avanzados como el enmascaramiento de patches o las \textit{contrastive losses}, resulta adecuado para una tesis de pregrado y suficiente para producir representaciones útiles que posteriormente se especializan durante el entrenamiento supervisado.
 \end{comment}
 
-El pre-entrenamiento autosupervisado implementado adopta un enfoque basado en predicción de transformaciones. En esta fase, el modelo recibe imágenes de siluetas a las que se les aplican transformaciones geométricas simples y el objetivo consiste en que el modelo identifique cuál transformación fue aplicada. Este mecanismo obliga al backbone a aprender patrones estructurales relevantes del cuerpo humano y de la forma general de la marcha, sin necesidad de etiquetas. Aunque este enfoque es más simple que métodos más avanzados como el enmascaramiento de patches o las \textit{contrastive losses}, resulta adecuado para una tesis de pregrado y suficiente para producir representaciones útiles que posteriormente se especializan durante el entrenamiento supervisado.
+El pre-entrenamiento autosupervisado implementa en esta investigación se basa en la consistencia temporal entre subsecuencias de una misma secuencia de marcha. Donde, en lugar de aplicar transformaciones geométricas estáticas, se generan pares positivos a partir de segmentos temporales parcialmente solapados extraídos de una misma secuencia. Por ejemplo, una secuencia de longitud mayor se divide en dos subsecuencias que representan distintas fases del ciclo de marcha.
+
+El modelo es entrenado para maximizar la similitud entre estas subsecuencias en el espacio de características, promoviendo la invariancia frente a la fase temporal del movimiento. Este enfoque permite capturar de manera más efectiva la dinámica temporal de la marcha, generando representaciones más robustas y coherentes con la naturaleza secuencial del problema. 
 
 \subsection{Enfoques Generativos (Reconstructivos)}
 
@@ -138,13 +148,23 @@ Esta normalización es fundamental para asegurar la estabilidad en el proceso de
 
 Todas las imágenes se redimensionan a una resolución fija de: 64x64 pixeles. Ya que de esta forma se reduce el costo computacional, permitiendo que modelos \textit{CNN} y el módulo SSL sin necesidad de hardware potente extenro. Además, al estandarizar la entrada se facilita el aprendizaje del extractor de caracteriza. Por útltimo, también evita deformaciones significativas, ya que las siluetas tienen un alto nivel de contraste y estructura simple.
 
-\subsection{Augmentación para Aprendizaje Autosupervisado}
+\subsection{Augmentación para aprendizaje autosupervisado}
 
-Para la etapa de aprendizaje autosupervisado, el pre-procesamiento incorpora un conjunto específico de augmentaciones con el objetivo es generar dos versiones distintas de cada imagen, permitiendo que el modelo aprenda invariancias sin utilizar etiquetas. Estas transformaciones incluyen recortes aleatorios, ligeras rotaciones, inversión horizontal y cambios controlados en brillo o contraste. Todas estas operaciones están alineadas con el enfoque contrastivo implementado en el proyecto y buscan reforzar la robustez del modelo ante variaciones espaciales comunes en secuencias de marcha. Estas augmentaciones se aplican exclusivamente durante el pre-entrenamiento autosupervisado, mientras que la fase supervisada utiliza únicamente las transformaciones estándar.
+Las estrategias de augmentación se aplican a nivel de secuencia, incluyendo variaciones como recortes temporales, inversión horizontal y perturbaciones leves en los frames, con el objetivo de reforzar la robustez del modelo frente a variaciones espaciales y temporales. Todas estas operaciones están alineadas con el enfoque contrastivo implementado en el proyecto y buscan reforzar la robustez del modelo ante variaciones espaciales comunes en secuencias de marcha. Estas augmentaciones se aplican exclusivamente durante el pre-entrenamiento autosupervisado, mientras que la fase supervisada utiliza únicamente las transformaciones estándar.
 
 \subsection{Construcción de Mini-Batches}
 
 Durante el entrenamiento supervisado, el proyecto utiliza dos estrategias de muestreo complementarias. Para la parte basada en entropía cruzada, se emplea muestreo aleatorio tradicional. Por otro lado, para optimizar el \textit{Triplet Loss}, el modelo puede apoyarse en un esquema tipo PK Sampler, en el que cada mini-batch contiene un número fijo de identidades distintas y varias imágenes por cada una de ellas. Esto facilitará la construcción de anclas, positivos y negativos dentro del mismo lote, mejorando la discriminación de los embeddings entre clases y dentro de la misma identidad. Esta combinación de estrategias permite un entrenamiento más estable y efectivo para el modelo híbrido.
+
+\subsection{Construcción de secuencias temporales}
+
+A diferencia de enfoques basados en imágenes individuales, el modelo propuesto requiere como entrada secuencias de longitud fija. Para ello, se construyen subsecuencias de tamaño $T$ a partir de las secuencias originales del dataset. 
+
+Se aplica un muestreot emporal uniforme para seleccionar $T$ \textit{frames} representativos del ciclo de marcha. En casod e secuencias más largas, se generan múltiples subsecuencias.
+
+\subsection{Alineamiento por Centro de Masa (CoM)}
+
+Antes de la construcción de las secuencias, se aplica un proceso de alineamiento espacial basado en el centro de masa de la silueta. Este procedimiento consiste en trasladar el baricentro de los píxeles activos al centro geométrico de la imagen. El objetivo de este paso es eliminar variaciones de traslación lateral, permitiendo que el modelo concentre su capacidad en el aprendizaje de patrones estructurales y dinámicos, en lugar de aprender invariacias irrelevantes.
 
 \begin{comment}
 \subsection{Pre-Procesamiento para la Extracción de Siluetas}

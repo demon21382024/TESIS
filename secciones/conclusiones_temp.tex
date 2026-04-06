@@ -1,0 +1,55 @@
+\chapter{CONCLUSIONES}
+
+El presente trabajo abordó el problema de la re-identificación de personas basada en la marcha mediante un enfoque híbrido que integra aprendizaje auto-supervisado y entrenamiento supervisado. A diferencia de otros estudios centradas en imágenes individuales, esta investigación introdujo un enfoque orientado a la modelación temporal de secuencias de marcha.
+
+\section{Conclusiones principales}
+
+\begin{itemize}
+    \item Se demostró que el uso de \textbf{aprendizaje auto-supervisado basado en consistencia temporal} permite aprender representaciones robustas sin depender completamente de etiquetas, capturando de manera más efectiva la dinámica intrínseca del movimiento humano.
+
+    \item La transición de un enfoque estático a uno basado en \textbf{secuencias temporales} permitió mejorar significativamente la calidad del espacio de características, evidenciado por el incremento del mAP global.
+
+    \item El modelo alcanzó un \textbf{99.5\% en condiciones normales}, confirmando que la marcha constituye una biometría altamente discriminativa cuando no existen perturbaciones externas.
+
+    \item En condiciones complejas como \textbf{bolsas (76.0\%)} y \textbf{abrigos (49.6\%)}, se observó una degradación del rendimiento, evidenciando que la variabilidad en la apariencia sigue siendo uno de los principales desafíos del problema.
+
+    \item El uso de una estrategia híbrida (SSL + supervisado) permitió combinar \textbf{capacidad de generalización} con \textbf{capacidad discriminativa}, logrando un equilibrio adecuado entre ambas.
+\end{itemize}
+
+\section{Aportes del Trabajo}
+
+Los principales aportes de esta investigación son:
+
+\begin{itemize}
+    \item Propuesta de un enfoque de \textbf{aprendizaje autsupervisado temporal} basado en subsecuencias, orientado a capturar invariancia de fase en el ciclo de marcha.
+
+    \item Implementación de un modelo que opera sobre \textbf{representaciones secuenciales}, alineado con la naturaleza dinámica del problema.
+
+    \item Integración de un esquema híbrido de entrenamiento que combina \textbf{pre-entrenamiento autosupervisado} y \textbf{fine-tuning supervisado} en un mismo pipeline.
+
+    \item Evaluación experimental completa sobre CASIA-B con análisis diferenciado por condiciones (NM, BG, CL), lo cual proporciona una visión más realista del comportamiento del sistema.
+\end{itemize}
+
+\section{Limitaciones}
+
+A pesar de los resultados obtenidos, el trabajo presenta ciertas limitaciones:
+
+\begin{itemize}
+    \item El modelo depende únicamente de siluetas, lo cual lo hace sensible a cambios drásticos en la apariencia.
+    \item No se incorporan explícitamente estructuras más avanzadas de modelado temporal como modelos 3D completos.
+    \item El tamaño del dataset limita la capacidad de generalización frente a escenarios más complejos.
+\end{itemize}
+
+\section{Trabajos Futuros}
+
+A forma de futuros trabajos se propone lo siguiente:
+
+\begin{itemize}
+    \item Uso de arquitecturas más avanzadas de modelado temporal (Temporal CNN, Transformers).
+    \item Extensión a datasets más grandes como OU-MVLP u otros.
+    \item Incorporación de técnicas multimodales para mejorar la robustez ante cambios drásticos de vestimenta.
+\end{itemize}
+
+\section{Cierre}
+
+En conclusión, este trabajo demuestra que la incorporación de aprendizaje auto-supervisado y modelado temporal representa una dirección efectiva para mejorar los sistemas de reconocimiento por marcha. Si bien aún existen desafíos abiertos, especialmente en escenarios con alta variabilidad de apariencia, los resultados obtenidos validan el enfoque propuesto y establecen una base sólida para futuras investigaciones.

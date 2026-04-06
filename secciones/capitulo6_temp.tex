@@ -1,0 +1,68 @@
+\chapter{RESULTADOS}
+
+\section{Configuración experimental}
+
+La evaluación del modelo propuesto se realizó sobre el dataset CASIA-B, utilizando el dataset estandar. A diferencia de experimentos preliminares, los resultados presentados corresponden a un escenario completo, lo cual representa una condición más realista y exigente en el contexto de re-identificación basada en la marcha.
+
+\subsection{Protocolo de evaluación}
+
+Los experimentos fueron diseñados bajo las siguientes condiciones:
+
+\begin{itemize}
+    \item \textbf{Dataset:} CASIA-B completo (124 sujetos)
+    \item \textbf{Condiciones evaluadas:}
+    \begin{itemize}
+        \item Caminata normal (NM)
+        \item Caminata con bolsa (BG)
+        \item Caminata con abrigo (CL)
+    \end{itemize}
+    \item \textbf{Entrada del modelo:} Secuencias de siluetas normalizadas a $64 \times 64$
+    \item \textbf{Representación:} Secuencias temporales de longitud fija
+    \item \textbf{Métricas:} Rank-1 Accuracy y Mean Average Precision (mAP)
+\end{itemize}
+
+\section{Resultados cuantitativos}
+
+El modelo híbrido propuesto (SSL temporal + fine-tuning supervisado) alcanzó los siguientes resultados:
+
+\begin{itemize}
+    \item \textbf{mAP global:} 49.55\%
+    \item \textbf{Rank-1 (Normal - NM):} 99.5\%
+    \item \textbf{Rank-1 (Bolsa - BG):} 76.0\%
+    \item \textbf{Rank-1 (Abrigo - CL):} 49.6\%
+\end{itemize}
+
+Estos resultados reflejan el desempeño del modelo bajo distintas condiciones de covariancia, permitiendo analizar su robustez frente a cambios en la apariencia.
+
+\section{Análisis del desempeño}
+
+\subsection{Condición Normal (NM)}
+
+El modelo alcanza un \textbf{99.5\% en Rank-1}, indicando la capacidad casi perfecta de identificación cuando no existen perturbaciones externas. Este resultado evidencia que el modelo logra capturar correctamente la dinámica de la marcha como una firma biométrica discriminativa.
+
+\subsection{Condición con Bolsa (BG)}
+
+En presencia de objetos externos, el rendimiento disminuye a \textbf{76.0\%}. Esta caída es consistente con la literatura, ya que la presencia de una bolsa altera la silueta y modifica parcialmente la dinámica del movimiento, especialmente en el balanceo de los brazos. Sin embargo, el modelo mantiene resultados competitivos, lo que sugiere que las representaciones aprendidas conservan información temporal relevante.
+
+\subsection{Condición con Abrigo (CL)}
+
+El escenario más desafiante corresponde a la condición de abrigo, donde el modelo alcanza \textbf{49.6\% en Rank-1}. Esta degradación significativa se debe a que el abrigo altera drásticamente la geometría de la silueta, ocultando características estructurales clave del cuerpo humano. Este resultado evidencia una limitación común en sistemas basados únicamente en siluetas, donde la dependencia de la forma visual impacta negativamente en la robustez.
+
+\subsection{Análisis del mAP}
+
+El valor de \textbf{mAP es 49.55\%} indica una mejora significativa respecto a configuraciones iniciales del modelo, reflejando una mayor consistencia en el ranking global de recuperación. A diferencia de modelos puramente espaciales, este incremento sugiere que la incorporación de información temporal permite estructurar mejor el espacio de embeddings, reduciendo la dispersión intra-clase y mejorando la separación inter-clase.
+
+\section{Discusión}
+
+Los resultados muestran un comportamiento característico de los sistemas de reconocimiento por marcha:
+
+\begin{itemize}
+    \item Alto desempeño en condiciones controladas (NM)
+    \item Degradación progresiva ante variaciones de apariencia (BG, CL)
+\end{itemize}
+
+No obstante, el modelo logra mantener una capacidad de discriminación razonable incluso en condiciones adversas, lo cual valida la efectividad del enfoque híbrido propuesto. Adicionalmente, el incremento en mAP sugiere que el aprendizaje auto-supervisado temporal contribuye a generar representaciones más estables, particularmente en la organización global del espacio de características.
+
+\section{Conclusión}
+
+Los resultados obtenidos demuestran que el modelo es altamente efectivo en escenarios ideales y mantiene un comportamiento consistente en condiciones más complejas. Sin embargo, también evidencian que la variabilidad en la apariencia sigue siendo un desafío abierto, especialmente en condiciones de vestimenta extrema. Estos hallazgos establecen una base sólida para la interpretación final del modelo y orientan las futuras mejoras del sistema.
