@@ -2,28 +2,35 @@
 
 \section{Configuración experimental}
 
-La evaluación del modelo propuesto se realizó sobre el dataset CASIA-B, utilizando el dataset estandar. A diferencia de experimentos preliminares, los resultados presentados corresponden a un escenario completo, lo cual representa una condición más realista y exigente en el contexto de re-identificación basada en la marcha.
+La validación del modelo propuesto se realizó sobbre el conjunto de datos CASIA-B. A diferencia de aproximaciones tradicionales basadas en imágenes individuales, el presente trabajo adopta un enfoque espacio-temporal, en donde la marcha es modelada bajo el timepo. \\
+En este contexto, cada muestra de entrada no corresponde a una imagen, sino a un volumen de datos compuestos por $T=24$ fotogramas consecutivos. Este volumen se representa como un tensor de dimensión $[T, C, H, W]$. \\
+Este paradigma permite a la red aprender patrones cinemáticos complejos del ciclo de marcha, en lugar de depender únicamente de información estática de apariencia. 
+
 
 \subsection{Protocolo de evaluación}
 
 Los experimentos fueron diseñados bajo las siguientes condiciones:
 
 \begin{itemize}
-    \item \textbf{Dataset:} CASIA-B completo (124 sujetos)
-    \item \textbf{Condiciones evaluadas:}
+    \item \textbf{Dataset:} Se utilizaron los 124 sujetos oficiales de CASIA-B.
+    
+    \item \textbf{Condiciones de evaluación:} Se consideraron las tres condiciones estándar del dataset:
     \begin{itemize}
-        \item Caminata normal (NM)
-        \item Caminata con bolsa (BG)
-        \item Caminata con abrigo (CL)
+        \item Caminata normal (\texttt{NM})
+        \item Caminata con bolsa (\texttt{BG})
+        \item Caminata con abrigo (\texttt{CL})
     \end{itemize}
-    \item \textbf{Entrada del modelo:} Secuencias de siluetas normalizadas a $64 \times 64$
-    \item \textbf{Representación:} Secuencias temporales de longitud fija
-    \item \textbf{Métricas:} Rank-1 Accuracy y Mean Average Precision (mAP)
+    
+    \item \textbf{Entrada del modelo:} Secuencias de $T=24$ fotogramas consecutivos, formando tensores volumétricos $[T, C, H, W]$.
+    
+    \item \textbf{Pre-procesamiento:} Siluetas normalizadas en el rango [0,1] y redimensionadas a $64\times64$ píxeles.
+    
+    \item \textbf{Métricas de evaluación:} Comparaciones bajo \textbf{Rank-1 Accuracy} y \textbf{Mean Average Precision (mAP)}.
 \end{itemize}
 
 \section{Resultados cuantitativos}
 
-El modelo híbrido propuesto (SSL temporal + fine-tuning supervisado) alcanzó los siguientes resultados:
+El modelo espacio-temporal propuesto obtuvo los siguientes resultados sobre CASIA-B:
 
 \begin{itemize}
     \item \textbf{mAP global:} 49.55\%
@@ -32,37 +39,68 @@ El modelo híbrido propuesto (SSL temporal + fine-tuning supervisado) alcanzó l
     \item \textbf{Rank-1 (Abrigo - CL):} 49.6\%
 \end{itemize}
 
-Estos resultados reflejan el desempeño del modelo bajo distintas condiciones de covariancia, permitiendo analizar su robustez frente a cambios en la apariencia.
+Estos resultados evidencia una mejora significativa respecto a otros enfoques basados en representaciones estáticas, especialmente en términos de la métrica mAP, lo cual indica una mejor estructura del espacio de \textit{embeddings}.
 
-\section{Análisis del desempeño}
+\section{Interpretación del desempeño}
 
-\subsection{Condición Normal (NM)}
+El alto desempeño obtenido en la condición de caminata normal (\textbf{99.5\% Rank-1}) nos confirma que el modelo tiene la capacidad de capturar con precisión la dinámica de la marcha cuando no hay perturbaciones externas. Este resultado es consistente con la representación volumétrica permite modelar directamente la cinemática del movimiento humano. \\
+Por otro lado, el desempeño en condiciones más desafiantes revela limitaciones importantes:
 
-El modelo alcanza un \textbf{99.5\% en Rank-1}, indicando la capacidad casi perfecta de identificación cuando no existen perturbaciones externas. Este resultado evidencia que el modelo logra capturar correctamente la dinámica de la marcha como una firma biométrica discriminativa.
+\begin{itemize}
+    \item En la condición \textbf{BG (76.0\%)}, la presencia de objetos externos introduce ruido en la silueta, afectando al patrón temporal.
+    
+    \item En la condición \textbf{CL (49.6\%)}, el abrigo afecta significativamente la geometría del cuerpo, ocultando información clave de la marcha, lo cual impacta negativamente en la discriminabilidad del modelo.
+\end{itemize}
 
-\subsection{Condición con Bolsa (BG)}
+Por otro lado, el valor de \textbf{mAP (49.55\%)} representa una mejora frente a configuraciones previas, indicando que el modelo no solo acierta en la primera posición, sino que mantiene su valor en un ranking más amplio.
 
-En presencia de objetos externos, el rendimiento disminuye a \textbf{76.0\%}. Esta caída es consistente con la literatura, ya que la presencia de una bolsa altera la silueta y modifica parcialmente la dinámica del movimiento, especialmente en el balanceo de los brazos. Sin embargo, el modelo mantiene resultados competitivos, lo que sugiere que las representaciones aprendidas conservan información temporal relevante.
+\section{Análisis del Modelado Temporal}
 
-\subsection{Condición con Abrigo (CL)}
+La importancia del modelo radica en su capacidad para transformar la información temporal en una representación geométrica discriminativa. A diferencia de enfoques basados en imágenes individuales, el modelo procesa secuencias completas como volúmenes tridimensionales, donde la dimensión temporal es tratada como una variable explícita del sistema. \\
+El módulo de \textit{temporal pooling} desempeña un rol clave en este proceso, al condensar la información temporal mediante operaciones de promedio (GAP) y máximo (GMP), lo que permite capturar el comportamiento global y otros eeventos más discriminativos del ciclo de marcha. \\
+En este sentido, el modelo no aprende solo de la forma de la silueta, sino también sobre la evolución temporal de la misma.
 
-El escenario más desafiante corresponde a la condición de abrigo, donde el modelo alcanza \textbf{49.6\% en Rank-1}. Esta degradación significativa se debe a que el abrigo altera drásticamente la geometría de la silueta, ocultando características estructurales clave del cuerpo humano. Este resultado evidencia una limitación común en sistemas basados únicamente en siluetas, donde la dependencia de la forma visual impacta negativamente en la robustez.
+\section{Comparación con el Estado del Arte}
 
-\subsection{Análisis del mAP}
+\begin{table}[h]
+\centering
+\caption{Comparación de Rank-1 (\%) por condición}
+\begin{tabular}{lccc}
+\hline
+\textbf{Método} & \textbf{NM} & \textbf{BG} & \textbf{CL} \\
+\hline
+GaitGL & $\sim$98 & $\sim$95 & $\sim$87 \\
+GaitTAKE & 98.0 & 97.5 & 92.2 \\
+\hline
+\textbf{Modelo Propuesto} & \textbf{99.5} & 76.0 & 49.6 \\
+\hline
+\end{tabular}
+\end{table}
 
-El valor de \textbf{mAP es 49.55\%} indica una mejora significativa respecto a configuraciones iniciales del modelo, reflejando una mayor consistencia en el ranking global de recuperación. A diferencia de modelos puramente espaciales, este incremento sugiere que la incorporación de información temporal permite estructurar mejor el espacio de embeddings, reduciendo la dispersión intra-clase y mejorando la separación inter-clase.
+El modelo propuesto supera a métodos bajo la condición de caminata normal. Sin embargo, también presenta una degradación considerable en condiciones de variación de apariencia. Esta diferencia se explica principalmente por el tipo de información utilizada:
+
+\begin{itemize}
+    \item Los métodos del estado del arte integran información adicional como pose o mecanismos de atención temporal.
+    
+    \item El modelo propuesto utiliza únicamente siluetas, lo cual limita su capacidad para manejar cambios estructurales severos como el uso de abrigo.
+\end{itemize}
+
+No obstante, es importante destacar que el modelo logra resultados competitivos en condiciones controladas sin la implementación de arquitecturas adicionales, resaltando su eficiencia.
 
 \section{Discusión}
 
-Los resultados muestran un comportamiento característico de los sistemas de reconocimiento por marcha:
+Los resultados obtenidos evidencian que el modelado espacio-temporal propuesto basado en siluetas es efectivo para capturar patrones de marcha en condiciones ideales. Sin embargo, la falta de información estructural limita su robustez frente a variaciones de apariencia. \\
+Este comportamiento es consistente con la literatura, donde se ha demostrado que la incorporación de información de pose u otros mecanismos de atención mejora significativamente el desempeño bajo condiciones complejas. \\
+En este sentido, la presente investigación establece una base para futuras extensiones, como la integración de características de pose o el uso de mecanismos de atención temporal, con el objetivo de mejorar la consistencia del modelo ante perturbaciones.
+
+\section{Conclusiones del Capítulo}
+
+En resumen, los resultados demuestran que:
 
 \begin{itemize}
-    \item Alto desempeño en condiciones controladas (NM)
-    \item Degradación progresiva ante variaciones de apariencia (BG, CL)
+    \item El modelado volumétrico permite capturar eficazmente la dinámica de la marcha.
+    \item El modelo alcanza desempeño sobresaliente en condiciones normales.
+    \item Persisten desafíos importantes en escenarios con variaciones de apariencia.
 \end{itemize}
 
-No obstante, el modelo logra mantener una capacidad de discriminación razonable incluso en condiciones adversas, lo cual valida la efectividad del enfoque híbrido propuesto. Adicionalmente, el incremento en mAP sugiere que el aprendizaje auto-supervisado temporal contribuye a generar representaciones más estables, particularmente en la organización global del espacio de características.
-
-\section{Conclusión}
-
-Los resultados obtenidos demuestran que el modelo es altamente efectivo en escenarios ideales y mantiene un comportamiento consistente en condiciones más complejas. Sin embargo, también evidencian que la variabilidad en la apariencia sigue siendo un desafío abierto, especialmente en condiciones de vestimenta extrema. Estos hallazgos establecen una base sólida para la interpretación final del modelo y orientan las futuras mejoras del sistema.
+Los resultados validan que la incorporación explícita de la dimensión temporal es un factor clave para mejorar el reconocimiento por marcha.

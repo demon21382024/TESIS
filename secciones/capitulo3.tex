@@ -1,4 +1,5 @@
 \chapter{MARCO TEÓRICO}
+
 \section{Fundamentos de la Re-identificación de Personas}
 
 Tradicionalmente, los sistemas de \textit{Re-ID} se han basado en el aprendizaje supervisado, en el cual cada individuo del conjunto de entrenamiento se asocia con una etiqueta de identidad. Este enfoque ha permitido avances significativos, pero presenta limitaciones importantes ya que requiere de grandes volúmenes de datos anotados manualmente y muestra una reducida capacidad de generalización cuando se enfrenta a escenarios no vistos durante el entrenamiento. En entornos reales, donde las condiciones de captura son diversas y las identidades no están etiquetadas, estas limitaciones afectan directamente su rendimiento y aplicabilidad.
@@ -9,132 +10,135 @@ Por lo tanto, la integración de ambos paradigmas puede considerarse un componen
 
 \subsection{Contexto}
 
-El propósito de la re-identificación de personas es establecer correspondencias entre imágenes o secuencias que pertenecen a la misma persona, capturadas por diferentes cámaras y en distintos momentos. A diferencia del reconocimiento facial o de huellas, la \textit{Re-ID} tiene la capacidad de trabajar con características globales del cuerpo, patrones de vestimenta, postura y movimiento, lo que la hace aplicable incluso cuando el rostro no es visible.
+El propósito de la re-identificación de personas es establecer correspondencias entre imágenes o secuencias que pertenecen a la misma persona, capturadas por diferentes cámaras y en distintos momentos. A diferencia de otras biometrías, el \textit{Gait Recognition} puede operar sobre características globales del cuerpo, incluyendo patrones de vestimenta, postura y movimiento.
 
-El proceso general implica tres etapas: detección del individuo en las imágenes, extracción de características representativas y comparación mediante una métrica de similitud. La calidad del descriptor aprendido es determinante para garantizar una identificación robusta ante las variaciones visuales.
+El proceso general de un sistema de \textit{Re-ID} comprende tres etapas principales: detección del individuo, extracción de características representativas y comparación de métricas de similitud. La calidad del descriptor aprendido es crítica para garantizar un desempeño robusto ante variaciones visuales complejas.
 
 \subsection{Desafíos y variabilidad}
 
-Uno de los principales retos de la re-identificación de personas radica en la gran variabilidad visual entre capturas. La variabilidad \textit{intra-clase} se refiere a los cambios en la apariencia del mismo individuo por factores como el ángulo de visión, la iluminación, la pose corporal o el tipo de ropa. Por otra parte, la variabilidad \textit{inter-clase} refiere a las similitudes entre diferentes personas, especialmente cuando comparten vestimenta o contextura física.
+Uno de los principales retos de la re-identificación de personas radica en la variabilidad visual entre capturas. La variabilidad \textit{intra-clase} se refiere a los cambios en la apariencia del mismo individuo por factores como el ángulo de visión, la iluminación, la pose corporal o el tipo de ropa. Por otra parte, la variabilidad \textit{inter-clase} refiere a las similitudes entre diferentes personas, especialmente cuando comparten vestimenta o contextura física.
 
-Estas variaciones complican el aprendizaje de representaciones verdaderamente invariantes y discriminativas. Los modelos deben ser capaces de mantener la identidad ante transformaciones significativas y, al mismo tiempo, distinguir entre sujetos visualmente parecidos. Superar este equilibrio constituye uno de los ejes centrales en la investigación de modelos híbridos, los cuales buscan fortalecer tanto la discriminación supervisada como la generalización auto-supervisada.
+Estas variaciones descritas dificultan el aprendizaje de representaciones que sean simultáneamente invariantes y discriminativas. En este sentido, el desafío radica en lograr un equilibrio entre robustez ante cambios significativos y capacidad de diferenciación entre individuos visualmente similares.
 
 \section{Reconocimiento de Marcha}
 
-El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada. \\
-En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas. Sin embargo, su efectividad depende en gran medida de la capacidad del modelo para representar adecuadamente la estructura temporal de las secuencias, lo cual refuerza la necesidad de enfoques que modelen explícitamente la dinámica delmovimiento humano. 
+El reconocimiento de marcha (\textit{Gait Recognition}) es una técnica biométrica que identifica a las personas a partir de su forma de caminar. Se basa en la hipótesis de que la marcha humana posee patrones de movimiento únicos, suficientemente distintivos para diferenciar individuos, incluso cuando existen variaciones en la apariencia, el entorno o la vestimenta. Su principal ventaja frente a otras modalidades biométricas radica en que puede realizarse a distancia y sin cooperación explícita del sujeto, lo que amplía su utilidad en contextos de seguridad y vigilancia automatizada.
 
 \subsection{Modalidades y representaciones}
 
-Los métodos de reconocimiento de marcha pueden agruparse según la naturaleza de la información utilizada para describir el movimiento.  
+Los métodos de reconocimiento de marcha pueden agruparse según la naturaleza de la información utilizada para describir el movimiento.
+
 Las \textbf{modalidades basadas en apariencia} emplean secuencias de imágenes o siluetas binarias que capturan la forma y textura del cuerpo durante el ciclo de caminata. Estas técnicas buscan patrones visuales discriminativos mediante modelos que analizan la evolución espacial de la silueta. Aunque son efectivas en escenarios controlados, suelen ser sensibles a factores externos como el cambio de ropa, el fondo o las condiciones de iluminación.
 
 Por otro lado, las \textbf{modalidades basadas en pose} utilizan representaciones esqueléticas derivadas de la estimación de articulaciones corporales. Este enfoque abstrae la información visual y se centra en la dinámica de movimiento, ofreciendo mayor invariancia ante el entorno y la apariencia. En estas representaciones, el cuerpo humano se modela como un grafo cuyas conexiones reflejan las relaciones espaciales y temporales entre articulaciones, lo que facilita la integración con arquitecturas basadas en grafos o secuencias temporales.
 
-En ambos casos, el objetivo central es aprender una representación robusta del patrón de marcha, capaz de preservar la identidad del sujeto y resistir la variabilidad en las condiciones de captura. Los enfoques modernos emplean redes profundas que extraen características espaciales y temporales de manera conjunta, superando las limitaciones de los descriptores manuales tradicionales.
+Em ambos casos, el objetivo cnetral es aprender una representación robusta del patrón de marcha, capaz de preservar la identidad del sujeto y resistir la variabilidad en las condiciones de captura.
+
+\subsection{Modelado temporal en \textit{Gait Recognition}}
+
+Una característica fundamental del reconocimiento de marcha es su naturaleza temporal. A diferencia de imágenes estáticas, la marcha se define por patrones dinámicos y cíclicos en el tiempo. Por tal motivo, la capacidad de modelar adecuadamente estas dependencias temporales resulta clave para capturar información discriminativa relevante.
+
+Los enfoques tradicionales han simplificado esta dimensión mediante técnicas de agregación temporal, como el \textit{temporal pooling} o el promedio de características a lo largo de la secuencia. Estas estrategias permiten representaciones compactas, pero pierden información importante sobre la dinámica del movimiento, como relaciones de largo alcance o variaciones sutiles entre ciclos de marcha. NECESITA CITA
+
+No obstante, el modelado temporal sigue siendo un desafío abierto y amplio, especialmente ante escenarios con cambios de vista, variaciones de velocidad y ruido en la segmentación. En este contexto, el desarrollo de representaciones temporales se vuelve una necesidad central en sistemas modernos de reconocimiento de marcha.
 
 \subsection{Desafíos y aplicaciones}
 
-A pesar de su potencial, el reconocimiento de marcha enfrenta numerosos desafíos prácticos. Entre los más relevantes destacan los cambios de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetos y las diferencias en el terreno o velocidad de desplazamiento. Estos factores alteran significativamente la representación del movimiento, lo que dificulta la correspondencia entre secuencias de la misma persona capturadas en distintos contextos. Donde, para abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen la consistencia de las representaciones. % Además, la disponibilidad de datos etiquetados sigue siendo una limitación crítica, ya que los conjuntos de entrenamiento suelen ser costosos de anotar y poco generalizables a nuevos escenarios.
+A pesar de su potencial, el reconocimiento de marcha enfrenta desafíos prácticos, como son los cambio de vista, la oclusión parcial del cuerpo, las variaciones de vestimenta, el transporte de objetivos, velocidad de desplazamiento, etc. Estos factores alteran la representación del movimiento, lo que dificulta la correspondencia entre secuencias de un mismo individuo. En consecuencia y con la finalidad de abordar estas dificultades, los modelos recientes incorporan mecanismos de normalización espacial y temporal, atención multivista y estrategias de aprendizaje contrastivo que fortalecen las representaciones.
 
-En este sentido, las estrategias de aprendizaje auto-supervisado han demostrado ser una alternativa eficaz para aprovechar la abundancia de secuencias sin etiquetas, permitiendo capturar la dinámica de la marcha mediante tareas auxiliares. Y, combinadas con la precisión de los métodos supervisados, estas técnicas favorecen el desarrollo de modelos híbridos más adaptables y escalables, alineados con el propósito de esta investigación.
+En este sentido, el aprendizaje autosupervisado se presenta como una estrategia que permitirá aprovechar el volúmen de datos no etiquetados, facilitando la adquisición de representaciones más robustas. Donde, combinado con el aprendizaje supervisado, permitirá desarrollar modelos híbridos adaptables y escalables. 
 
 \section{Modelos y Arquitecturas}
-\subsection{Redes Convolucionales (CNNs)}
 
-Las Convolutional Neural Networks (CNNs) son uno de los pilares fundamentales en el procesamiento de imágenes ya que su fortalece radica en la capacidad de extraer características espaciales de varios niveles, como bordes o patrones de movimiento, mediante operaciones de convolución. Para \textit{Gait Recognition} las CNNs permiten capturar variaciones locales del contorno del cuerpo y de la propia silueta durante la secuencia de caminata. Es aqui donde las CNNs funcionan como "espina dorsal" (\textit{backbone}) para poder generar \textit{embeddings} que luego se comparan mediante distancias métricas o se optimizan con funciones.
+\subsection{Redes Convolucionales (CNNs) para representación espacial}
+
+Las redes convolucionales (\textit{Convolutional Neural Networks - CNNs}) constituyen un componente fundamental en los sistemas de reconocimiento de marcha, debido a su capacidad para extraer características espaciales jerárquicas en base de imágenes o secuencias. En este contexto, las \textit{CNNs} permiten capturar patrones locales relevantes, como la forma del contorno corporal y variaciones espaciales en la postura durante el andar. \\
+En los enfoques de \textit{Gait Recognition}, las \textit{CNNs} suelen emplearse como \textit{backbone} para generar representaciones discriminativas a nivel de \textit{frames}. Sin embargo, su principal limitación radica en que no pueden modelar explítictamente las dependencias temporales entre \textit{frames}, lo que restringe su capacidad de capturar la dinámica completa del movimiento.
 
 \subsection{Vision Transformers (ViTs)}
 
-Los \textit{vision Transformers} representan los nuevos modelos que reemplazan las convoluciones tradicionales con mecanismos de auto-atención, permitiendo que el modelo aprenda relaciones globales entre diferentes regiones de una imagen. A diferencia de los \textit{CNNs} que procesan regiones locales, los \textit{ViTs} dividen la imagen y los tratan como una secuencia, de manera similar a los Transformers de procesamiento de lenguaje. Esto facilita que el modelo captura patrones globales del cuerpo, la postura y la dinámica del movimiento, siendo beneficioso en \textit{Gait Recognition}.
+Los modelos basados en mecanismos de atención, como los \textit{Vision Transformers - ViTs}, son una alternativa poderosa para modelar relaciones globales en datos visuales. A diferencia de las CNNs, estos modelos procesan la entrada como una secuencia de elementos, permitiendo capturar dependencias de largo alcance mediante mecanismos de auto-atención. \\
+Para el reconocimiento de marcha, estas arquitecturas resultan especialmente relevantes para el modelo temporal, ya que permiten aprender relaciones complejas en toda la secuencia. Esto facilita la captura de patrones dinámicos y cíclicos de la marcha. 
 
-\section{Paradigmas de Aprendizaje en Re-Identification}
+No obstante, los modelos basados en atención suelen requerir mayor cantidad de datos y recursos computacionales. Por ello, en varios otros enfoques se explotan arquitecturas híbridas que combinan \textit{CNNS} para la extracción de características espaciales con mecanismos de atención para el modelo temporal.
+
+\begin{comment}
+Los \textit{vision Transformers} representan los nuevos modelos que reemplazan las convoluciones tradicionales con mecanismos de auto-atención, permitiendo que el modelo aprenda relaciones globales entre diferentes regiones de una imagen. A diferencia de los \textit{CNNs} que procesan regiones locales, los \textit{ViTs} dividen la imagen y los tratan como una secuencia, de manera similar a los Transformers de procesamiento de lenguaje. Esto facilita que el modelo captura patrones globales del cuerpo, la postura y la dinámica del movimiento, siendo beneficioso en \textit{Gait Recognition}.
+\end{comment}
+
+\section{Paradigmas de aprendizaje para representaciones en re-identificaciónn}
 
 Los avances en re-identificación de personas se deben, en gran medida, a la evolución de los paradigmas de aprendizaje automático aplicados a la visión por computador. Cada uno ofrece un enfoque distinto para la adquisición de conocimiento a partir de los datos, lo cual influye directamente en la capacidad del modelo para generalizar, adaptarse y discriminar identidades. A continuación, se describen los principales enfoques: supervisado, no supervisado y auto-supervisado.
 
 \subsection{Supervisado}
 
-El aprendizaje supervisado se basa en el uso de conjuntos de datos anotados, donde cada muestra está asociada a una etiqueta que representa la identidad de la persona. El objetivo del modelo es aprender una función de correspondencia entre las imágenes y sus etiquetas, de manera que pueda clasificar correctamente a nuevos individuos.
-
-En re-identificación, este paradigma ha sido ampliamente utilizado gracias a su alta precisión y estabilidad durante la fase de entrenamiento. Modelos basados en redes convolucionales (\textit{CNNs}) y transformadores visuales (\textit{Vision Transformers}) han mostrado gran capacidad para aprender representaciones discriminativas, especialmente cuando se emplean estrategias de pérdida como \textit{Triplet Loss} o \textit{Cross-Entropy Loss}.
-
+El aprendizaje supervisado se basa en el uso de conjuntos de datos anotados, donde cada muestra está asociada a una etiqueta que representa la identidad de la persona. El objetivo del modelo es aprender una función de correspondencia entre las imágenes y sus etiquetas, de manera que pueda clasificar correctamente a nuevos individuos. \\
+En re-identificación, este paradigma ha sido ampliamente utilizado gracias a su alta precisión y estabilidad durante la fase de entrenamiento. Modelos basados en redes convolucionales (\textit{CNNs}) y transformadores visuales (\textit{Vision Transformers}) han mostrado gran capacidad para aprender representaciones discriminativas, especialmente cuando se emplean estrategias de pérdida como \textit{Triplet Loss} o \textit{Cross-Entropy Loss}. \\
 Sin embargo, su dependencia de etiquetas exhaustivas limita su aplicabilidad a escenarios reales. La recolección y anotación de grandes volúmenes de datos es costosa y poco escalable, además de generar modelos fuertemente dependientes del dominio, cuya efectividad disminuye ante condiciones no vistas.
 
 \subsection{No Supervisado}
 
-En contraste, el aprendizaje no supervisado prescinde totalmente de etiquetas, centrándose en descubrir patrones o estructuras inherentes a los datos. En re-identificación, estos métodos buscan agrupar instancias visualmente similares y construir representaciones que reflejen relaciones de similitud sin información explícita de identidad.
-
-Las técnicas más comunes incluyen la agrupación iterativa (\textit{clustering}) combinada con aprendizaje de características, el uso de autoencoders y la asignación pseudoetiquetada basada en distancias métricas. Si bien estas estrategias eliminan el costo de la anotación, su rendimiento suele ser inferior al supervisado, ya que la ausencia de señales de identidad precisas dificulta la optimización directa de la discriminación entre individuos.
-
-No obstante, el aprendizaje no supervisado ha sentado las bases para paradigmas más avanzados, al demostrar que es posible aprender representaciones útiles sin depender de etiquetas, aprovechando únicamente la estructura estadística de los datos.
+En contraste, el aprendizaje no supervisado prescinde totalmente de etiquetas, centrándose en descubrir patrones o estructuras inherentes a los datos. En re-identificación, estos métodos buscan agrupar instancias visualmente similares y construir representaciones que reflejen relaciones de similitud sin información explícita de identidad. Las técnicas más comunes incluyen la agrupación iterativa (\textit{clustering}) combinada con aprendizaje de características, el uso de autoencoders y la asignación pseudoetiquetada basada en distancias métricas. Si bien estas estrategias eliminan el costo de la anotación, su rendimiento suele ser inferior al supervisado, ya que la ausencia de señales de identidad precisas dificulta la optimización directa de la discriminación entre individuos.
 
 \subsection{Auto-supervisado}
 
-El aprendizaje auto-supervisado (\textit{Self-Supervised Learning}, SSL) surge como una alternativa intermedia entre los enfoques supervisado y no supervisado. En lugar de requerir etiquetas externas, el SSL genera sus propias tareas de supervisión a partir de la información interna de los datos, denominadas \textit{pretext tasks}. Estas tareas permiten al modelo aprender representaciones semánticamente ricas que pueden transferirse posteriormente a tareas específicas, como la re-identificación de personas.
+El aprendizaje auto-supervisado (\textit{Self-Supervised Learning}, SSL) surge como una alternativa intermedia entre los enfoques supervisado y no supervisado. En lugar de requerir etiquetas externas, el SSL genera sus propias tareas de supervisión a partir de la información interna de los datos, denominadas \textit{pretext tasks}. Estas tareas permiten al modelo aprender representaciones semánticamente ricas que pueden transferirse posteriormente a tareas específicas, como la re-identificación de personas. \\
+En el contexto del reconocimiento de marcha, estas estrategias resultan especialmente relevantes, ya que permietn aprender representaciones que capturan tanto invariancias espaciales como dependencias temporales en secuencias de movimiento, siendo un aspecto fundamental para el modelo de la dinámica de marcha.
 
-En el contexto de Re-ID, el aprendizaje auto-supervisado permite capturar invariancias espaciales y temporales sin anotaciones manuales, lo que lo convierte en una herramienta clave para entrenar modelos en entornos con escasez de etiquetas o alta variabilidad visual.
+% En el contexto de Re-ID, el aprendizaje auto-supervisado permite capturar invariancias espaciales y temporales sin anotaciones manuales, lo que lo convierte en una herramienta clave para entrenar modelos en entornos con escasez de etiquetas o alta variabilidad visual.
 
 \subsubsection{\textit{Contrastive Learning}}
 
 El aprendizaje contrastivo busca que las representaciones de una misma identidad (vistas positivas) sean similares, mientras que las de identidades diferentes (vistas negativas) se mantengan separadas en el espacio de características. Para ello, se generan distintas vistas de una misma imagen mediante transformaciones de datos, y el modelo aprende a maximizar la similitud entre ellas.  
-En Re-ID, este principio se adapta al aprendizaje de descriptores robustos frente a cambios de cámara, pose o iluminación, logrando resultados competitivos incluso sin etiquetas.
+En re-identificación, este principio se adapta al aprendizaje de descriptores robustos frente a cambios de cámara, pose o iluminación, logrando resultados competitivos incluso sin etiquetas. Y, asimismo, este enfoque puede extender al dominio temporal, promoviendo la consistencia entre diferentes fragmentos de una misma secuencia de marcha.
 
 \subsubsection{\textit{Masked Image / Sequence Modeling}}
 
 El modelado enmascarado (\textit{Masked Image Modeling}, MIM) y su equivalente temporal (\textit{Masked Sequence Modeling}) se inspiran en el aprendizaje predictivo. Estos métodos consisten en ocultar parcialmente regiones de una imagen o pasos de una secuencia y entrenar al modelo para reconstruir las partes faltantes.  
-En reconocimiento de marcha, esta estrategia permite que el modelo capture relaciones espaciales y temporales implícitas en la secuencia de movimiento, reforzando su capacidad para comprender la estructura dinámica del cuerpo humano.
+En reconocimiento de marcha, esta estrategia permite que el modelo capture relaciones espaciales y temporales implícitas en la secuencia de movimiento, reforzando su capacidad para comprender la estructura dinámica del cuerpo humano. Esta capacidad es de alta importancia para el modelado temporal, ya que obliga al modelo a inferir la dinámica del movimiento a partir de información incompleta.
 
 \subsubsection{Predicción temporal y reconstrucción}
 
-Otra familia de métodos auto-supervisados se centra en la predicción de estados futuros o la reconstrucción de secuencias temporales. En este caso, el modelo aprende a anticipar la evolución del movimiento humano, comprendiendo la coherencia temporal entre fotogramas.  
-Estas tareas de predicción fomentan la adquisición de representaciones invariantes al tiempo y útiles para distinguir patrones de marcha, aspecto fundamental en la re-identificación basada en secuencias.
+Otra familia de métodos auto-supervisados se centra en la predicción de estados futuros o la reconstrucción de secuencias temporales. En este caso, el modelo aprende a anticipar la evolución del movimiento humano, comprendiendo la coherencia temporal entre fotogramas. Estas tareas de predicción fomentan la adquisición de representaciones invariantes al tiempo y útiles para distinguir patrones de marcha, aspecto fundamental en la re-identificación basada en secuencias. \\
+Este enfoque permite reforzar al modelo a comprender la dinámica de la marcha en lugar de depender únicamente de representaciones estáticas.
 
 \subsubsection{\textit{Skeleton y Graph-based SSL}}
 
 En los enfoques basados en esqueleto, el cuerpo humano se modela como un conjunto de articulaciones interconectadas, lo que permite representar el movimiento mediante grafos dinámicos. El aprendizaje auto-supervisado en este contexto se apoya en tareas como la predicción de trayectorias articulares, la reconstrucción de grafos incompletos o la detección de inconsistencias estructurales.  
 Estas técnicas explotan la topología corporal y las relaciones espaciales entre articulaciones, resultando especialmente efectivas para el reconocimiento de marcha. Además, su combinación con arquitecturas de grafos (\textit{Graph Neural Networks}, GNNs) ha demostrado mejorar la capacidad del modelo para aprender dependencias espaciales complejas.
 
-\section{Representación Espacio-Temporal}
+\section{Representación espacio-temporal y aprendizaje de características}
 
-En el reconocimiento de marcha, la información visual debe ser modela como una secuencia estructurada en el tiempo, en lugar de ser procesada bajo imágenes independientes. Para ello, las secuencias pueden representarse como tensores $[T, C, H, W]$, donde $T$ corresponde al número de frames, $C$ a los canales, y $H$, $W$ a las dimensiones espaciales.
+\subsection{Representación Espacio-Temporal}
 
-Esta representación permite preservar tanto la información espacial como la evolución temporal del moivimiento. A diferencia de los enfoques basados en \textit{frames}, las representaciones espacio-temporales captura patrones dinámicos asociados al ciclo de marcha, como la priodicidad, oscilación de las extremidades y coordinación corporal.
-
+En el reconocimiento de marcha, la información visual debe ser modela como una secuencia estructurada en el tiempo, en lugar de ser procesada bajo imágenes independientes. Para ello, las secuencias pueden representarse como tensores $[T, C, H, W]$, donde $T$ corresponde al número de frames, $C$ a los canales, y $H$, $W$ a las dimensiones espaciales. \\
+Esta representación permite preservar tanto la información espacial como la evolución temporal del moivimiento. A diferencia de los enfoques basados en \textit{frames}, las representaciones espacio-temporales captura patrones dinámicos asociados al ciclo de marcha, como la priodicidad, oscilación de las extremidades y coordinación corporal. \\
 Modelar esta estructura resulta fundamental para aprender características biométricas más robustas, ya que la identidad de una persona también se basa en la forma en que se mueve a lo largo del tiempo.
 
-\section{invariancia y normalización física}
+\subsection{Invariancia y normalización física}
 
-Las secuencias de marcha suelen contener variaciones espaciales irrelevantes, como traslaciones, desplazamientos o inestabilidad. Estas variaciones no aportan información discrimnativa sobre la identidad, pero pueden afectar negativamente el aprendizaje. 
+Las secuencias de marcha suelen contener variaciones espaciales irrelevantes, como traslaciones, desplazamientos o inestabilidad. Estas variaciones no aportan información discrimnativa sobre la identidad, pero pueden afectar negativamente el aprendizaje. \\
+Comúnmente, los modelos intenta aprender invariancia frente a las perturbaciones. Sin embargo, este enfoque implica que parte de la capacidad delmodelo se dedique a ignorar información irrelevante, en lugar de enfocarse en los patrones útiles y distintivos. \\
+Una estrategia más eficiente, consiste en eliminar dichas variaciones mediante normalización física antes del entrenamiento. Bajo este contexto, el alineamiento basado en el centro de masa (\textit{Center of Mass, CoM}) permite centrar las siluetas en cada \textit{frame}, reduciendo el efecto de la traslación y estabilizando la secuencia. Esto permitirá que el modelo se centre en la dinámica real del movimiento.
 
-Comúnmente, los modelos intenta aprender invariancia frente a las perturbaciones. Sin embargo, este enfoque implica que parte de la capacidad delmodelo se dedique a ignorar información irrelevante, en lugar de enfocarse en los patrones útiles y distintivos.
+\subsection{Aprendizaje métrico temporal}
 
-Una estrategia más eficiente, consiste en eliminar dichas variaciones mediante normalización física antes del entrenamiento. Bajo este contexto, el alineamiento basado en el centro de masa (CoM) permite centrar las siluetas en cada \textit{frame}, reduciendo el efecto de la traslación y estabilizando la secuencia. Esto permitirá que el modelo se centre en la dinámica real del movimiento.
-
-\section{Aprendizaje métrico temporal}
-
-El objetivo del reconocimiento de marcha es aprender representaciones que permitan distinguir entre individuos en un espacio de características. Para ello, el aprendizaje métrico optimiza directamente la distancia entre muestran en función de su identidad. Por ejemplo, el \textit{triplet-loss}, busca minimizar la distancia entre muestras de la misma identidad y maximizarla respecto a diferentes identidades.
-
-En el caso de secuencias de marcha, este enfoque se extiende al dominio temporal, donde los \textit{embeddings} deben capturar la dinámica del movimiento, dando lugar a representaciones más robustas y discrimnativas.
+El objetivo del reconocimiento de marcha es aprender representaciones que permitan distinguir entre individuos en un espacio de características. Para ello, el aprendizaje métrico optimiza directamente la distancia entre muestran en función de su identidad. Un enfoque común es el uso de funciones de pérdida como \textit{triplet-loss}, que busca minimizar la distancia entre muestras de la misma identidades y maximizarla respecto a diferentes identifidades. Bajo el contexto de secuencias de marcha, este principio se extiende al dominio temporal, donde los \textit{embeddings} deben capturar la información espacial y dinámica del movimiento.
 
 \section{Estrategias Complementarias}
-\subsection{Fine-Tuning y Transferencia}
 
-Las transferencia de aprendizaje es altamente utilizada en visión por computador, consiste en aprovechar el conocimiento adquirido por un modelo durante un pre-entrenamiento para luego adaptarlo a una tarea específica. En \textit{Gait Recognition}, la estrategia es muy útil debido a la escasez de grandes conjuntos de datos etiquetados, condición que dificulta entrenar modelos más complejos.
+\subsection{Transferencia de aprendizaje y \textit{fine-tuning}}
 
-En este contexto, el \textit{fine-tuning} implica tomar un modelo ya entrenado y ajustar sus pesos de manera supervisada utilizando un dataset etiquetado. Esta fase o etapa permite que el modelo refine características generales hacia patrones más discriminativos entre identidades, mejorando la precisión sin sacrificar la capacidad de generalización obtenida durante el pre-entrenamiento. 
+La transferencia de aprendizaje (\textit{transfer learning}) es una estrategia ampliamente utilizada en visión por computador, que consiste en aprovechar el conocimiento adquirido por un modelo durante una fase de pre-entrenamiento para posteriormente adaptarlo a una tarea específica. En \textit{Gait Recognition} esta estrategia resulta útil debido a la limitada disponibilidad de conjuntos etiquetados a gran escala, lo cual dificulta el entrenamiento de modelos complejos. \\
+El proceso de \textit{fine-tuning} implica ajustar los parámetros de un modelo pre-entrenado mediante una capa extra de entrenamiento supervisado sobre un conjunto de datos específico. Esta etapa permite refinar representaciones generales hacia características más discriminativas entre identidades, manteniendo la capacidad de generalización adquirida durante el pre-entrenamiento.
+
+En particular, cuando el pre-entrenamiento incorpora información espacio-temporal, el \textit{fine-tuning} facilita la adaptación de las representaciones a patrones específicos de la dinámica de la marcha, mejorando el desempeño en tareas de re-identificación.
 
 \subsection{Aprendizaje Híbrido}
 
-El aprendizaje híbrido refiere a la integración de distintos paradigmas de entrenamiento dentro de un mismo marco. Esta aproximación permite obtener representaciones más robustas y discriminativas, especialmente en tareas donde la variabilidad visual es alta y la disponibilidad de datos etiquetados es limitada, como es el presente caso de \textit{Gait Recognition}
-
-\begin{comment}
-\section{Diseño Experimental, Datasets y Métricas de Evaluación}
-\subsection{Pruebas y protocolos de evaluación}
-\begin{itemize}
-    \item \textbf{Prueba de Covariantes:} La evaluación se enfocará en el rendimiento bajo las condiciones de caminata normal y con ropa cambiada, todas en régimen de vista cruzada (\textit{cross-view}) (\cite{Li2020SemiSupGait}).
-    \item \textbf{Control de Generalización:} Se utilizará un conjunto de desarrollo extraído de la distribución de los \textit{IDs} de prueba para monitorear el sobreajuste durante el \textit{fine-tuning} y asegurar que los resultados de la evaluación final sean una medida no sesgada de la generalización del modelo (\cite{Huang2025PersonViT, Zhang2024LowResolution}).
-\end{itemize}
-\end{comment}
+El aprendizaje híbrido refiere a la integración de distintos paradigmas de entrenamiento dentro de un mismo marco. Esta aproximación permite obtener representaciones más robustas y discriminativas, especialmente en tareas donde la variabilidad visual es alta y la disponibilidad de datos etiquetados es limitada. \\
+En el reconocimiento de marcha, este enfoque resulta relevante, ya que permite aprender representaciones espacio-temporales robustas a partir de secuencias sin anotación, y posteriormente especializarlas para la discriminación de identidades. \\
+De esta forma, el aprendizaje híbrido contirbuye tanto a la generalización del modelo como a su capacidad discriminativa, lo cual es fundamental en escenarios de re-identificación con alta variabilidad.
 
 \section{Métricas de Evaluación}
 Para evaluar el rendimiento de los modelos de re-identificación, se emplean ciertas métricas que permiten medir tanto la precisión de identificación como la calidad de la recuperación de identidades dentro de un conjunto de galería. En el presente trabajo se consideran las métricas \textit{Rank-1 Accuracy} y \textit{Mean Average Precision (mAP)}, ampliamente utilizadas en la literatura de Person Re-ID y Gait Recognition \citep{Asperti2024ReviewReID}.
@@ -143,10 +147,10 @@ Para evaluar el rendimiento de los modelos de re-identificación, se emplean cie
     \item \textbf{Rank-1 Accuracy:} Esta métrica indica la proporción de veces en que la identidad correcta del individuo consultado aparece como la primera coincidencia en el ranking generado por el modelo (\cite{Asperti2024ReviewReID}). Es decir, mide el porcentaje de consultas para las cuales la secuencia correspondiente a la misma persona ocupa la primera posición en la lista ordenada de similitudes. Un alto valor de Rank-1 refleja que el modelo es capaz de generar representaciones discriminativas y robustas ante variaciones de vista, ropa o entorno.
     
     \item \textbf{mAP (\textit{Mean Average Precision}):} Esta métrica evalúa la calidad global del sistema de recuperación, considerando la posición y relevancia de todas las coincidencias correctas dentro del ranking (\cite{Asperti2024ReviewReID}). Para cada consulta, se calcula el \textit{Average Precision} (AP) como el área bajo la curva de precisión-recall, y luego se obtiene el promedio sobre todas las consultas válidas. A diferencia de Rank-1, el mAP proporciona una visión donde se refleja tanto la precisión como la exhaustividad del modelo en la recuperación de identidades.
-
 \end{itemize}
 
 \section{Síntesis Conceptual}
+
 \subsection{Integración de paradigmas}
 
 \begin{comment}
@@ -165,6 +169,6 @@ El enfoque híbrido propuesto se sustenta en varias oportunidades. Los avances r
 En conjunto, estas oportunidades constituyen el fundamento conceptual de la propuesto, aprovechar ambos modelos de la forma posible para construir un sistema de re-identificación de personas mucho más robuso, preciso y escalable.
 \end{comment}
 
-El enfoque propuesto se sustenta en la necesidad de modelar de manera explícita la dinámica temporal de la marcha, considerando que la identidad de un individuo está estrechamente ligada a patrones de movimientos que evolucionanen el tiempo. \\
-Asimismo, la incorporación de técnicas de normalización física permite reducir variaciones irrelevantes en las secuencias, facilitando que el modelo se enfoque en características discriminativas. En conjunto, el uso de representaciones espacio-temporales, mecanismos de alineamiento y estrategias de aprendizaje métrico, contribuyen a la construcción de \textit{embeddings} más robustos. \\
-En este sentido, el uso de un esquema híbrido de aprendizaje, que combine aprendizaje autosupervisado y supervisado, se integra como un componente adicional que permite mejorar la generalización y precisión del modelo.
+El enfoque propuesto se sustenta en la necesidad de modelar de manera explícita la dinámica temporal de la marcha, considerando que la identidad de un individuo está ligada a patrones de movimientos que evolucionan en el tiempo. \\
+Asimismo, la incorporación de técnicas de normalización física permiten reducir variaciones irrelevantes en las secuencias, facilitando que el modelo se enfoque en características discriminativas. En conjunto, el uso de representaciones espacio-temporales, mecanismos de alineamiento y estrategias de aprendizaje métrico, contribuyen a la construcción de \textit{embeddings} más robustos. \\
+Finalmente la integración de un esquema híbrido de aprendizaje se plantea como un mecanismo complementario que permite mejorar la generalización y la precisión del modelo.

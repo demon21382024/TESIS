@@ -2,18 +2,19 @@
 
 El presente trabajo abordó el problema de la re-identificación de personas basada en la marcha mediante un enfoque híbrido que integra aprendizaje auto-supervisado y entrenamiento supervisado. A diferencia de otros estudios centradas en imágenes individuales, esta investigación introdujo un enfoque orientado a la modelación temporal de secuencias de marcha.
 
+El presente trabajo abordóla re-identificación de personas basada en la marcha mediante un enfoque centrado en el modelado espacio-temporal de secuencia de siluetas. A diferencia de otros enfoques, esta investigación propuso representar la marcha de forma dinámica, capturado a través de volúmenes de información de fotogramas consecutivos. \\
+Este cambio permitió modelar directamente la cinemática del movimiento humano, proporcionando una representación discriminativa del patrón de marcha.
+
 \section{Conclusiones principales}
 
 \begin{itemize}
-    \item Se demostró que el uso de \textbf{aprendizaje auto-supervisado basado en consistencia temporal} permite aprender representaciones robustas sin depender completamente de etiquetas, capturando de manera más efectiva la dinámica intrínseca del movimiento humano.
+    \item Se demostró que el uso de \textbf{representaciones volumétricas} permite capturar efectivamente la dinámica temporal del movimiento humano, superando las limitaciones de enfoques basados en imágenes individuales.
 
-    \item La transición de un enfoque estático a uno basado en \textbf{secuencias temporales} permitió mejorar significativamente la calidad del espacio de características, evidenciado por el incremento del mAP global.
-
-    \item El modelo alcanzó un \textbf{99.5\% en condiciones normales}, confirmando que la marcha constituye una biometría altamente discriminativa cuando no existen perturbaciones externas.
+    \item El modelo alcanzó un \textbf{99.5\%} de precisión Rank-1 en condiciones normales, confirmando que la marcha es una biometría discriminativa cuando se modela correctamente su dinámica temporal.
 
     \item En condiciones complejas como \textbf{bolsas (76.0\%)} y \textbf{abrigos (49.6\%)}, se observó una degradación del rendimiento, evidenciando que la variabilidad en la apariencia sigue siendo uno de los principales desafíos del problema.
 
-    \item El uso de una estrategia híbrida (SSL + supervisado) permitió combinar \textbf{capacidad de generalización} con \textbf{capacidad discriminativa}, logrando un equilibrio adecuado entre ambas.
+    \item El uso de un esquema de entrenamiento híbrido, que combina \textbf{pre-entrenamiento auto-supervisado} y \textbf{ajuste supervisado}, contribuyó a mejorar la capacidad de generalización del modelo.
 \end{itemize}
 
 \section{Aportes del Trabajo}
@@ -21,13 +22,13 @@ El presente trabajo abordó el problema de la re-identificación de personas bas
 Los principales aportes de esta investigación son:
 
 \begin{itemize}
-    \item Propuesta de un enfoque de \textbf{aprendizaje autsupervisado temporal} basado en subsecuencias, orientado a capturar invariancia de fase en el ciclo de marcha.
+    \item Propuesta de un enfoque de modelado espacio-temporal, donde la marcha es representada como un volumen de datos en lugar de imágenes individuales.
 
-    \item Implementación de un modelo que opera sobre \textbf{representaciones secuenciales}, alineado con la naturaleza dinámica del problema.
+    \item Implementación de un modelo capaz de aprender \textbf{patrones cinemáticos} del movimiento humano, capturando información biométrica.
 
-    \item Integración de un esquema híbrido de entrenamiento que combina \textbf{pre-entrenamiento autosupervisado} y \textbf{fine-tuning supervisado} en un mismo pipeline.
+    \item Integración de un pipeline de entrenamiento híbrido que combina \textbf{aprendizaje auto-supervisado temporal} y \textbf{fine-tuning supervisado}, orientado a mejorar la calidad de las representaciones.
 
-    \item Evaluación experimental completa sobre CASIA-B con análisis diferenciado por condiciones (NM, BG, CL), lo cual proporciona una visión más realista del comportamiento del sistema.
+    \item Evaluación experimental completa sobre CASIA-B, incluyendo análisis diferenciado por condiciones, permitiendo caracterizar el comportamiento del modelo en escenarios realistas.
 \end{itemize}
 
 \section{Limitaciones}
@@ -35,9 +36,10 @@ Los principales aportes de esta investigación son:
 A pesar de los resultados obtenidos, el trabajo presenta ciertas limitaciones:
 
 \begin{itemize}
-    \item El modelo depende únicamente de siluetas, lo cual lo hace sensible a cambios drásticos en la apariencia.
-    \item No se incorporan explícitamente estructuras más avanzadas de modelado temporal como modelos 3D completos.
-    \item El tamaño del dataset limita la capacidad de generalización frente a escenarios más complejos.
+    \item El modelo depende únicamente de siluetas, lo cual lo hace sensible a cambios drásticos en la apariencia como ropa voluminosa o accesorios.
+    \item No se incorporan explícitamente fuentes de información estructural, las cuales han demostrado ser efectivas para mejorar la robustez en condiciones complejas.
+    \item El modelo utiliza un esquema de agregación temporal simple, basado en \textit{pooling}, lo cual limita la capacidad de capturar dependencias temporales más complejas.
+    \item La evaluación se limita a CASIA-B, lo cual restringe la validación del modelo en escenarios a gran escala o bajo condiciones reales.
 \end{itemize}
 
 \section{Trabajos Futuros}
@@ -45,11 +47,12 @@ A pesar de los resultados obtenidos, el trabajo presenta ciertas limitaciones:
 A forma de futuros trabajos se propone lo siguiente:
 
 \begin{itemize}
-    \item Uso de arquitecturas más avanzadas de modelado temporal (Temporal CNN, Transformers).
-    \item Extensión a datasets más grandes como OU-MVLP u otros.
-    \item Incorporación de técnicas multimodales para mejorar la robustez ante cambios drásticos de vestimenta.
+    \item Incorporación de mecanismos avanzados de modelado temporal, como redes convolucionales 3D completas o arquitecturas basadas en \textit{Transformers}.
+    \item Integración de información multimodal para mejorar la invariancia frente a cambios de vestimenta.
+    \item Evaluación en datasets de mayor escala con el objetivo de validar la capacidad de generalización del modelo.
 \end{itemize}
 
 \section{Cierre}
 
-En conclusión, este trabajo demuestra que la incorporación de aprendizaje auto-supervisado y modelado temporal representa una dirección efectiva para mejorar los sistemas de reconocimiento por marcha. Si bien aún existen desafíos abiertos, especialmente en escenarios con alta variabilidad de apariencia, los resultados obtenidos validan el enfoque propuesto y establecen una base sólida para futuras investigaciones.
+En conclusión, este trabajo demuestra que el modelado explícito de la dimensión temporal constituye un factor fundamental para mejorar el reconocimiento por marcha. Al transformer secuencias de imágenes en representaciones volumétricas, el modelo es capaz de capturar adecuadamente la dinámica del movimiento humano. \\
+Si bien aún persisten desafíos importantes ante escenarios con alta variabilidad de apariencia, los resultados obtenidos validan el enfoque propuesto y establecen una base para el desarrollo de sistemas de reconocimiento por marcha más robustos.
