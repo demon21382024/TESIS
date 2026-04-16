@@ -2,15 +2,86 @@
 
 \section{Introducción}
 
+La reidentificación de personas (\textit{Person Re-ID}) es un problema fundamental cuyo objetivo es determinar si imágenes o secuencias capturadas por distintas cámaras corresponden a la misma identidad. En escenarios reales, esta tarea presenta importantes desafíos debido a la alta variabilidad generada por cambios de pose, iluminación, oclusiones, resolución y condiciones de captura, así como por la reducida variabilidad entre individuos con apariencia o patrones de movimiento similares. Estas problemáticas exigen el aprendizaje de representaciones altamente discriminativas y robustas \cite{Asperti2024ReviewReID}. Dentro de este campo, el reconocimiento basado en la marcha (\textit{Gait Recognition}) se posiciona como una alternativa biométrica, al basarse en patrones de movimiento característicos \cite{Purish2023GaitRecognition}.
+
+Históricamente, los enfoques iniciales en \textit{Gait Recognition} se han basado en representaciones estáticas que simplifican la información temporal en descriptores compactos. Si bien estos métodos han demostrado ser efectivos en escenarios controlados, presentan limitaciones importantes al no capturar la dinámica completa del movimiento \cite{Purish2023GaitRecognition}. Sin embargo, han emergido modelos capaces de aprender representaciones más complejas a partir de datos visuales, incluyendo enfoques que procesan información espacial y arquitecturas que incorporan modelado temporal mediante secuencias, convoluciones 3D o mecanismos de atención.
+
+Asimismo, los paradigmas de aprendizaje han evolucionado significativamente. Los métodos supervisados han alcanzado altos niveles de desempeño cuando se dispone de grandes volúmenes de datos etiquetados. Por otro lado, el aprendizaje autosupervisado (\textit{Self-Supervised Learning, SSL}) ha emergido como una alternativa prometedora para explotar grandes colecciones de datos no etiquetados, uno de los mayores problemas del aprendizaje supervisado, mediante el diseño de tareas pretexto que permiten aprender representaciones transferibles \cite{Liu2023GaitBenchmark}.
+
+Considerando esto, surge la necesidad de analizar de manera crítica cómo los distintos enfoques en la literatura abordan tanto el modelado espacio-temporal como los paradigmas de aprendizaje utilizados, así como las limitaciones que persisten en su integración.
+
+En este capítulo se presenta una revisión crítica de la literatura en \textit{Gait Recognition} y \textit{Person Re-ID}, estructurada en función de los enfoques de modelado y los paradigmas de aprendizaje. Se analizan los métodos clásicos diferenciando entre enfoques espaciales y espacio-temporales, así como las estrategias supervisadas, no supervisadas y autosupervisadas. Finalmente, se identifican las principales brechas en el estado del arte, las cuales motivan el desarrollo de enfoques híbridos capaces de integrar modelado temporal y aprendizaje eficiente a partir de datos etiquetados y no etiquetados.
+
 \section{Enfoques clásicos}
 
-\section{\textit[Deep learning] en \textit{Gait Recognition}}
+Los primeros enfoques en \textit{Gait Recognition} se realizaron en base a prepresentaciones en siluetas, las cuales buscan capturar la forma global del cuerpo humano durante el ciclo de marcha. Entre estas representaciones, la más influyente es la \textit{Gait Energy Image (GEI)}, propuesta por Han y Bhanu \cite{Han2006GEI}, que consiste en promediar las siluetas binarias de una secuencia de marcha en el tiempo para obtener una única imagen representativa. Es decir, se puede definir como el promedio temporal de las siluetas alineadas de un sujeto durante un ciclo de caminata, lo que permite obtener una representación compacta y robustas frente a pequeñas variaciones. 
+
+No obstante, esta simplificación introduce limitaciones. Al reducir una secuencia completa a una única imagen promedio, la GEI pierde información temporal crítica relacionada con la dinámica del movimiento. En consecuencia, diferentes patrones de marcha que presentan estructuras espaciales similares pueden volverse indistinguibles bajo esta representación. En respuesta a mencionadas limitaciones, surgieron extensiones que buscan preservar la información temporal, como representaciones basadas en secuencias de siluetas o descriptores dinámicos.
+
+En síntesis, aunque los enfoques clásicos basados en siluetas establecieron las bases del reconocimiento de la marcha, su incapacidad para modelar explícitamente la dinámica temporal del movimiento y su limitada robustez frente a variaciones reales evidencian la necesidad de métodos más avanzados. Estas limitaciones han motivado la adopción de técnicas de \textit{Deep Learning}, capaces de aprender representaciones espacio-temporales.
+
+\section{\textit{Deep learning} en \textit{Gait Recognition}}
+
+El avance en el área de \textit{Computer Vision} ha transformado el campo de \textit{Gait Recognition}, permitiendo el aprendizaje profundo de las representaciones a partir de datos visuales. A diferencia de enfoques clásicos como \textit{Gait Energy Image (GEI)}, los modelos profundos tienen la capacidad de capturar patrones complejos tanto a nivel espacial como temporal, siendo esto fundamental para la discriminación de identidades.
 
 \subsection{Enfoques espaciales}
 
+Los primeros enfoques se centraron en el aprendizaje de representaciones espaciales a partri de siluetas o imágenes individuales, utilizando principalmente redes neuronales convolucionales (CNN). En estos métodos, cada frame de una secuencia de marcha es procesado de manera independiente, y la formación global se agrega posteriormente.
+
+GaitSet () modela una secuencia de marcha como un conjunto no ordenado de siluetas. En lugar de asumir una estructura temporal estricta, el modelo aplica una función de agregación sobre los frames para obtener una representación global invariante al orden. Esta formulación les permite manejar secuencias de longitud variables y reduce la complejidad del modelado temporal, logrando resultados competitivos.
+
+No obstante, este tipo de aproximaciones presenta limitaciones significativas. Al tratar la secuencia como un conjunto desordenado, se pierde información relacioanda a la dinámica temporal del movimiento, lo cual es fundamental en el reconocimiento de la marcha. En consecuencia, patrones asociados a la evolución temporal de la postura pueden no ser adecuadamente capturados por el modelo. De igual forma, la dependencia de mecanismos de agregación limita la capacidad del modelo para diferenciar entre secuencias con estructruras temporales similares pero con variaciones.
+
 \subsection{Modelado temporal}
 
+Con el objetivo de capturar de manera explícita la dinámica de la marcha, diversos trabajos han incluido mecanismos de modelado temporal dentro de sus arquitecturas. Estos enfoques buscan aprender representaciones y también sobre la evolución del movimiento a lo largo del tiempo.
+
+\subsubsection{Modelos basados en RNN y LSTM}
+
+Una de las aproximaciones para modelar secuencias de marcha consiste en el uso de redes recurrentes, como las \textit{Recurrent Neural Networks (RNN)} y sus variantes basadas en memoria a largo plazo (\textit{Long Short-Term Memory, LSTM}). \\
+En el contexto de \textit{Gait Recognition}, las RNN y LSTM son utilizadas para modelar la evolución de características extraídas por redes convolucionales, permitiendo añadir información temporal de manera explícita \cite{ReferenciaRNNGait}. Sin embargo, presentan limitaciones importantes, como problemas de gradiente durante el entrenamiento, así como una capacidad limitada para capturar dependencias secuencias extensas. Además, su naturaleza secuencial implica un mayor costo computacional.
+
+\subsubsection{Modelos convolucionales 3D}
+
+El uso de convoluciones tridimensionales (3D CNN), permiten procesar simultáneamente las dimensiones espaciales y temporales de una secuencia. En estos modelos, la entrada se representa como un volumen de datos con forma $[T, C, H, W]$, donde $T$ corresponde a la dimensión temporal. \\
+Las 3D CNN han sido utilizadas en tareas de reconocimiento de acciones y han sido adaptadas al reconocimiento de la marcha para capturar patrones dinámicos de movimiento \cite{Referencia3DCNN}. Este tipo de arquitecturas permite aprender características espacio-temporales de manera conjunta, superando las limitaciones de los enfoques puramente espaciales. Modelos como GaitGL \cite{Lin2022GaitGL} incorporan estrategias eficientes para el modelado temporal, logrando mejoras significativas en tareas de identificación basadas en la marcha. \\
+No obstante, estos modelos suelen requerir grandes volúmenes de datos para evitar sobreajuste, además de su elevado costo computacional debido a la complejidad de las operaciones tridimensionales.
+
+\subsubsection{Transformers y atención temporal}
+
+Por otro lado, los modelos basados en mecanismos de atención y arquitecturas tipo \textit{Transformer} han sido explorados para el modelado de secuencias. Estos enfoques permiten capturar dependencias a largo plazo mediante la atención global, superando algunas de las limitaciones de las arquitecturas recurrentes. \\
+Trabajos recientes han propuesto variantes de \textit{Transformers} adaptadas al análisis de la marcha, incorporando mecanismos de atención temporal para modelar relaciones entre frames no consecutivos \cite{ReferenciaGaitFormer}. Estos modelos han demostrado un alto potencial para capturar patrones complejos de movimiento y mejorar el rendimiento en escenarios desafiantes. \\
+Sin embargo, presentan desafíos asociados a su alto costo computacional y a la necesidad de grandes cantidades de datos para su entrenamiento efectivo. Además, su desempeño puede verse afectado en escenarios con alta variabilidad entre vistas (\textit{cross-view}), lo que sigue siendo un problema abierto en la literatura.
+
+\subsubsection{Análisis crítico}
+
+En conjunto, estos enfoques basados en el modelado temporal han permitido avances significativos en el reconocimiento de marcha al capturar mejor la dinámica del movimiento humano. No obstante, persisten limitaciones relevantes. Muchos de estos modelos requieren grandes volúmenes de datos etiquetados, lo que limita su escalabilidad. Además, el incremento en la complejidad arquitectónica conlleva mayores costos computacionales y riesgos de sobreajuste. Por último, la generalización a escenarios no controlados, bajo condiciones de cambio de vista, oclusión o variaciones en la velocidad de la marcha, continúa siendo un desafío constante.
+
 \section{Paradigmas de aprendizaje}
+
+El desarrollo de métodos para \textit{Person Re-ID} y \textit{Gait Recognition} no solo se determinan por las arquitecturas empleadas, sino también por los paradigmas de aprendizaje bajo los cuales se entrenan los modelos.
+
+\section{Aprendizaje supervisado}
+
+Los trabajos supervisados mantienen una línea de referencia para medir el rendimiento, enfoques basados en metric learning (triplet y variantes con soft-labels) se mantienen como estándar para optimizar la separación identidad-interna y la discriminación entre clases cercanas, aunque sufren cuando las etiquetas son escasas o ruidosas y no generalizan bien entre escenas muy distintas (\cite{Lin2020Softened}; \cite{Guo2023TripletContrastive}). Estudios sobre pérdidas tipo triplet y sus variantes muestran robustez en benchmarks clásicos, pero exigen anotaciones costosas y estrategias de muestreo cuidadosas. 
+
+Por otro lado, los CNNs tradicionales resultan competitivos en\textit{gait recognition} cuando se diseñan para separar identidad y covariables, pero la adopción creciente de Transformers y ViT-based supervised models (\cite{Huang2025PersonViT}; \cite{He2025TransReID}) evidencia una tendencia hacia \textit{backbones} que capturan relaciones a larga distancia y tokens; estos modelos tienden a obtener mejoras en escenarios donde hay suficiente data anotada.
+
+Finalmente, los métodos \textit{part-aware} (\cite{Yang2020DevilDetails}) y basados en atención proveen discriminación a nivel de región, especialmente útil en \textit{gait recognition} si se busca resaltar los segmentos corporales por separado. No obstante, su dependencia en buenas detecciones y segmentaciones, y la posible saturación en datasets implican que las ganancias pueden ser modestas en escenarios reales.
+
+\section{Aprendizaje autosupervisado}
+
+Los trabajos basados en aprendizaje auto-supervisado muestran una diversificación de pretext-tasks orientadas a capturar distintas propiedades útiles para Re-ID. Las estrategias basadas en \textit{contrastive learning}, enfoques que construyen pares a partir de frames y tracklets (\cite{Zheng2022PASS}; \cite{Dou2023IdentitySeeking}), buscan explotar la continuidad temporal de videos para obtener invariancias útiles entre vistas y son representadas por métodos como \textit{Identity-Seeking (ISR)}, que emplea este emparejamiento y pérdida contrastiva por confiabilidad para mitigar pares ruidosos. Sin embargo, puede llegar depender fuertemente de la calidad del extractor de características y de la selección temporal de pares.
+
+Así mismo, se investiga también sobre enmascaramiento \textit{(MIM / Masked Sequence Modeling)} y tareas reconstructivas que han sido adaptadas para extraer características locales sin requerir alineación manual; como es el caso de PersonViT, que incorpora MIM para obtener representaciones locales de grano fino y reducir dependencia de divisiones manuales de partes (\cite{Han2021LocalitySGE}; \cite{Wang2025GaitForeMer}), lo que es muy relevante cuando se trabaja con silhouettes o secuencias de marcha donde la alineación es difícil, aunque su alto costo computacional y modelos complejos de pre-entrenamiento (LUPerson - Utilizado también en \cite{Zheng2022PASS}; \cite{Li2025OrientedKD}; \cite{Xu2023VILLS}) son limitaciones claras.
+
+Otros métodos aprovechan modelos geométricos, esqueletos y grafos, donde métodos como SM-SGE (\cite{Han2021SMSGE}) y CAGES (\cite{Han2021LocalitySGE}) aplican tareas de reconstrucción \textit{multi-scale} y pérdidas contrastivas con conciencia de localidad para conservar relaciones intra-secuencia y estructura corporal. Estos enfoques son particularmente prometedores para \textit{Gait Recognition}, ya que explotan explícitamente la dinámica corporal, pero su desempeño queda restringido por la calidad y disponibilidad de esqueletos 3D y por el tamaño reducido de \textit{datasets} disponibles.
+
+\section{Aprendizajes híbridos}
+
+Los métodos híbridos nos presentan una serie de nuevos enfoques como pre-entrenamiento SSL seguido de fine-tuning supervisado (\cite{Dou2023IdentitySeeking}; \cite{Huang2025PersonViT}), distillation orientada a Re-ID (\cite{Li2025OrientedKD}) y frameworks multi-escena (\cite{Liu2025UCMVeID}; \cite{Rao2024MSFFT}). Estos métodos permiten máximizar la generalización; por ejemplo, frameworks como VersReID (\cite{Zhou2024VersReID}) emplean pre-entrenamiento autosupervisado y destilan conocimiento multi-escena para obtener un modelo único robusto frente a variaciones de escenario, mostrando que combinar etapas es una de las rutas más prácticas para obtener ventajas que otorga SSL a tareas concretas de Re-ID.
+
+Los métodos de distillation orientada o los que combinan reconstrucción más alineación, ofrecen mejoras frente a baja resolución y oclusiones simuladas, pero añaden hiperparámetros y aumentan el coste de entrenamiento. En el extremo, los métodos de asociación cíclica (CycAs - \cite{Gao2025CycAs}) proponen pretextos alineados, evitando pseudo-etiquetas y mostrando que diseñar tareas pretexto coherentes con la métrica final (re-identificación) puede ser más efectivo que adaptaciones genéricas de SSL.
 
 \section{Análisis crítico global}
 
