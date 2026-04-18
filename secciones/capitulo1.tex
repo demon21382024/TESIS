@@ -22,6 +22,7 @@ Bajo este contexto, el modelo temporal se convierte en un componente clave para 
 
 Con la finalidad de abordar estas limitaciones, el aprendizaje autosupervisado (\textit{Self-Supervised Learning, SSL}) se presenta como una estrategia complementaria que permitirá explotar datos no etiquetados, facilitando la adquisición de invariancias espacio-temporales relevantes. En combinación con un ajuste supervisado posterior, este enfoque híbrido permitirá refinar la capacidad discriminativa del modelo mientras se preserva su habilidad para generalizar. En consecuencia, la integración de técnicas de modelado temporal con un aprendizaje híbrido nos muestra una solución prometedora para el desarrollo de sistemas de re-identificación más robustos y escalables bajo el método de reconocimiento de marcha.
 
+\begin{comment}
 \section{Descripción de la situación problemática}
 
 A pesar de los avances en \textit{Gait Recognition}, los modelos actuales presentan limitaciones fundamentales que afectan su desempeño en escenarios reales. En particular, muchas de las arquitecturas propuestas tratan las secuencias de marcha como conjuntos de \textit{frames} independientes, lo que impide capturar adecuadamente la dinámica compleja del movimiento humano. Adicionalmente, los modelos actuales tienden a aprender representaciones invariantes frente a variaciones como translaciones, cambios de posición o ruido en la captura. 
@@ -29,22 +30,23 @@ A pesar de los avances en \textit{Gait Recognition}, los modelos actuales presen
 Por otro lado, si bien el aprendizaje autosupervisado ha demostrado mejorar la generalización al aprovechar grandes volúmenes de datos no etiquetados, y el aprendizaje supervisado permite una mejor discriminación entre identidades, ambos enfoques presenta limitaciones cuando son aplicados independientemente. Por ejemplo, \citet{Kovacevic2021SelfAttentionGait} introduce mecanismos de auto-atención que mejora la capacidad del modelo para concentrarse en las regiones más relevantes del movimiento. No obstante, incluso bajo este enfoque avanzando, no se logra resolver el problema debido a la falta de un componente supervisado que refine la discriminación entre identidades.
 
 En este contexto, el problema que esta tesis aborda, radica en la ausencia de una enfoque que integre de manera efectiva el modelo temporal de la marcha con estrategias de aprendizaje robustas. Específicamente, se requiere un concepto que no solo combine aprendizaje autosupervisado y supervisado, sino que busque también capturar la dinámica temproal y el carácter cíclico de la marcha, permitiendo mejorar la discriminación entre individuos en condiciones reales.
+\end{comment}
 
 \section{Formulación del problema}
 
-En \textit{Gait Recognition}, los métodos actuales se basan en el procesamiento de \textit{frames} individuales o en representaciones limitadas. Este enfoque \textit{frame-based} no permite capturar de manera adecuada la naturaleza secuencial y cíclica del andar humano, lo que reduce la capacidad del modelo para identofocar patrones dinámicos distintivos entre individuos. 
+En \textit{Gait Recognition}, los métodos actuales se basan en el procesamiento de \textit{frames} individuales o en representaciones espaciales limitadas, lo que impide modelar adecuadamente la naturaleza secuencial y cíclica del andar humano. Este enfoque reduce la capacidad de los modelos para capturar patrones distintivos entre individuos, afectando su desempeño en escenarios reales.
 
-La marcha es un proceso intrínsecamente temporal, donde la información relevante no reside únicamente en la apariencia estática, sino en la evolución del movimiento a lo largo del tiempo. Sin embargo, la falta de un modelo temporal conlleva a representaciones incompletas y poco robustas frente a variaciones reales como cambios de velocidad, fase del ciclo de marcha o condiciones de captura.
+La marcha es un proceso intrínsecamente temporal, donde la información relevante no esta únicamente en la apariencia estática, sino en la evolución del movimiento en el tiempo. Sin embargo, la ausencia de un modelado temporal explícito conlleva a representaciones incompletas y poco robustas frente a variaciones como cambios de velocidad o condiciones de captura.
 
-Asimismo, aunque el aprendizaje autosupervisado ha permitido mejorar la generalización mediante el uso de datos no etiquetados, y el aprendizaje supervisado ha demostrado eficacia para la discriminación entre identidades, ambos paradigmas sulen aplicarse sin explotar plenamente la estructura temproal de las secuencias.
+Por otro lado, si bien el aprendizaje autosupervisado ha demostrado mejorar la generalización al aprovechar grandes volúmenes de datos no etiquetados, y el aprendizaje supervisado permite una mejor discriminación entre identidades, ambos enfoques presentan limitaciones cuando son aplicados de manera independiente. En esta línea, \citet{Kovacevic2021SelfAttentionGait} introduce mecanismos de auto-atención que mejoran la capacidad del modelo para enfocarse en regiones relevantes del movimiento; no obstante, incluso bajo este enfoque, persiste la limitación asociada a la falta de integración con estrategias supervisadas que refuercen la discriminación entre identidades.
 
-En este contexto, el problema de investigación se define como la ausencia de un modelo que permita representaciones secuenciales robustas mediante un modelo temporal explícito de la marcha, integrando estrategias de aprendizaje que mejoren la capacidad de generalización y la discriminación entre individuos.
+En consecuencia, el problema de investigación radica en la falta de un enfoque que integre de manera efectiva el modelado temporal de la marcha con estrategias de aprendizaje robustas. Específicamente, se requiere un modelo que capture la dinámica temporal y el carácter cíclico de la marcha, combinando aprendizaje autosupervisado y supervisado, permitiendo mejorar la discriminación entre individuos en condiciones reales. 
 
 \section{Objetivos de investigación}
 
 \subsection*{Objetivo General}
 
-Evaluar, diseñar e implementar un modelo de \textit{Gait Recognition} que aprenda representaciones temporales robustas mediante el modelo explícito de la dinámica de la marcha, integrando estrategias de aprendizaje autosupervisado y supervisado para mejorar la re-identificación de personas.
+Proponer un modelo de reconocimiento de marcha que aprenda representaciones espacio-temporales robustas mediante el modelado explícito de la dinámica del movimiento, integrando estrategias de aprendizaje autosupervisado y supervisado, con el fin de mejorar el desempeño en tareas de re-identificación de personas.
 
 \subsection*{Objetivos Específicos}
 \begin{enumerate}
